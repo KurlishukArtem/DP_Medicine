@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="Medicine_DP.Elements.Emploeess_El"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Medicine_DP.Elements"
+             mc:Ignorable="d" >
+    <Grid Background="Azure">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <Label Content="ID сотрудника" x:Name="lbEmployeeId" Margin="10" Width="250"/>
+            <Label Content="Фамилия" x:Name="lbLastName" Margin="10" Width="250"/>
+            <Label Content="Имя" x:Name="lbFirstName" Margin="10" Width="250"/>
+            <Label Content="Отчество" x:Name="lbMiddleName" Margin="10" Width="250"/>
+            <Label Content="Должность" x:Name="lbPosition" Margin="10" Width="250"/>
+            <Label Content="Специализация" x:Name="lbSpecialization" Margin="10" Width="250"/>
+            <Label Content="Дата рождения" x:Name="lbBirthDate" Margin="10" Width="250"/>
+        </StackPanel>
+
+        <Grid Grid.Column="1">
+            <StackPanel>
+                <Label Content="Пол" x:Name="lbGender" Margin="10" Width="250"/>
+                <Label Content="Телефон" x:Name="lbPhoneNumber" Margin="10" Width="250"/>
+                <Label Content="Email" x:Name="lbEmail" Margin="10" Width="250"/>
+                <Label Content="Дата приема" x:Name="lbHireDate" Margin="10" Width="250"/>
+                <Label Content="Зарплата" x:Name="lbSalary" Margin="10" Width="250"/>
+                <Label Content="Адрес" x:Name="lbAddress" Margin="10" Width="250"/>
+                <Label Content="Логин" x:Name="lbLogin" Margin="10" Width="250"/>
+                <Label Content="Активен" x:Name="lbIsActive" Margin="10" Width="250"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

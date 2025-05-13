@@ -1,0 +1,98 @@
+﻿<UserControl x:Class="Medicine_DP.Elements.Medications_El"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Medicine_DP.Elements"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <DropShadowEffect x:Key="ShadowEffect" BlurRadius="10" ShadowDepth="3" Opacity="0.2"/>
+        
+    </UserControl.Resources>
+
+    <Border Background="#FFF5F5F5" CornerRadius="10" Padding="15"
+            BorderBrush="#FFE0E0E0" BorderThickness="1"
+            Effect="{StaticResource ShadowEffect}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Левая колонка - основная информация -->
+            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="Лекарственный препарат" 
+                               FontSize="18" FontWeight="SemiBold" 
+                               Margin="0,0,0,15" Foreground="#FF333333"/>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="ID:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbMedicationId" FontWeight="SemiBold"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="Название:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbName" FontWeight="SemiBold"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="Производитель:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbManufacturer" FontWeight="SemiBold"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="Форма выпуска:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbDosageForm" FontWeight="SemiBold"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="Дозировка:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbDosage" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Разделитель -->
+            <Rectangle Grid.Column="1" Fill="#FFEEEEEE" Width="1" HorizontalAlignment="Center"/>
+
+            <!-- Правая колонка - информация о запасах -->
+            <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="Информация о запасах" 
+                               FontSize="18" FontWeight="SemiBold" 
+                               Margin="0,0,0,15" Foreground="#FF333333"/>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="Наличие:" Width="120" Foreground="#FF666666"/>
+                        <Border CornerRadius="4" Padding="3,1" 
+                                Background="{Binding QuantityInStock, 
+                                            Converter={StaticResource StockLevelConverter},
+                                            ConverterParameter={Binding MinimumStockLevel}}">
+                            <TextBlock x:Name="lbQuantity" FontWeight="SemiBold" Foreground="White"/>
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="Минимальный запас:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbMinStock" FontWeight="SemiBold"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="Цена:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbPrice" FontWeight="SemiBold"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical" Margin="0,5">
+                        <TextBlock Text="Описание:" Foreground="#FF666666"/>
+                        <TextBox x:Name="tbDescription" FontWeight="SemiBold" 
+                                 TextWrapping="Wrap" AcceptsReturn="True"
+                                 BorderThickness="0" Background="Transparent"
+                                 IsReadOnly="True"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,0 +1,119 @@
+﻿<Page x:Class="Medicine_DP.Pages.Main"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Medicine_DP.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Main">
+
+    <Page.Resources>
+        <!-- Стиль для кнопок навигации -->
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                            CornerRadius="3">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                          VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF1565C0"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#FF0D47A1"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Эффект тени -->
+        <DropShadowEffect x:Key="ShadowEffect" BlurRadius="10" 
+                      ShadowDepth="2" Opacity="0.1"/>
+    </Page.Resources>
+    <Grid>
+        <!-- Верхняя панель навигации -->
+        <Border Background="#FF1E88E5" Height="60" VerticalAlignment="Top"
+            Padding="10" CornerRadius="0,0,10,10">
+            <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Hidden">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="appointments" 
+                        Content="Записи на приём" 
+                        Style="{StaticResource NavButtonStyle}"
+                        Click="appointments_Click"/>
+
+                    <Button x:Name="employees" 
+                        Content="Сотрудники" 
+                        Style="{StaticResource NavButtonStyle}"
+                        Click="employees_Click"
+                        Margin="15,0,0,0"/>
+
+                    <Button x:Name="medical_records" 
+                        Content="Записи" 
+                        Style="{StaticResource NavButtonStyle}"
+                        Click="medical_records_Click"
+                        Margin="15,0,0,0"/>
+
+                    <Button x:Name="medical_tests" 
+                        Content="мед-тесты" 
+                        Style="{StaticResource NavButtonStyle}"
+                        Click="medtical_tests_Click"
+                        Margin="15,0,0,0"/>
+
+                    <Button x:Name="medications" 
+                        Content="медикаменты" 
+                        Style="{StaticResource NavButtonStyle}"
+                        Click="medications_Click"
+                        Margin="15,0,0,0"/>
+
+                    <Button x:Name="patients" 
+                        Content="Пациенты" 
+                        Style="{StaticResource NavButtonStyle}"
+                        Click="patients_Click"
+                        Margin="15,0,0,0"/>
+
+                    <Button x:Name="payments" 
+                        Content="Оплата" 
+                        Style="{StaticResource NavButtonStyle}"
+                        Click="payments_Click"
+                        Margin="15,0,0,0"/>
+                    <Button x:Name="rooms" 
+                            Content="Палаты" 
+                            Style="{StaticResource NavButtonStyle}"
+                            Click="rooms_Click"
+                            Margin="15,0,0,0"/>
+                    <Button x:Name="shedules" 
+                            Content="Рассписание" 
+                            Style="{StaticResource NavButtonStyle}"
+                            Click="schedules_Click"
+                            Margin="15,0,0,0"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Основное содержимое -->
+        <Border Margin="10,70,10,10" Background="White"
+            CornerRadius="5" BorderThickness="1" BorderBrush="#FFE0E0E0"
+            Effect="{StaticResource ShadowEffect}">
+            <ScrollViewer>
+                <StackPanel x:Name="parent">
+                    
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        
+    </Grid>
+</Page>

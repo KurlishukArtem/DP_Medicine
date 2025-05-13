@@ -1,0 +1,68 @@
+﻿<Page x:Class="Medicine_DP.Pages.Login"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Medicine_DP.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Login">
+
+    
+
+    <Grid>
+        <!-- Фоновое изображение -->
+        <!--<Grid.Background>
+            <ImageBrush ImageSource="" Stretch="UniformToFill" Opacity="0.3"/>
+        </Grid.Background>-->
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Левая часть - логотип и информация -->
+        <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Image Width="200" Margin="0,0,0,30"/>
+            <TextBlock Text="МЕДИЦИНСКАЯ ИНФОРМАЦИОННАЯ СИСТЕМА" 
+                       FontSize="24" FontWeight="Bold" TextAlignment="Center"
+                       Margin="20"/>
+            <TextBlock Text="Версия 1.0" FontSize="14" TextAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Разделитель -->
+        <Rectangle Grid.Column="1" Width="1" Fill="LightGray" Margin="0,50"/>
+
+        <!-- Правая часть - форма входа -->
+        <StackPanel Grid.Column="2" Width="300" VerticalAlignment="Center" Margin="50,0">
+            <TextBlock Text="ВХОД В СИСТЕМУ" 
+                       FontSize="20" FontWeight="Bold" 
+                       Margin="0,0,0,30" HorizontalAlignment="Center"/>
+
+            <Label Content="Логин:"/>
+            <TextBox x:Name="UsernameTextBox" 
+                     Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Content="Пароль:"/>
+            <!--<PasswordBox x:Name="PasswordBox" 
+                         PasswordChanged="PasswordBox_PasswordChanged"/>-->
+
+            <CheckBox x:Name="RememberCheckBox" 
+                      Content="Запомнить меня" 
+                      Margin="0,10"
+                      IsChecked="{Binding RememberMe}"/>
+
+            <Button Content="Войти" 
+                    Command="{Binding LoginCommand}"
+                    Background="#FF1E88E5" 
+                    Foreground="White"/>
+
+            <TextBlock x:Name="ErrorMessage" 
+                       Text="{Binding ErrorMessage}"
+                       Foreground="Red" 
+                       TextWrapping="Wrap"
+                       Margin="0,20,0,0"/>
+        </StackPanel>
+    </Grid>
+</Page>

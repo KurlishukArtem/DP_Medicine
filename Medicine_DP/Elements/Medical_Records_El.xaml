@@ -1,0 +1,102 @@
+﻿<UserControl x:Class="Medicine_DP.Elements.Medical_Records_El"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Medicine_DP.Elements"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <DropShadowEffect x:Key="ShadowEffect" BlurRadius="10" ShadowDepth="3" Opacity="0.2"/>
+    </UserControl.Resources>
+
+    <Border Background="#FFF5F5F5" CornerRadius="10" Padding="15"
+            BorderBrush="#FFE0E0E0" BorderThickness="1"
+            Effect="{StaticResource ShadowEffect}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <!-- Разделитель -->
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Левая колонка - основная информация -->
+            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="Медицинская карта" 
+                               FontSize="18" FontWeight="SemiBold" 
+                               Margin="0,0,0,15" Foreground="#FF333333"/>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="ID записи:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbRecordId" FontWeight="SemiBold"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="ID пациента:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbPatientId" FontWeight="SemiBold"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="ID врача:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbEmployeeId" FontWeight="SemiBold"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="ID приёма:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbAppointmentId" FontWeight="SemiBold"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="Дата записи:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbRecordDate" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Разделитель -->
+            <Rectangle Grid.Column="1" Fill="#FFEEEEEE" Width="1" HorizontalAlignment="Center"/>
+
+            <!-- Правая колонка - медицинская информация -->
+            <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="Медицинские данные" 
+                               FontSize="18" FontWeight="SemiBold" 
+                               Margin="0,0,0,15" Foreground="#FF333333"/>
+
+                    <StackPanel Orientation="Vertical" Margin="0,5">
+                        <TextBlock Text="Диагноз:" Foreground="#FF666666"/>
+                        <TextBox x:Name="tbDiagnosis" FontWeight="SemiBold" 
+                                 TextWrapping="Wrap" AcceptsReturn="True"
+                                 BorderThickness="0" Background="Transparent"
+                                 IsReadOnly="True"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical" Margin="0,5">
+                        <TextBlock Text="Лечение:" Foreground="#FF666666"/>
+                        <TextBox x:Name="tbTreatment" FontWeight="SemiBold" 
+                                 TextWrapping="Wrap" AcceptsReturn="True"
+                                 BorderThickness="0" Background="Transparent"
+                                 IsReadOnly="True"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical" Margin="0,5">
+                        <TextBlock Text="Назначения:" Foreground="#FF666666"/>
+                        <TextBox x:Name="tbPrescription" FontWeight="SemiBold" 
+                                 TextWrapping="Wrap" AcceptsReturn="True"
+                                 BorderThickness="0" Background="Transparent"
+                                 IsReadOnly="True"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical" Margin="0,5">
+                        <TextBlock Text="Рекомендации:" Foreground="#FF666666"/>
+                        <TextBox x:Name="tbRecommendations" FontWeight="SemiBold" 
+                                 TextWrapping="Wrap" AcceptsReturn="True"
+                                 BorderThickness="0" Background="Transparent"
+                                 IsReadOnly="True"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

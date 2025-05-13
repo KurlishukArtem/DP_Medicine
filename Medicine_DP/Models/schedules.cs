@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+
+namespace Medicine_DP.Models
+{
+    public class schedules
+    {
+        [Key]
+        public int schedule_id { get; set; }
+        public int employee_id { get; set; }
+        public int day_of_week { get; set; }
+        public int start_time { get; set; }
+        public int room_id { get; set; }
+        public int is_working_day { get; set; }
+    }
+}

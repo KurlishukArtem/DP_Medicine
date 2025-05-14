@@ -71,8 +71,7 @@
 
                     <StackPanel Orientation="Horizontal" Margin="0,5">
                         <TextBlock Text="Статус:" Width="120" Foreground="#FF666666"/>
-                        <Border CornerRadius="4" Padding="3,1" 
-                                Background="{Binding status, Converter={StaticResource StatusColorConverter}}">
+                        <Border CornerRadius="4" Padding="3,1">
                             <TextBlock x:Name="lbStatus" FontWeight="SemiBold" Foreground="White"/>
                         </Border>
                     </StackPanel>

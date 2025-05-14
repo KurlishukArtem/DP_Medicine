@@ -89,62 +89,73 @@ namespace Medicine_DP.Windows
         }
 
         private void LoadAvailableTimes()
-{
-    _availableTimes.Clear();
-    cbTime.ItemsSource = null;
-
-    try
-    {
-        dynamic selectedDoctor = cbDoctors.SelectedItem;
-        int doctorId = selectedDoctor.employee_id;
-        DateTime selectedDate = dpDate.SelectedDate.Value;
-        int dayOfWeek = (int)selectedDate.DayOfWeek;
-        if (dayOfWeek == 0) dayOfWeek = 7;
-
-        // Упрощенный запрос без использования навигационных свойств
-        var schedule = _context.schedules
-            .AsNoTracking()
-            .FirstOrDefault(s => s.employee_id == doctorId 
-                             && s.day_of_week == dayOfWeek 
-                             && s.is_working_day == 1);
-
-        if (schedule != null)
         {
+            _availableTimes.Clear();
+            cbTime.ItemsSource = null;
+
+            try
+            {
+                dynamic selectedDoctor = cbDoctors.SelectedItem;
+                int doctorId = selectedDoctor.employee_id;
+                DateTime selectedDate = dpDate.SelectedDate.Value;
+                int dayOfWeek = (int)selectedDate.DayOfWeek;
+                if (dayOfWeek == 0) dayOfWeek = 7;
+
+                // Получаем расписание врача
+                var schedule = _context.schedules
+                    .AsNoTracking()
+                    .FirstOrDefault(s => s.employee_id == doctorId
+                                     && s.day_of_week == dayOfWeek
+                                     && s.is_working_day == 1);
+
+                if (schedule != null)
+                {
                     TimeSpan startTime = schedule.start_time;
                     TimeSpan endTime = schedule.end_time;
                     TimeSpan slotDuration = TimeSpan.FromMinutes(30);
 
-            var bookedTimes = _context.appointments
-                .AsNoTracking()
-                .Where(a => a.employee_id == doctorId 
-                         && a.appointment_date == selectedDate)
-                .Select(a => TimeSpan.FromMinutes(a.start_time))
-                .ToList();
+                    // Получаем уже занятые времена
+                    var bookedTimes = _context.appointments
+                        .AsNoTracking()
+                        .Where(a => a.employee_id == doctorId
+                                 && a.appointment_date == selectedDate
+                                 && a.status != "cancelled") // Исключаем отмененные записи
+                        .Select(a => TimeSpan.FromMinutes(a.start_time))
+                        .ToList();
 
-            for (TimeSpan time = startTime; time < endTime; time += slotDuration)
-            {
-                if (!bookedTimes.Contains(time))
+                    // Генерируем список доступных временных слотов
+                    var availableSlots = new List<TimeSpan>();
+                    for (TimeSpan time = startTime; time < endTime; time += slotDuration)
+                    {
+                        if (!bookedTimes.Contains(time))
+                        {
+                            availableSlots.Add(time);
+                        }
+                    }
+
+                    _availableTimes = availableSlots;
+                    cbTime.ItemsSource = _availableTimes.Select(t => t.ToString(@"hh\:mm")).ToList();
+                    tbRoom.Text = schedule.room_id.ToString();
+
+                    if (!_availableTimes.Any())
+                    {
+                        MessageBox.Show("Нет доступного времени для записи в этот день", "Информация",
+                            MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                else
                 {
-                    _availableTimes.Add(time);
+                    MessageBox.Show("Врач не работает в выбранный день", "Информация",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки расписания: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
-            cbTime.ItemsSource = _availableTimes.Select(t => t.ToString(@"hh\:mm")).ToList();
-            tbRoom.Text = schedule.room_id.ToString() ?? "Не указан";
-        }
-        else
-        {
-            MessageBox.Show("Врач не работает в выбранный день", "Информация", 
-                MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-    }
-    catch (Exception ex)
-    {
-        MessageBox.Show($"Ошибка загрузки расписания: {ex.Message}", "Ошибка", 
-            MessageBoxButton.OK, MessageBoxImage.Error);
-    }
-}
-        
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             try

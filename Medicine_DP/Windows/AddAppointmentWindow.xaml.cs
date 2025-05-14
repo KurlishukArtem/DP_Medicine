@@ -144,11 +144,11 @@ namespace Medicine_DP.Windows
             MessageBoxButton.OK, MessageBoxImage.Error);
     }
 }
-
+        
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            //try
-            //{
+            try
+            {
                 // Получаем ID выбранной услуги
                 dynamic selectedService = cbServices.SelectedItem;
                 int serviceId = selectedService.service_id;
@@ -163,13 +163,14 @@ namespace Medicine_DP.Windows
                 // Получаем врача
                 dynamic selectedDoctor = cbDoctors.SelectedItem;
                 int doctorId = selectedDoctor.employee_id;
-
+                
                 // Создаем новую запись
                 var appointment = new appointments
                 {
                     patient_id = patientId,
                     employee_id = doctorId,
                     service_id = serviceId,
+                    room_id = Int32.Parse(tbRoom.Text),
                     appointment_date = dpDate.SelectedDate.Value,
                     start_time = (int)_availableTimes[cbTime.SelectedIndex].TotalMinutes,
                     status = "scheduled",
@@ -177,17 +178,18 @@ namespace Medicine_DP.Windows
                     created_at = DateTime.Now
                 };
 
+
                 _context.appointments.Add(appointment);
                 _context.SaveChanges();
 
                 MessageBox.Show("Запись успешно сохранена!");
                 this.Close();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show($"Ошибка сохранения: {ex.Message}");
-            //}
         }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка сохранения: {ex.Message}");
+            }
+}
 
         private bool ValidateInput()
         {

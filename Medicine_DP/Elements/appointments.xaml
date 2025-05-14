@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Medicine_DP.Elements"
              mc:Ignorable="d" >
     <UserControl.Resources>
-        <!-- Эффект тени -->
+        <!-- Эффект тени --> 
         <DropShadowEffect x:Key="ShadowEffect" BlurRadius="10" ShadowDepth="3" Opacity="0.2"/>
 
         <!-- Конвертер для цвета статуса -->

@@ -8,14 +8,9 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Login">
 
-    
+
 
     <Grid>
-        <!-- Фоновое изображение -->
-        <!--<Grid.Background>
-            <ImageBrush ImageSource="" Stretch="UniformToFill" Opacity="0.3"/>
-        </Grid.Background>-->
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
@@ -24,11 +19,10 @@
 
         <!-- Левая часть - логотип и информация -->
         <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Image Width="200" Margin="0,0,0,30"/>
-            <TextBlock Text="МЕДИЦИНСКАЯ ИНФОРМАЦИОННАЯ СИСТЕМА" 
-                       FontSize="24" FontWeight="Bold" TextAlignment="Center"
-                       Margin="20"/>
-            <TextBlock Text="Версия 1.0" FontSize="14" TextAlignment="Center"/>
+            <!--<Image Width="200" Margin="0,0,0,30" Source="/Assets/logo.png"/>-->
+            <TextBlock Text="Med-Clinic" 
+                   FontSize="24" FontWeight="Bold" TextAlignment="Center"
+                   Margin="20"/>
         </StackPanel>
 
         <!-- Разделитель -->
@@ -37,32 +31,32 @@
         <!-- Правая часть - форма входа -->
         <StackPanel Grid.Column="2" Width="300" VerticalAlignment="Center" Margin="50,0">
             <TextBlock Text="ВХОД В СИСТЕМУ" 
-                       FontSize="20" FontWeight="Bold" 
-                       Margin="0,0,0,30" HorizontalAlignment="Center"/>
+                   FontSize="20" FontWeight="Bold" 
+                   Margin="0,0,0,30" HorizontalAlignment="Center"/>
 
             <Label Content="Логин:"/>
             <TextBox x:Name="UsernameTextBox" 
-                     Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+                 Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
 
             <Label Content="Пароль:"/>
-            <!--<PasswordBox x:Name="PasswordBox" 
-                         PasswordChanged="PasswordBox_PasswordChanged"/>-->
+            <PasswordBox x:Name="Password"/>
 
             <CheckBox x:Name="RememberCheckBox" 
-                      Content="Запомнить меня" 
-                      Margin="0,10"
-                      IsChecked="{Binding RememberMe}"/>
+                  Content="Запомнить меня" 
+                  Margin="0,10"
+                  IsChecked="{Binding RememberMe}"/>
 
             <Button Content="Войти" 
-                    Command="{Binding LoginCommand}"
-                    Background="#FF1E88E5" 
-                    Foreground="White"/>
+                Click="Button_Click"
+                Background="#FF1E88E5" 
+                Foreground="White"
+                Padding="10,5"/>
 
             <TextBlock x:Name="ErrorMessage" 
-                       Text="{Binding ErrorMessage}"
-                       Foreground="Red" 
-                       TextWrapping="Wrap"
-                       Margin="0,20,0,0"/>
+                   Text="{Binding ErrorMessage}"
+                   Foreground="Red" 
+                   TextWrapping="Wrap"
+                   Margin="0,20,0,0"/>
         </StackPanel>
     </Grid>
 </Page>

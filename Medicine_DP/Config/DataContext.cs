@@ -17,6 +17,7 @@ namespace Medicine_DP.Config
         public DbSet<payments> payments { get; set; }
         public DbSet<rooms> rooms { get; set; }
         public DbSet<services> services { get; set; }
+        public DbSet<schedules> schedules { get; set; }
         
         public DataContext()
         {

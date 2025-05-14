@@ -9,6 +9,8 @@ namespace Medicine_DP.Models
     {
         [Key]
         public int employee_id { get; set; }
+        // Добавляем навигационное свойство для расписания
+        public virtual ICollection<schedules> schedules { get; set; }
         public string first_name { get; set; }
         public string last_name { get; set; }
         public string middle_name { get; set; }

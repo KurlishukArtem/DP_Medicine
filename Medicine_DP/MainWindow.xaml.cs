@@ -20,11 +20,12 @@ namespace Medicine_DP
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static readonly MainWindow init;
+        public static MainWindow init;
         public MainWindow()
         {
             InitializeComponent();
-            OpenPages(new Pages.Main());
+            init = this;
+            OpenPages(new Pages.Login());
         }
         public void OpenPages(Page pages)
         {

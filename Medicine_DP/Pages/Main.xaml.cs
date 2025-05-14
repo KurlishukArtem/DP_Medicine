@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Medicine_DP.Config;
+using Medicine_DP.Windows;
 using Microsoft.EntityFrameworkCore;
 
 namespace Medicine_DP.Pages
@@ -130,6 +131,24 @@ namespace Medicine_DP.Pages
         private void schedules_Click(object sender, RoutedEventArgs e)
         {
             CreateUI(new DataContext().services);
+        }
+
+        private void createAppointment_Click(object sender, RoutedEventArgs e)
+        {
+            // Создаем экземпляр окна для добавления новой записи
+            AddAppointmentWindow addAppointmentWindow = new AddAppointmentWindow();
+
+            // Настраиваем окно
+            
+            addAppointmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner; // Позиционируем по центру родительского окна
+
+            //// Подписываемся на событие закрытия окна (если нужно обновить данные после закрытия)
+            //addAppointmentWindow.Closed += (s, args) =>
+            //{
+            //    // Здесь можно обновить данные в главном окне, если нужно
+            //    // Например: RefreshAppointmentsList();
+            //};
+            addAppointmentWindow.Show(); 
         }
     }
 }

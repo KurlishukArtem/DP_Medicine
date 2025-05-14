@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Medicine_DP.Models;
+using Medicine_DP.Windows;
 
 namespace Medicine_DP.Elements
 {
@@ -19,9 +20,11 @@ namespace Medicine_DP.Elements
     /// </summary>
     public partial class Rooms_El : UserControl
     {
+        public rooms _rooms;
         public Rooms_El(rooms room)
         {
             InitializeComponent();
+            _rooms = room;
             lbRoomId.Text = room.room_id.ToString();
             lbRoomNumber.Text = room.room_number;
             lbRoomType.Text = GetRoomTypeDisplay(room.room_type);
@@ -42,6 +45,18 @@ namespace Medicine_DP.Elements
                 "diagnostic" => "Диагностический",
                 _ => type
             };
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            Room_Edit_Window room_Edit_Window = new Room_Edit_Window(_rooms);
+            room_Edit_Window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            room_Edit_Window.Show();
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

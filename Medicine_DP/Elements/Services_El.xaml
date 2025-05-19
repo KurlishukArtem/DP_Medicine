@@ -7,7 +7,41 @@
              mc:Ignorable="d" >
     <UserControl.Resources>
         <DropShadowEffect x:Key="ShadowEffect" BlurRadius="10" ShadowDepth="3" Opacity="0.2"/>
-        
+
+        <Style x:Key="EditButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF4285F4"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10 5"/>
+            <Setter Property="Margin" Value="0 10 5 0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                    CornerRadius="4"
+                    Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF3367D6"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DeleteButtonStyle" TargetType="Button" BasedOn="{StaticResource EditButtonStyle}">
+            <Setter Property="Background" Value="#FFEA4335"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FFD33426"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
     </UserControl.Resources>
 
     <Border Background="#FFF5F5F5" CornerRadius="10" Padding="15"
@@ -73,6 +107,15 @@
                                  TextWrapping="Wrap" AcceptsReturn="True"
                                  BorderThickness="0" Background="Transparent"
                                  IsReadOnly="True"/>
+                    </StackPanel>
+                    <!-- Кнопки действий -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 15 0 0">
+                        <Button x:Name="btnEdit" Content="Изменить" 
+        Style="{StaticResource EditButtonStyle}"
+        Click="EditButton_Click"/>
+                        <Button x:Name="btnDelete" Content="Удалить" 
+        Style="{StaticResource DeleteButtonStyle}"
+        Click="DeleteButton_Click"/>
                     </StackPanel>
                 </StackPanel>
             </Border>

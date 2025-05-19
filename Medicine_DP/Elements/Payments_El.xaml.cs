@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Medicine_DP.Models;
+using Medicine_DP.Windows;
 
 namespace Medicine_DP.Elements
 {
@@ -19,9 +20,11 @@ namespace Medicine_DP.Elements
     /// </summary>
     public partial class Payments_El : UserControl
     {
+        payments _payments;
         public Payments_El(payments payment)
         {
             InitializeComponent();
+            _payments = payment;
             lbPaymentId.Text = payment.payment_id.ToString();
             lbAppointmentId.Text = payment.appointment_id.ToString();
             lbPatientId.Text = payment.patient_id.ToString();
@@ -52,6 +55,17 @@ namespace Medicine_DP.Elements
                 "refunded" => "Возврат",
                 _ => status
             };
+        }
+
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            Payments_Window payments_Window = new Payments_Window(_payments);    
+            payments_Window.Show();
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Medicine_DP.Models;
+using Medicine_DP.Windows;
 
 namespace Medicine_DP.Elements
 {
@@ -19,9 +20,11 @@ namespace Medicine_DP.Elements
     /// </summary>
     public partial class Patients_El : UserControl
     {
+        patients _patients;
         public Patients_El(patients patient)
         {
             InitializeComponent();
+            this._patients = patient;
             lbFullName.Text = $"{patient.last_name} {patient.first_name} {patient.middle_name}";
             lbBirthDate.Text = patient.birth_date.ToString("dd.MM.yyyy");
             lbPhone.Text = patient.phone_number ?? "Не указано";
@@ -37,7 +40,8 @@ namespace Medicine_DP.Elements
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
-
+            Patients_Edit_Window patients_window = new Patients_Edit_Window(_patients);
+            patients_window.Show();
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)

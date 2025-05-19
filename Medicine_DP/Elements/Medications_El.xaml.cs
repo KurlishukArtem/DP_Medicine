@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Medicine_DP.Models;
+using Medicine_DP.Windows;
 
 namespace Medicine_DP.Elements
 {
@@ -19,9 +20,11 @@ namespace Medicine_DP.Elements
     /// </summary>
     public partial class Medications_El : UserControl
     {
+        medications _medications;
         public Medications_El(medications med)
         {
             InitializeComponent();
+            _medications = med;
             lbMedicationId.Text = med.medication_id.ToString();
             lbName.Text = med.name ?? "Не указано";
             lbManufacturer.Text = med.manufacturer ?? "Не указано";
@@ -32,6 +35,17 @@ namespace Medicine_DP.Elements
             lbMinStock.Text = med.minimum_stock_level.ToString();
             lbPrice.Text = $"{med.price:N2} руб.";
             tbDescription.Text = med.description ?? "Нет описания";
+        }
+
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            Medications_Edit_Window medications_Edit_Window = new Medications_Edit_Window(_medications);
+            medications_Edit_Window.ShowDialog();
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -34,5 +34,15 @@ namespace Medicine_DP.Elements
             lbRegDate.Text = patient.registration_date.ToString("dd.MM.yyyy");
             tbNotes.Text = patient.notes ?? "Нет примечаний";
         }
+
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

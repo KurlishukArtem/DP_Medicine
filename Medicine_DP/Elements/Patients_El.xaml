@@ -7,7 +7,26 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <DropShadowEffect x:Key="ShadowEffect" BlurRadius="10" ShadowDepth="3" Opacity="0.2"/>
-        
+
+        <Style x:Key="ActionButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF1E88E5"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="4" ShadowDepth="2" Opacity="0.2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource ActionButtonStyle}">
+            <Setter Property="Background" Value="#FFE53935"/>
+        </Style>
+
     </UserControl.Resources>
 
     <Border Background="#FFF5F5F5" CornerRadius="10" Padding="15"
@@ -94,6 +113,14 @@
                                  TextWrapping="Wrap" AcceptsReturn="True"
                                  BorderThickness="0" Background="Transparent"
                                  IsReadOnly="True"/>
+                    </StackPanel>
+
+                    <!-- Панель действий -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+                        <Button x:Name="btnEdit" Content="Редактировать" Width="120" Margin="0,0,10,0"
+Style="{StaticResource ActionButtonStyle}" Click="btnEdit_Click"/>
+                        <Button x:Name="btnDelete" Content="Удалить" Width="120"
+Style="{StaticResource DangerButtonStyle}" Click="btnDelete_Click"/>
                     </StackPanel>
                 </StackPanel>
             </Border>

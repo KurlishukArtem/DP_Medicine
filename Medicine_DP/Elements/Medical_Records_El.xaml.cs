@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Medicine_DP.Models;
+using Medicine_DP.Windows;
 
 namespace Medicine_DP.Elements
 {
@@ -19,9 +20,11 @@ namespace Medicine_DP.Elements
     /// </summary>
     public partial class Medical_Records_El : UserControl
     {
+        medical_records medical_Records;
         public Medical_Records_El(medical_records record)
         {
             InitializeComponent();
+            medical_Records = record;
             lbRecordId.Text = record.record_id.ToString();
             lbPatientId.Text = record.patient_id.ToString();
             lbEmployeeId.Text = record.employee_id.ToString();
@@ -36,6 +39,8 @@ namespace Medicine_DP.Elements
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
+            Medical_records_Edit_Window medical_Records_Edit_Window = new Medical_records_Edit_Window(medical_Records);
+            medical_Records_Edit_Window.Show();
 
         }
 

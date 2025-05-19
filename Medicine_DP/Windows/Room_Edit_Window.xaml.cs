@@ -45,7 +45,15 @@ namespace Medicine_DP.Windows
         {
             if (_room == null)
             {
-                
+                Models.rooms newrooms = new Models.rooms();
+                newrooms.room_number = txtRoomNumber.Text;
+                newrooms.room_type = cbRoomType.Text;
+                newrooms.floor = int.Parse(txtFloor.Text);
+                newrooms.description = txtDescription.Text;
+
+                _context.Add(newrooms);
+                _context.SaveChanges();
+
             }
             else
             {

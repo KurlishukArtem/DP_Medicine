@@ -53,5 +53,15 @@ namespace Medicine_DP.Elements
                 _ => "Не указан"
             };
         }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

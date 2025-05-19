@@ -5,33 +5,206 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Medicine_DP.Elements"
              mc:Ignorable="d" >
-    <Grid Background="Azure">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
-        <StackPanel>
-            <Label Content="ID сотрудника" x:Name="lbEmployeeId" Margin="10" Width="250"/>
-            <Label Content="Фамилия" x:Name="lbLastName" Margin="10" Width="250"/>
-            <Label Content="Имя" x:Name="lbFirstName" Margin="10" Width="250"/>
-            <Label Content="Отчество" x:Name="lbMiddleName" Margin="10" Width="250"/>
-            <Label Content="Должность" x:Name="lbPosition" Margin="10" Width="250"/>
-            <Label Content="Специализация" x:Name="lbSpecialization" Margin="10" Width="250"/>
-            <Label Content="Дата рождения" x:Name="lbBirthDate" Margin="10" Width="250"/>
-        </StackPanel>
+    <UserControl.Resources>
+        <Style x:Key="DetailLabelStyle" TargetType="Label">
+            <Setter Property="Margin" Value="0,5,10,5"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Foreground" Value="#FF666666"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
 
-        <Grid Grid.Column="1">
-            <StackPanel>
-                <Label Content="Пол" x:Name="lbGender" Margin="10" Width="250"/>
-                <Label Content="Телефон" x:Name="lbPhoneNumber" Margin="10" Width="250"/>
-                <Label Content="Email" x:Name="lbEmail" Margin="10" Width="250"/>
-                <Label Content="Дата приема" x:Name="lbHireDate" Margin="10" Width="250"/>
-                <Label Content="Зарплата" x:Name="lbSalary" Margin="10" Width="250"/>
-                <Label Content="Адрес" x:Name="lbAddress" Margin="10" Width="250"/>
-                <Label Content="Логин" x:Name="lbLogin" Margin="10" Width="250"/>
-                <Label Content="Активен" x:Name="lbIsActive" Margin="10" Width="250"/>
-            </StackPanel>
+        <Style x:Key="DetailValueStyle" TargetType="Label">
+            <Setter Property="Margin" Value="0,5,0,5"/>
+            <Setter Property="Padding" Value="5,2"/>
+            <Setter Property="Foreground" Value="#FF333333"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Background" Value="#FFF5F5F5"/>
+            <Setter Property="BorderBrush" Value="#FFE0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="MinHeight" Value="28"/>
+        </Style>
+
+        <DropShadowEffect x:Key="ShadowEffect" BlurRadius="10" ShadowDepth="3" Opacity="0.2"/>
+
+        <Style x:Key="ActionButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF1E88E5"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="4" ShadowDepth="2" Opacity="0.2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource ActionButtonStyle}">
+            <Setter Property="Background" Value="#FFE53935"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="#FFF5F5F5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+       
+
+        <!-- Основное содержимое -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Левая колонка -->
+            <Border Grid.Column="0" Background="White" CornerRadius="5" Margin="10" 
+                    BorderBrush="#FFE0E0E0" BorderThickness="1"
+                    Effect="{StaticResource ShadowEffect}">
+                <StackPanel Margin="15">
+                    <TextBlock Text="Основная информация" 
+                               FontSize="16" FontWeight="SemiBold" 
+                               Margin="0,0,0,10" Foreground="#FF1E88E5"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Content="ID сотрудника:" Grid.Row="0" Grid.Column="0" 
+                               Style="{StaticResource DetailLabelStyle}"/>
+                        <Label x:Name="lbEmployeeId" Grid.Row="0" Grid.Column="1" 
+                               Style="{StaticResource DetailValueStyle}"/>
+
+                        <Label Content="Фамилия:" Grid.Row="1" Grid.Column="0" 
+                               Style="{StaticResource DetailLabelStyle}"/>
+                        <Label x:Name="lbLastName" Grid.Row="1" Grid.Column="1" 
+                               Style="{StaticResource DetailValueStyle}"/>
+
+                        <Label Content="Имя:" Grid.Row="2" Grid.Column="0" 
+                               Style="{StaticResource DetailLabelStyle}"/>
+                        <Label x:Name="lbFirstName" Grid.Row="2" Grid.Column="1" 
+                               Style="{StaticResource DetailValueStyle}"/>
+
+                        <Label Content="Отчество:" Grid.Row="3" Grid.Column="0" 
+                               Style="{StaticResource DetailLabelStyle}"/>
+                        <Label x:Name="lbMiddleName" Grid.Row="3" Grid.Column="1" 
+                               Style="{StaticResource DetailValueStyle}"/>
+
+                        <Label Content="Должность:" Grid.Row="4" Grid.Column="0" 
+                               Style="{StaticResource DetailLabelStyle}"/>
+                        <Label x:Name="lbPosition" Grid.Row="4" Grid.Column="1" 
+                               Style="{StaticResource DetailValueStyle}"/>
+
+                        <Label Content="Специализация:" Grid.Row="5" Grid.Column="0" 
+                               Style="{StaticResource DetailLabelStyle}"/>
+                        <Label x:Name="lbSpecialization" Grid.Row="5" Grid.Column="1" 
+                               Style="{StaticResource DetailValueStyle}"/>
+
+                        <Label Content="Дата рождения:" Grid.Row="6" Grid.Column="0" 
+                               Style="{StaticResource DetailLabelStyle}"/>
+                        <Label x:Name="lbBirthDate" Grid.Row="6" Grid.Column="1" 
+                               Style="{StaticResource DetailValueStyle}"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Правая колонка -->
+            <Border Grid.Column="1" Background="White" CornerRadius="5" Margin="10" 
+                    BorderBrush="#FFE0E0E0" BorderThickness="1"
+                    Effect="{StaticResource ShadowEffect}">
+                <StackPanel Margin="15">
+                    <TextBlock Text="Контактные данные" 
+                               FontSize="16" FontWeight="SemiBold" 
+                               Margin="0,0,0,10" Foreground="#FF1E88E5"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Content="Пол:" Grid.Row="0" Grid.Column="0" 
+                               Style="{StaticResource DetailLabelStyle}"/>
+                        <Label x:Name="lbGender" Grid.Row="0" Grid.Column="1" 
+                               Style="{StaticResource DetailValueStyle}"/>
+
+                        <Label Content="Телефон:" Grid.Row="1" Grid.Column="0" 
+                               Style="{StaticResource DetailLabelStyle}"/>
+                        <Label x:Name="lbPhoneNumber" Grid.Row="1" Grid.Column="1" 
+                               Style="{StaticResource DetailValueStyle}"/>
+
+                        <Label Content="Email:" Grid.Row="2" Grid.Column="0" 
+                               Style="{StaticResource DetailLabelStyle}"/>
+                        <Label x:Name="lbEmail" Grid.Row="2" Grid.Column="1" 
+                               Style="{StaticResource DetailValueStyle}"/>
+
+                        <Label Content="Дата приема:" Grid.Row="3" Grid.Column="0" 
+                               Style="{StaticResource DetailLabelStyle}"/>
+                        <Label x:Name="lbHireDate" Grid.Row="3" Grid.Column="1" 
+                               Style="{StaticResource DetailValueStyle}"/>
+
+                        <Label Content="Зарплата:" Grid.Row="4" Grid.Column="0" 
+                               Style="{StaticResource DetailLabelStyle}"/>
+                        <Label x:Name="lbSalary" Grid.Row="4" Grid.Column="1" 
+                               Style="{StaticResource DetailValueStyle}"/>
+
+                        <Label Content="Адрес:" Grid.Row="5" Grid.Column="0" 
+                               Style="{StaticResource DetailLabelStyle}"/>
+                        <Label x:Name="lbAddress" Grid.Row="5" Grid.Column="1" 
+                               Style="{StaticResource DetailValueStyle}"/>
+
+                        <Label Content="Логин:" Grid.Row="6" Grid.Column="0" 
+                               Style="{StaticResource DetailLabelStyle}"/>
+                        <Label x:Name="lbLogin" Grid.Row="6" Grid.Column="1" 
+                               Style="{StaticResource DetailValueStyle}"/>
+
+                        <Label Content="Активен:" Grid.Row="7" Grid.Column="0" 
+                               Style="{StaticResource DetailLabelStyle}"/>
+                        <Label x:Name="lbIsActive" Grid.Row="7" Grid.Column="1" 
+                               Style="{StaticResource DetailValueStyle}"/>
+                    </Grid>
+
+                    <!-- Панель действий -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+                        <Button x:Name="btnEdit" Content="Редактировать" Width="120" Margin="0,0,10,0"
+             Style="{StaticResource ActionButtonStyle}" Click="btnEdit_Click"/>
+                        <Button x:Name="btnDelete" Content="Удалить" Width="120"
+             Style="{StaticResource DangerButtonStyle}" Click="btnDelete_Click"/>
+                    </StackPanel>
+                </StackPanel>
+                
+                
+            </Border>
+            
         </Grid>
     </Grid>
+
 </UserControl>

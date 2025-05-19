@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Medicine_DP.Config;
 using Medicine_DP.Models;
+using Medicine_DP.Windows;
 
 namespace Medicine_DP.Elements
 {
@@ -36,6 +37,17 @@ namespace Medicine_DP.Elements
             lb_status.Text = _appointments.status;
             lb_notes.Text = _appointments.notes;
             lb_created_at.Text = _appointments.created_at.ToString();
+        }
+
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            appointments_Edit_Window appointments_Edit_Window = new appointments_Edit_Window();
+            appointments_Edit_Window.Show();
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

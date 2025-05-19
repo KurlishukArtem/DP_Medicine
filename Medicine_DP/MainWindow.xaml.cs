@@ -25,7 +25,7 @@ namespace Medicine_DP
         {
             InitializeComponent();
             init = this;
-            OpenPages(new Pages.Main());
+            OpenPages(new Pages.Login());
         }
         public void OpenPages(Page pages)
         {

@@ -45,7 +45,7 @@ namespace Medicine_DP.Windows
         {
             if (_room == null)
             {
-                MessageBox.Show("что-то не то", "Изменение", MessageBoxButton.OK, MessageBoxImage.Information);
+                
             }
             else
             {

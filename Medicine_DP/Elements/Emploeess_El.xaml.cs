@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Medicine_DP.Models;
+using Medicine_DP.Windows;
 
 namespace Medicine_DP.Elements
 {
@@ -19,9 +20,11 @@ namespace Medicine_DP.Elements
     /// </summary>
     public partial class Emploeess_El : UserControl
     {
+        employees _emploeess;
         public Emploeess_El(employees employee)
         {
             InitializeComponent();
+            _emploeess = employee;
             // Основная информация
             lbEmployeeId.Content = employee.employee_id;
             lbLastName.Content = employee.last_name ?? "Не указано";
@@ -56,12 +59,13 @@ namespace Medicine_DP.Elements
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
-
+            Emploeess_Edit_Window emploeess_Edit_Window = new Emploeess_Edit_Window(_emploeess);
+            emploeess_Edit_Window.Show();
         }
     }
 }

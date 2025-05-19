@@ -33,5 +33,15 @@ namespace Medicine_DP.Elements
             tbPrescription.Text = record.prescription ?? "Не указано";
             tbRecommendations.Text = record.recommendations ?? "Не указано";
         }
+
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -9,32 +9,113 @@
       Title="Main">
 
     <Page.Resources>
-        <!-- Стиль для кнопок навигации -->
+
+        <Style x:Key="HorizontalScrollViewerStyle" TargetType="ScrollViewer">
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollViewer">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Основное содержимое -->
+                            <ScrollContentPresenter Grid.Row="0" 
+                                          Margin="{TemplateBinding Padding}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"/>
+
+                            <!-- Горизонтальный скроллбар -->
+                            <ScrollBar x:Name="PART_HorizontalScrollBar"
+                             Grid.Row="1"
+                             Orientation="Horizontal"
+                             ViewportSize="{TemplateBinding ViewportWidth}"
+                             Maximum="{TemplateBinding ScrollableWidth}"
+                             Value="{TemplateBinding HorizontalOffset}"
+                             Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}">
+                                <ScrollBar.Style>
+                                    <Style TargetType="ScrollBar">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Height" Value="8"/>
+                                        <Setter Property="Foreground" Value="#80FFFFFF"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ScrollBar">
+                                                    <Grid>
+                                                        <Track x:Name="PART_Track" 
+                                                     IsDirectionReversed="False">
+                                                            <Track.DecreaseRepeatButton>
+                                                                <RepeatButton Style="{StaticResource ScrollBarButton}"/>
+                                                            </Track.DecreaseRepeatButton>
+                                                            <Track.Thumb>
+                                                                <Thumb Background="{TemplateBinding Foreground}"/>
+                                                            </Track.Thumb>
+                                                            <Track.IncreaseRepeatButton>
+                                                                <RepeatButton Style="{StaticResource ScrollBarButton}"/>
+                                                            </Track.IncreaseRepeatButton>
+                                                        </Track>
+                                                    </Grid>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ScrollBar.Style>
+                            </ScrollBar>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Дополнительные стили для работы ScrollViewer -->
+        <Style x:Key="ScrollBarButton" TargetType="RepeatButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border Background="Transparent"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+
+
         <Style x:Key="NavButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,8"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Padding" Value="10,5"/>
-            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" 
-                            CornerRadius="3">
+                        CornerRadius="4"
+                        Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" 
-                                          VerticalAlignment="Center"/>
+                                      VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#FF1565C0"/>
+                    <Setter Property="Background" Value="#3D5AFE"/>
+                    <Setter Property="Foreground" Value="White"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#FF0D47A1"/>
+                    <Setter Property="Background" Value="#1A237E"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -46,66 +127,112 @@
     <Grid>
         <!-- Верхняя панель навигации -->
         <Border Background="#FF1E88E5" Height="60" VerticalAlignment="Top"
-            Padding="10" CornerRadius="0,0,10,10">
-            <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Hidden">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        Padding="0" CornerRadius="0,0,10,10">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                  VerticalScrollBarVisibility="Disabled"
+                  Padding="10,0"
+                  Background="Transparent">
+                <ScrollViewer.Resources>
+                    <!-- Стиль для скроллбара -->
+                    <Style TargetType="ScrollBar">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Height" Value="8"/>
+                        <Setter Property="Foreground" Value="#80FFFFFF"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ScrollBar">
+                                    <Grid>
+                                        <Track x:Name="PART_Track" 
+                                       IsDirectionReversed="False">
+                                            <Track.DecreaseRepeatButton>
+                                                <RepeatButton Style="{StaticResource ScrollBarButton}"/>
+                                            </Track.DecreaseRepeatButton>
+                                            <Track.Thumb>
+                                                <Thumb Background="{TemplateBinding Foreground}" />
+                                            </Track.Thumb>
+                                            <Track.IncreaseRepeatButton>
+                                                <RepeatButton Style="{StaticResource ScrollBarButton}"/>
+                                            </Track.IncreaseRepeatButton>
+                                        </Track>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+
+                    <Style x:Key="ScrollBarButton" TargetType="RepeatButton">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="RepeatButton">
+                                    <Border Background="Transparent"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ScrollViewer.Resources>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Кнопки навигации -->
                     <Button x:Name="appointments" 
-                        Content="Записи на приём" 
-                        Style="{StaticResource NavButtonStyle}"
-                        Click="appointments_Click"/>
+                    Content="Записи на приём" 
+                    Style="{StaticResource NavButtonStyle}"
+                    Click="appointments_Click"
+                    Margin="5,0"/>
 
                     <Button x:Name="employees" 
-                        Content="Сотрудники" 
-                        Style="{StaticResource NavButtonStyle}"
-                        Click="employees_Click"
-                        Margin="15,0,0,0"/>
+                    Content="Сотрудники" 
+                    Style="{StaticResource NavButtonStyle}"
+                    Click="employees_Click"
+                    Margin="5,0"/>
 
                     <Button x:Name="medical_records" 
-                        Content="Записи" 
-                        Style="{StaticResource NavButtonStyle}"
-                        Click="medical_records_Click"
-                        Margin="15,0,0,0"/>
+                    Content="Мед. карты" 
+                    Style="{StaticResource NavButtonStyle}"
+                    Click="medical_records_Click"
+                    Margin="5,0"/>
 
                     <Button x:Name="medical_tests" 
-                        Content="мед-тесты" 
-                        Style="{StaticResource NavButtonStyle}"
-                        Click="medtical_tests_Click"
-                        Margin="15,0,0,0"/>
+                    Content="Анализы" 
+                    Style="{StaticResource NavButtonStyle}"
+                    Click="medtical_tests_Click"
+                    Margin="5,0"/>
 
                     <Button x:Name="medications" 
-                        Content="медикаменты" 
-                        Style="{StaticResource NavButtonStyle}"
-                        Click="medications_Click"
-                        Margin="15,0,0,0"/>
+                    Content="Лекарства" 
+                    Style="{StaticResource NavButtonStyle}"
+                    Click="medications_Click"
+                    Margin="5,0"/>
 
                     <Button x:Name="patients" 
-                        Content="Пациенты" 
-                        Style="{StaticResource NavButtonStyle}"
-                        Click="patients_Click"
-                        Margin="15,0,0,0"/>
+                    Content="Пациенты" 
+                    Style="{StaticResource NavButtonStyle}"
+                    Click="patients_Click"
+                    Margin="5,0"/>
 
                     <Button x:Name="payments" 
-                        Content="Оплата" 
-                        Style="{StaticResource NavButtonStyle}"
-                        Click="payments_Click"
-                        Margin="15,0,0,0"/>
-                    <Button x:Name="rooms" 
-                            Content="Кабинеты" 
-                            Style="{StaticResource NavButtonStyle}"
-                            Click="rooms_Click"
-                            Margin="15,0,0,0"/>
-                    <Button x:Name="shedules" 
-                            Content="Рассписание" 
-                            Style="{StaticResource NavButtonStyle}"
-                            Click="schedules_Click"
-                            Margin="15,0,0,0"/>
-                <Button x:Name="createAppointment" 
-        Content="Записаться" 
-        Style="{StaticResource NavButtonStyle}"
-        Click="createAppointment_Click"
-        Margin="15,0,0,0"/>
-                </StackPanel>
+                    Content="Оплата" 
+                    Style="{StaticResource NavButtonStyle}"
+                    Click="payments_Click"
+                    Margin="5,0"/>
 
+                    <Button x:Name="rooms" 
+                    Content="Кабинеты" 
+                    Style="{StaticResource NavButtonStyle}"
+                    Click="rooms_Click"
+                    Margin="5,0"/>
+
+                    <Button x:Name="shedules" 
+                    Content="Расписание" 
+                    Style="{StaticResource NavButtonStyle}"
+                    Click="schedules_Click"
+                    Margin="5,0"/>
+
+                    <Button x:Name="createAppointment" 
+                    Content="Новая запись" 
+                    Style="{StaticResource NavButtonStyle}"
+                    Click="createAppointment_Click"
+                    Margin="5,0"/>
+                </StackPanel>
             </ScrollViewer>
         </Border>
 

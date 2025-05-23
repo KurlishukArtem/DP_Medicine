@@ -1,0 +1,156 @@
+﻿<Page x:Class="Medicine_DP.Pages.Personal_cabinet"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Medicine_DP.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Personal_cabinet">
+
+    <Grid Margin="15">
+        <!-- Заголовок с аватаром -->
+        <Border Background="#FF1E88E5" CornerRadius="5" Padding="15">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <!--<Ellipse Width="60" Height="60" Margin="0,0,15,0">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="/Assets/avatar.png"/>
+                    </Ellipse.Fill>
+                </Ellipse>-->
+                <Label Content="Личный кабинет" 
+                       FontSize="24" 
+                       FontWeight="Bold" 
+                       Foreground="White"
+                       VerticalAlignment="Top"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Основной контент -->
+        <Border Margin="0,80,0,0" 
+                Background="White" 
+                CornerRadius="5"
+                Padding="30"
+                BorderThickness="1"
+                BorderBrush="#FFE0E0E0">
+            <ScrollViewer>
+                <StackPanel>
+                    <!-- Персональные данные -->
+                    <Label Content="Персональные данные" 
+                           FontSize="18" 
+                           FontWeight="Bold"
+                           Margin="0,0,0,20"
+                           Foreground="#FF1E88E5"/>
+
+                    <!-- Основная информация -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0" 
+                               Content="ФИО:" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,10,10"/>
+                        <Label Grid.Row="0" Grid.Column="1" 
+                               x:Name="lblFullName" 
+                               Content="-" 
+                               Foreground="#FF424242"/>
+
+                        <Label Grid.Row="1" Grid.Column="0" 
+                               Content="Дата рождения:" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,10,10"/>
+                        <Label Grid.Row="1" Grid.Column="1" 
+                               x:Name="lblBirthDate" 
+                               Content="-" 
+                               Foreground="#FF424242"/>
+
+                        <Label Grid.Row="2" Grid.Column="0" 
+                               Content="Телефон:" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,10,10"/>
+                        <Label Grid.Row="2" Grid.Column="1" 
+                               x:Name="lblPhone" 
+                               Content="-" 
+                               Foreground="#FF424242"/>
+
+                        <Label Grid.Row="3" Grid.Column="0" 
+                               Content="Email:" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,10,10"/>
+                        <Label Grid.Row="3" Grid.Column="1" 
+                               x:Name="lblEmail" 
+                               Content="-" 
+                               Foreground="#FF424242"/>
+
+                        <Label Grid.Row="4" Grid.Column="0" 
+                               Content="Адрес:" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,10,10"/>
+                        <Label Grid.Row="4" Grid.Column="1" 
+                               x:Name="lblAddress" 
+                               Content="-" 
+                               Foreground="#FF424242"/>
+                    </Grid>
+
+                    <!-- Медицинские данные (только для пациентов) -->
+                    <StackPanel x:Name="patientPanel" Visibility="Collapsed">
+                        <Label Content="Медицинские данные" 
+                               FontSize="16" 
+                               FontWeight="Bold"
+                               Margin="0,20,0,15"
+                               Foreground="#FF1E88E5"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="0" 
+                                   Content="Номер полиса:" 
+                                   FontWeight="SemiBold" 
+                                   Margin="0,0,10,10"/>
+                            <Label Grid.Row="0" Grid.Column="1" 
+                                   x:Name="lblPolicy" 
+                                   Content="-" 
+                                   Foreground="#FF424242"/>
+
+                            <Label Grid.Row="1" Grid.Column="0" 
+                                   Content="СНИЛС:" 
+                                   FontWeight="SemiBold" 
+                                   Margin="0,0,10,10"/>
+                            <Label Grid.Row="1" Grid.Column="1" 
+                                   x:Name="lblSnils" 
+                                   Content="-" 
+                                   Foreground="#FF424242"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- Кнопка редактирования -->
+                    <Button x:Name="btnEditProfile" 
+                            Content="Редактировать профиль" 
+                            HorizontalAlignment="Right" 
+                            Margin="0,30,0,0"
+                            Padding="15,5" 
+                            Width="180" 
+                            Background="#FF1E88E5"
+                            Foreground="White"
+                            FontWeight="SemiBold"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</Page>

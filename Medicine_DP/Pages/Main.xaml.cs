@@ -21,10 +21,15 @@ namespace Medicine_DP.Pages
     /// </summary>
     public partial class Main : Page
     {
-
-        public Main()
+        public static string _loginUser;
+        public Main _main;
+        public DataContext _context = new DataContext();
+        Models.employees employeess;
+        public Main(string loginUser)
         {
             InitializeComponent();
+            _loginUser = loginUser;
+            
         }
 
         public void CreateUIapps()
@@ -136,7 +141,7 @@ namespace Medicine_DP.Pages
         private void createAppointment_Click(object sender, RoutedEventArgs e)
         {
             // Создаем экземпляр окна для добавления новой записи
-            AddAppointmentWindow addAppointmentWindow = new AddAppointmentWindow();
+            Windows.AddAppointmentWindow addAppointmentWindow = new AddAppointmentWindow();
 
             // Настраиваем окно
             
@@ -149,6 +154,11 @@ namespace Medicine_DP.Pages
             //    // Например: RefreshAppointmentsList();
             //};
             addAppointmentWindow.Show(); 
+        }
+        
+        private void cabinet_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.Personal_cabinet(_loginUser));
         }
     }
 }

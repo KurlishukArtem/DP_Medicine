@@ -1,0 +1,120 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using Medicine_DP.Config;
+using Medicine_DP.Models;
+using Medicine_DP.Windows;
+using Microsoft.EntityFrameworkCore;
+
+namespace Medicine_DP.Pages
+{
+    /// <summary>
+    /// Логика взаимодействия для Personal_cabinet.xaml
+    /// </summary>
+    public partial class Personal_cabinet : Page
+    {
+        private DataContext _context = new DataContext();
+        private employees _employee;
+        private patients _patient;
+        public Personal_cabinet(string username)
+        {
+            InitializeComponent();
+            LoadUserData(username);
+            LoadAppointments();
+        }
+        private void LoadUserData(string username)
+        {
+            // Проверяем, является ли пользователь сотрудником
+            _employee = _context.employees
+                .FirstOrDefault(e => e.login == username);
+
+            if (_employee != null)
+            {
+                // Заполняем данные сотрудника
+                lblFullName.Content = $"{_employee.last_name} {_employee.first_name} {_employee.middle_name}";
+                lblBirthDate.Content = _employee.birth_date.ToString("dd.MM.yyyy");
+                lblPhone.Content = _employee.phone_number;
+                lblEmail.Content = _employee.email;
+                lblAddress.Content = _employee.address;
+
+                // Скрываем панель пациента
+                patientPanel.Visibility = Visibility.Collapsed;
+                //btnNewAppointment.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                // Проверяем, является ли пользователь пациентом
+                _patient = _context.patients
+                    .FirstOrDefault(p => p.phone_number == username || p.email == username);
+
+                if (_patient != null)
+                {
+                    // Заполняем данные пациента
+                    lblFullName.Content = $"{_patient.last_name} {_patient.first_name} {_patient.middle_name}";
+                    lblBirthDate.Content = _patient.birth_date.ToString("dd.MM.yyyy");
+                    lblPhone.Content = _patient.phone_number;
+                    lblEmail.Content = _patient.email;
+                    lblAddress.Content = _patient.address;
+                    lblPolicy.Content = _patient.policy_number;
+                    lblSnils.Content = _patient.snils;
+
+                    // Показываем панель пациента
+                    patientPanel.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    MessageBox.Show("Пользователь не найден", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    
+                }
+            }
+        }
+
+        private void LoadAppointments()
+        {
+            //if (_employee != null)
+            //{
+            //    // Для сотрудника загружаем записи с информацией о пациенте и услуге
+            //    dgAppointments.ItemsSource = _context.appointments
+            //        .Where(a => a.employee_id == _employee.employee_id)
+
+            //        .OrderByDescending(a => a.appointment_date)
+            //        .ToList();
+            //}
+            //else if (_patient != null)
+            //{
+            //    // Для пациента загружаем записи с информацией о враче и услуге
+            //    dgAppointments.ItemsSource = _context.appointments
+            //        .Where(a => a.patient_id == _patient.patient_id)
+
+            //        .OrderByDescending(a => a.appointment_date)
+            //        .ToList();
+            //}
+        }
+
+        private void btnNewAppointment_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        //private void btnNewAppointment_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (_patient != null)
+        //    {
+        //        var appointmentWindow = new AddAppointmentWindow(_patient.patient_id);
+        //        appointmentWindow.ShowDialog();
+        //        LoadAppointments();
+
+        //    }
+        //}
+    }
+}

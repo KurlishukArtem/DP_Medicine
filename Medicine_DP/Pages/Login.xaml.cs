@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,12 +32,14 @@ namespace Medicine_DP.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            string loginUser = UsernameTextBox.Text;
+            string passwordBox = Password.Password.ToString();
             try
             {
-                var empl = dataContext.employees.Where(x => x.login == UsernameTextBox.Text && x.password_hash == Password.Password).First();
+                var empl = dataContext.employees.Where(x => x.login == loginUser && x.password_hash == passwordBox).First();
                 if (empl != null)
                 {
-                    MainWindow.init.OpenPages(new Pages.Main());
+                    MainWindow.init.OpenPages(new Pages.Main(loginUser));
                 }
                 else
                 {

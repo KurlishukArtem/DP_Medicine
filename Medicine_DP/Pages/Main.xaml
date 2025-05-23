@@ -232,6 +232,12 @@
                     Style="{StaticResource NavButtonStyle}"
                     Click="createAppointment_Click"
                     Margin="5,0"/>
+
+                    <Button x:Name="cabinet_page" 
+Content="личный кабинет" 
+Style="{StaticResource NavButtonStyle}"
+Click="cabinet_Click"
+Margin="5,0"/>
                 </StackPanel>
             </ScrollViewer>
         </Border>

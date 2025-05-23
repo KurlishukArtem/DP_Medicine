@@ -51,7 +51,7 @@ namespace Medicine_DP.Windows
                 newrooms.floor = int.Parse(txtFloor.Text);
                 newrooms.description = txtDescription.Text;
 
-                _context.Add(newrooms);
+                _context.rooms.Add(newrooms);
                 _context.SaveChanges();
 
             }

@@ -7,8 +7,45 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Personal_cabinet">
-
+    <Page.Resources>
+        <!-- Стили для кнопок -->
+        <Style x:Key="EditButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF4285F4"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10 5"/>
+            <Setter Property="Margin" Value="0 10 5 0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                     CornerRadius="4"
+                     Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF3367D6"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DeleteButtonStyle" TargetType="Button" BasedOn="{StaticResource EditButtonStyle}">
+            <Setter Property="Background" Value="#00fe81"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#00fe81"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
     <Grid Margin="15">
+
+        
         <!-- Заголовок с аватаром -->
         <Border Background="#FF1E88E5" CornerRadius="5" Padding="15">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -17,6 +54,7 @@
                         <ImageBrush ImageSource="/Assets/avatar.png"/>
                     </Ellipse.Fill>
                 </Ellipse>-->
+                
                 <Label Content="Личный кабинет" 
                        FontSize="24" 
                        FontWeight="Bold" 
@@ -24,7 +62,9 @@
                        VerticalAlignment="Top"/>
             </StackPanel>
         </Border>
-
+        <Button x:Name="btnDelete" Content="Назад" 
+Style="{StaticResource DeleteButtonStyle}"
+Click="back_Click" Width="80" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="23"/>
         <!-- Основной контент -->
         <Border Margin="0,80,0,0" 
                 Background="White" 
@@ -149,8 +189,19 @@
                             Background="#FF1E88E5"
                             Foreground="White"
                             FontWeight="SemiBold"/>
+                    <Button x:Name="zapis" 
+                            Content="Записаться на приём" 
+                            HorizontalAlignment="Right" 
+                            Margin="0,30,0,0"
+                            Padding="15,5" 
+                            Width="180" 
+                            Background="#FF1E88E5"
+                            Foreground="White"
+                            FontWeight="SemiBold"
+                            Click="zapis_Click"/> 
                 </StackPanel>
             </ScrollViewer>
         </Border>
+            
     </Grid>
 </Page>

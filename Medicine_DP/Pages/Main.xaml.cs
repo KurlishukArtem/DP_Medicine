@@ -25,7 +25,7 @@ namespace Medicine_DP.Pages
         public Main _main;
         public DataContext _context = new DataContext();
         Models.employees employeess;
-        public Main(string loginUser)
+        public Main(string loginUser = null)
         {
             InitializeComponent();
             _loginUser = loginUser;
@@ -59,6 +59,7 @@ namespace Medicine_DP.Pages
 
             foreach (var item in items)
             {
+
                 if (item is Models.medical_records record)
                 {
                     parent.Children.Add(new Elements.Medical_Records_El(record));

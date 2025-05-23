@@ -26,9 +26,11 @@ namespace Medicine_DP.Pages
         private DataContext _context = new DataContext();
         private employees _employee;
         private patients _patient;
+        
         public Personal_cabinet(string username)
         {
             InitializeComponent();
+
             LoadUserData(username);
             LoadAppointments();
         }
@@ -104,6 +106,29 @@ namespace Medicine_DP.Pages
         private void btnNewAppointment_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void back_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.Main());
+        }
+
+        private void zapis_Click(object sender, RoutedEventArgs e)
+        {
+            // Создаем экземпляр окна для добавления новой записи
+            Windows.AddAppointmentWindow addAppointmentWindow = new AddAppointmentWindow();
+
+            // Настраиваем окно
+
+            addAppointmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner; // Позиционируем по центру родительского окна
+
+            //// Подписываемся на событие закрытия окна (если нужно обновить данные после закрытия)
+            //addAppointmentWindow.Closed += (s, args) =>
+            //{
+            //    // Здесь можно обновить данные в главном окне, если нужно
+            //    // Например: RefreshAppointmentsList();
+            //};
+            addAppointmentWindow.Show();
         }
 
         //private void btnNewAppointment_Click(object sender, RoutedEventArgs e)

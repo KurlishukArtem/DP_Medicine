@@ -13,11 +13,11 @@ namespace Medicine_DP.Models
         public int payment_id { get; set; }
 
         [ForeignKey("appointment_id")]
-        public virtual Appointment Appointment { get; set; }
+        
         public int? appointment_id { get; set; }
 
         [ForeignKey("patient_id")]
-        public virtual Patient Patient { get; set; }
+        
         public int patient_id { get; set; }
 
         public decimal amount { get; set; }

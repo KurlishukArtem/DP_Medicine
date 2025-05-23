@@ -30,7 +30,7 @@ namespace Medicine_DP.Elements
             lbCategory.Text = service.category ?? "Не указана";
             lbPrice.Text = $"{service.price:N2} руб.";
 
-            lbActiveStatus.Text = service.is_active == 1 ? "Активна" : "Неактивна";
+            //lbActiveStatus.Text = service.is_active == 1 ? "Активна" : "Неактивна";
             tbDescription.Text = service.description ?? "Описание отсутствует";
         }
 

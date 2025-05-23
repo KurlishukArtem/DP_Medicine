@@ -34,7 +34,7 @@ namespace Medicine_DP.Elements
             lbPassport.Text = $"{patient.passport_series} {patient.passport_number}";
             lbSnils.Text = patient.snils ?? "Не указано";
             lbPolicy.Text = patient.policy_number ?? "Не указано";
-            lbRegDate.Text = patient.registration_date.ToString("dd.MM.yyyy");
+            //lbRegDate.Text = patient.registration_date.ToString("dd.MM.yyyy");
             tbNotes.Text = patient.notes ?? "Нет примечаний";
         }
 

@@ -24,103 +24,155 @@ namespace Medicine_DP.Elements
     /// </summary>
     public partial class appointments : UserControl
     {
-        Models.patients _patients;
-        Models.appointments appointments_mod;
-        DataContext _context = new DataContext();
-        Pages.Main _main;
-        public appointments(Models.appointments _appointments, Main main = null)
+        private readonly Models.appointments _appointment;
+        private readonly DataContext _context = new DataContext();
+        private readonly Pages.Main _mainPage;
+
+        public Brush StatusColor
+        {
+            get { return (Brush)GetValue(StatusColorProperty); }
+            set { SetValue(StatusColorProperty, value); }
+        }
+
+        public static readonly DependencyProperty StatusColorProperty =
+            DependencyProperty.Register("StatusColor", typeof(Brush), typeof(appointments));
+        public appointments(Models.appointments appointment, Main mainPage = null)
         {
             InitializeComponent();
-            _main = main;
-            appointments_mod = _appointments;
-            lb_appointments.Text = _appointments.appointment_id.ToString();
-            lb_patient_id.Text = new DataContext().patients.FirstOrDefault(x => x.patient_id == _appointments.patient_id).last_name;
-            lb_employeess.Text = new DataContext().employees.FirstOrDefault(x => x.employee_id == _appointments.employee_id).first_name;
-            lb_service_id.Text = new DataContext().services.FirstOrDefault(x => x.service_id == _appointments.service_id).service_name;
-            lb_room_id.Text = new DataContext().rooms.FirstOrDefault(x => x.room_id == _appointments.room_id).room_type;
-            lb_appointment_date.Text = _appointments.appointment_date.ToString();
-            lb_start_time.Text = _appointments.start_time.ToString();
-            lb_status.Text = _appointments.status;
-            lb_notes.Text = _appointments.notes;
-            lb_created_at.Text = _appointments.created_at.ToString();
+            _appointment = appointment;
+            _mainPage = mainPage;
+            LoadAppointmentData();
+        }
+
+        private void LoadAppointmentData()
+        {
+            try
+            {
+                // Основные данные о приеме
+                lbDate.Text = _appointment.appointment_date.ToString("dd.MM.yyyy");
+                lbTime.Text = _appointment.start_time.ToString();
+                lbStatus.Text = _appointment.status;
+                tbNotes.Text = string.IsNullOrEmpty(_appointment.notes) ? "Нет заметок" : _appointment.notes;
+                lbCreated.Text = _appointment.created_at.ToString("g");
+
+                // Установка цвета статуса
+                StatusColor = _appointment.status switch
+                {
+                    "scheduled" => Brushes.Green,
+                    "completed" => Brushes.Blue,
+                    "canceled" => Brushes.Red,
+                    "no-show" => Brushes.Orange,
+                    _ => Brushes.Gray
+                };
+
+                // Загрузка связанных данных
+                var patient = _context.patients
+                    .FirstOrDefault(p => p.patient_id == _appointment.patient_id);
+                lbPatient.Text = patient != null ?
+                    $"{patient.last_name} {patient.first_name} {patient.middle_name}" :
+                    "Неизвестно";
+
+                var doctor = _context.employees
+                    .FirstOrDefault(e => e.employee_id == _appointment.employee_id);
+                lbDoctor.Text = doctor != null ?
+                    $"{doctor.last_name} {doctor.first_name} {doctor.middle_name}" :
+                    "Неизвестно";
+
+                var service = _context.services
+                    .FirstOrDefault(s => s.service_id == _appointment.service_id);
+                lbService.Text = service?.service_name ?? "Неизвестно";
+
+                var room = _context.rooms
+                    .FirstOrDefault(r => r.room_id == _appointment.room_id);
+                lbRoom.Text = room?.room_type ?? "Неизвестно";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
-            appointments_Edit_Window appointments_Edit_Window = new appointments_Edit_Window(appointments_mod);
-            appointments_Edit_Window.Show();
+            var editWindow = new appointments_Edit_Window(_appointment);
+            editWindow.Closed += (s, args) =>
+            {
+                if (_mainPage != null)
+                {
+                    _mainPage.CreateUIapps();
+                }
+            };
+            editWindow.ShowDialog();
         }
 
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        private async void btnDelete_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 var confirmResult = MessageBox.Show(
                     $"Вы действительно хотите удалить запись на прием?\n\n" +
-                    $"Дата: {appointments_mod.appointment_date:dd.MM.yyyy}\n" +
-                    $"Пациент: {lb_patient_id.Text}",
+                    $"Дата: {_appointment.appointment_date:dd.MM.yyyy}\n" +
+                    $"Время: {_appointment.start_time}\n" +
+                    $"Пациент: {lbPatient.Text}",
                     "Подтверждение удаления",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Warning);
 
-                if (confirmResult != MessageBoxResult.Yes)
-                    return;
+                if (confirmResult != MessageBoxResult.Yes) return;
 
-                using (var context = new DataContext())
-                using (var transaction = context.Database.BeginTransaction())
+                using (var transaction = await _context.Database.BeginTransactionAsync())
                 {
                     try
                     {
-                        int appointmentId = appointments_mod.appointment_id;
+                        // Удаление связанных записей
+                        var records = await _context.medical_records
+                            .Where(mr => mr.appointment_id == _appointment.appointment_id)
+                            .ToListAsync();
 
-                        // 1. Удаляем связанные prescriptions
-                        context.Database.ExecuteSqlRaw(
-                            @"DELETE p FROM prescriptions p 
-                      INNER JOIN medical_records mr ON p.record_id = mr.record_id 
-                      WHERE mr.appointment_id = {0}",
-                            appointmentId);
+                        foreach (var record in records)
+                        {
+                            var prescriptions = await _context.prescriptions
+                                .Where(p => p.record_id == record.record_id)
+                                .ToListAsync();
+                            _context.prescriptions.RemoveRange(prescriptions);
+                        }
 
-                        // 2. Удаляем медицинские записи
-                        context.Database.ExecuteSqlRaw(
-                            "DELETE FROM medical_records WHERE appointment_id = {0}",
-                            appointmentId);
+                        _context.medical_records.RemoveRange(records);
 
-                        // 3. Удаляем платежи
-                        context.Database.ExecuteSqlRaw(
-                            "DELETE FROM payments WHERE appointment_id = {0}",
-                            appointmentId);
+                        var payments = await _context.payments
+                            .Where(p => p.appointment_id == _appointment.appointment_id)
+                            .ToListAsync();
+                        _context.payments.RemoveRange(payments);
 
-                        // 4. Удаляем саму запись на прием
-                        context.Database.ExecuteSqlRaw(
-                            "DELETE FROM appointments WHERE appointment_id = {0}",
-                            appointmentId);
-
-                        transaction.Commit();
+                        // Удаление самой записи
+                        _context.appointments.Remove(_appointment);
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
 
                         MessageBox.Show("Запись на прием успешно удалена", "Успех",
-                                      MessageBoxButton.OK, MessageBoxImage.Information);
+                            MessageBoxButton.OK, MessageBoxImage.Information);
 
-                        _main.CreateUIapps();
-                        
+                        _mainPage?.CreateUIapps();
                     }
                     catch (DbUpdateException dbEx)
                     {
-                        transaction.Rollback();
+                        await transaction.RollbackAsync();
                         MessageBox.Show($"Ошибка базы данных: {dbEx.InnerException?.Message}",
-                                      "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
+                        await transaction.RollbackAsync();
                         MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка",
-                                      MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Непредвиденная ошибка: {ex.Message}", "Ошибка",
-                              MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

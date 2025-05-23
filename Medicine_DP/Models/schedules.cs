@@ -12,7 +12,7 @@ namespace Medicine_DP.Models
         public int schedule_id { get; set; }
 
         [ForeignKey("employee_id")]
-        public virtual Employee Employee { get; set; }
+        
         public int employee_id { get; set; }
 
         public int day_of_week { get; set; }

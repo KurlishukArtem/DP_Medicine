@@ -17,6 +17,6 @@ namespace Medicine_DP.Models
         public string dosage { get; set; }
         public int quantity_in_stock { get; set; } = 0;
         public int minimum_stock_level { get; set; } = 5;
-        public decimal price { get; set; }
+        public double price { get; set; }
     }
 }

@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using Medicine_DP.Config;
 using Medicine_DP.Models;
 using Medicine_DP.Windows;
+using Microsoft.EntityFrameworkCore;
 
 namespace Medicine_DP.Elements
 {
@@ -21,34 +22,52 @@ namespace Medicine_DP.Elements
     /// </summary>
     public partial class Emploeess_El : UserControl
     {
-        employees _emploeess;
-        DataContext _context = new DataContext();
+        private readonly employees _employee;
+        private readonly DataContext _context = new DataContext();
+
+        public Brush IsActiveColor
+        {
+            get { return (Brush)GetValue(IsActiveColorProperty); }
+            set { SetValue(IsActiveColorProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsActiveColorProperty =
+          DependencyProperty.Register("IsActiveColor", typeof(Brush), typeof(Emploeess_El));
         public Emploeess_El(employees employee)
         {
             InitializeComponent();
-            _emploeess = employee;
-            // Основная информация
-            lbEmployeeId.Content = employee.employee_id;
-            lbLastName.Content = employee.last_name ?? "Не указано";
-            lbFirstName.Content = employee.first_name ?? "Не указано";
-            lbMiddleName.Content = employee.middle_name ?? "Не указано";
-            lbPosition.Content = employee.position ?? "Не указано";
-            lbSpecialization.Content = employee.specialization ?? "Не указано";
-
-            // Даты
-            lbBirthDate.Content = employee.birth_date.ToString("dd.MM.yyyy");
-            lbHireDate.Content = employee.hire_date.ToString("dd.MM.yyyy");
-
-            // Контактная информация
-            lbGender.Content = GetGenderDisplay(employee.gender);
-            lbPhoneNumber.Content = employee.phone_number ?? "Не указано";
-            lbEmail.Content = employee.email ?? "Не указано";
-            lbAddress.Content = employee.address ?? "Не указано";
-
-            // Учетные данные
-            lbLogin.Content = employee.login ?? "Не указано";
-            lbIsActive.Content = employee.is_active == 1 ? "Активен" : "Неактивен";
+            _employee = employee;
+            LoadEmployeeData();
         }
+        private void LoadEmployeeData()
+        {
+            try
+            {
+                // Основная информация
+                lbFullName.Text = $"{_employee.last_name} {_employee.first_name} {_employee.middle_name}";
+                lbPosition.Text = _employee.position ?? "Не указано";
+                lbSpecialization.Text = _employee.specialization ?? "Не указано";
+                lbBirthDate.Text = _employee.birth_date.ToString("dd.MM.yyyy");
+                lbGender.Text = GetGenderDisplay(_employee.gender);
+
+                // Контактная информация
+                lbPhone.Text = _employee.phone_number ?? "Не указано";
+                lbEmail.Text = _employee.email ?? "Не указано";
+                lbHireDate.Text = _employee.hire_date.ToString("dd.MM.yyyy");
+                lbAddress.Text = _employee.address ?? "Не указано";
+                lbLogin.Text = _employee.login ?? "Не указано";
+
+                // Статус активности
+                lbIsActive.Text = _employee.is_active == 1 ? "Активен" : "Неактивен";
+                IsActiveColor = _employee.is_active == 1 ? Brushes.Green : Brushes.Red;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private string GetGenderDisplay(char gender)
         {
             return gender switch
@@ -59,16 +78,78 @@ namespace Medicine_DP.Elements
             };
         }
 
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        private async void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            _context.employees.Remove(_emploeess);
-            _context.SaveChanges();
+            try
+            {
+                var confirmResult = MessageBox.Show(
+                    $"Вы действительно хотите удалить сотрудника?\n\n" +
+                    $"{_employee.last_name} {_employee.first_name} {_employee.middle_name}\n" +
+                    $"Должность: {_employee.position}",
+                    "Подтверждение удаления",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (confirmResult != MessageBoxResult.Yes) return;
+
+                using (var transaction = await _context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        // Проверка связанных записей
+                        bool hasAppointments = await _context.appointments
+                            .AnyAsync(a => a.employee_id == _employee.employee_id);
+
+                        bool hasMedicalRecords = await _context.medical_records
+                            .AnyAsync(m => m.employee_id == _employee.employee_id);
+
+                        bool hasSchedules = await _context.schedules
+                            .AnyAsync(s => s.employee_id == _employee.employee_id);
+
+                        if (hasAppointments || hasMedicalRecords || hasSchedules)
+                        {
+                            MessageBox.Show("Нельзя удалить сотрудника, так как есть связанные записи",
+                                "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+
+                        _context.employees.Remove(_employee);
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+
+                        MessageBox.Show("Сотрудник успешно удален", "Успех",
+                            MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    catch (DbUpdateException dbEx)
+                    {
+                        await transaction.RollbackAsync();
+                        MessageBox.Show($"Ошибка базы данных: {dbEx.InnerException?.Message}",
+                            "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Непредвиденная ошибка: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
-            Emploeess_Edit_Window emploeess_Edit_Window = new Emploeess_Edit_Window(_emploeess);
-            emploeess_Edit_Window.Show();
+            var editWindow = new Emploeess_Edit_Window(_employee);
+            editWindow.Closed += (s, args) =>
+            {
+                // Обновляем данные после редактирования
+                LoadEmployeeData();
+            };
+            editWindow.ShowDialog();
         }
     }
 }

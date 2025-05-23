@@ -110,8 +110,7 @@ namespace Medicine_DP.Windows
         var schedule = _context.schedules
             .AsNoTracking()
             .FirstOrDefault(s => s.employee_id == doctorId 
-                             && s.day_of_week == dayOfWeek 
-                             && s.is_working_day == 1);
+                             && s.day_of_week == dayOfWeek);
 
         if (schedule != null)
         {

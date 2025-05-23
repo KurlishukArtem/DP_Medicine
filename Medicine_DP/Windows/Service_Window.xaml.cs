@@ -19,31 +19,24 @@ namespace Medicine_DP.Windows
     /// </summary>
     public partial class Service_Window : Window
     {
-        public services _service;
-        public DataContext _context = new DataContext();
+        private readonly services _service;
+        private readonly DataContext _context = new DataContext();
+
         public Service_Window(services service = null)
         {
             InitializeComponent();
-            _service = service;
+            _service = service ?? new services();
 
-            if (service != null)
-            {
-                // Заполнение полей для редактирования
-                txtServiceId.Text = service.service_id.ToString();
-                txtServiceName.Text = service.service_name;
-                txtPrice.Text = service.price.ToString("0.00");
-                cbCategory.Text = service.category;
-                chkIsActive.IsChecked = service.is_active == 1;
-                txtDescription.Text = service.description;
-            }
-            else
-            {
-                // Установка значений по умолчанию для новой услуги
-                txtServiceId.Text = "Новая услуга";
-                txtPrice.Text = "0.00";
-                chkIsActive.IsChecked = true;
-                cbCategory.SelectedIndex = 0;
-            }
+            // Заполнение полей
+            txtServiceId.Text = _service.service_id > 0
+                ? _service.service_id.ToString()
+                : "Новая услуга";
+
+            txtServiceName.Text = _service.service_name;
+            txtPrice.Text = _service.price.ToString("0.00");
+            cbCategory.Text = _service.category;
+            chkIsActive.IsChecked = _service.is_active;
+            txtDescription.Text = _service.description;
         }
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
@@ -57,46 +50,44 @@ namespace Medicine_DP.Windows
                 // Валидация данных
                 if (string.IsNullOrWhiteSpace(txtServiceName.Text))
                     throw new Exception("Название услуги обязательно для заполнения");
+
                 if (!decimal.TryParse(txtPrice.Text, out decimal price) || price < 0)
                     throw new Exception("Некорректная цена услуги");
+
                 if (string.IsNullOrWhiteSpace(cbCategory.Text))
                     throw new Exception("Необходимо указать категорию");
 
-                if (_service == null)
+                // Обновление модели
+                _service.service_name = txtServiceName.Text;
+                _service.price = price;
+                _service.category = cbCategory.Text;
+                _service.is_active = chkIsActive.IsChecked ?? true;
+                _service.description = txtDescription.Text;
+
+                // Сохранение в БД
+                if (_service.service_id == 0)
                 {
-                    // Создание новой услуги
-                    _service = new services
-                    {
-                        service_name = txtServiceName.Text,
-                        price = (double)price,
-                        category = cbCategory.Text,
-                        is_active = chkIsActive.IsChecked == true ? 1 : 0,
-                        description = txtDescription.Text
-                    };
                     _context.services.Add(_service);
                 }
                 else
                 {
-                    // Обновление существующей услуги
-                    _service.service_name = txtServiceName.Text;
-                    _service.price = (double)price;
-                    _service.category = cbCategory.Text;
-                    _service.is_active = chkIsActive.IsChecked == true ? 1 : 0;
-                    _service.description = txtDescription.Text;
-
                     _context.services.Update(_service);
                 }
 
                 _context.SaveChanges();
+
                 MessageBox.Show("Данные услуги успешно сохранены", "Успех",
-                               MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+
+                this.DialogResult = true;
                 this.Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка при сохранении: {ex.Message}", "Ошибка",
-                                MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
 }
+

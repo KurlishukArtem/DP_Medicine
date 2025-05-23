@@ -6,127 +6,106 @@
              xmlns:local="clr-namespace:Medicine_DP.Elements"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <DropShadowEffect x:Key="ShadowEffect" BlurRadius="10" ShadowDepth="3" Opacity="0.2"/>
-
-        <Style x:Key="ActionButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#FF1E88E5"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Padding" Value="10,5"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Effect">
-                <Setter.Value>
-                    <DropShadowEffect BlurRadius="4" ShadowDepth="2" Opacity="0.2"/>
-                </Setter.Value>
-            </Setter>
+        <Style x:Key="DetailLabel" TargetType="TextBlock">
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Foreground" Value="#FF666666"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
-        <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource ActionButtonStyle}">
-            <Setter Property="Background" Value="#FFE53935"/>
+        <Style x:Key="DetailValue" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
         </Style>
     </UserControl.Resources>
 
-    <Border Background="#FFF5F5F5" CornerRadius="10" Padding="15"
-            BorderBrush="#FFE0E0E0" BorderThickness="1"
-            Effect="{StaticResource ShadowEffect}">
+    <Border Background="White" CornerRadius="10" Padding="15"
+            BorderBrush="#FFE0E0E0" BorderThickness="1">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="10"/>
-                <!-- Разделитель -->
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Левая колонка - основная информация -->
-            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="15">
-                <StackPanel>
-                    <TextBlock Text="Медицинская карта" 
-                               FontSize="18" FontWeight="SemiBold" 
-                               Margin="0,0,0,15" Foreground="#FF333333"/>
+            <!-- Record Info -->
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Информация о записи" 
+                           FontSize="18" FontWeight="SemiBold" 
+                           Margin="0,0,0,15" Foreground="#FF333333"/>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
-                        <TextBlock Text="ID записи:" Width="120" Foreground="#FF666666"/>
-                        <TextBlock x:Name="lbRecordId" FontWeight="SemiBold"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,5">
+                        <TextBlock Text="Пациент:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbPatient" FontWeight="SemiBold"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
-                        <TextBlock Text="ID пациента:" Width="120" Foreground="#FF666666"/>
-                        <TextBlock x:Name="lbPatientId" FontWeight="SemiBold"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5">
+                        <TextBlock Text="Врач:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbDoctor" FontWeight="SemiBold"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
-                        <TextBlock Text="ID врача:" Width="120" Foreground="#FF666666"/>
-                        <TextBlock x:Name="lbEmployeeId" FontWeight="SemiBold"/>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
-                        <TextBlock Text="ID приёма:" Width="120" Foreground="#FF666666"/>
-                        <TextBlock x:Name="lbAppointmentId" FontWeight="SemiBold"/>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5">
                         <TextBlock Text="Дата записи:" Width="120" Foreground="#FF666666"/>
                         <TextBlock x:Name="lbRecordDate" FontWeight="SemiBold"/>
                     </StackPanel>
-                </StackPanel>
-            </Border>
 
-            <!-- Разделитель -->
+                    <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,5">
+                        <TextBlock Text="Прием:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbAppointment" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
             <Rectangle Grid.Column="1" Fill="#FFEEEEEE" Width="1" HorizontalAlignment="Center"/>
 
-            <!-- Правая колонка - медицинская информация -->
-            <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="15">
-                <StackPanel>
-                    <TextBlock Text="Медицинские данные" 
-                               FontSize="18" FontWeight="SemiBold" 
-                               Margin="0,0,0,15" Foreground="#FF333333"/>
+            <!-- Medical Info -->
+            <StackPanel Grid.Column="2">
+                <TextBlock Text="Медицинские данные" 
+                           FontSize="18" FontWeight="SemiBold" 
+                           Margin="0,0,0,15" Foreground="#FF333333"/>
 
-                    <StackPanel Orientation="Vertical" Margin="0,5">
-                        <TextBlock Text="Диагноз:" Foreground="#FF666666"/>
-                        <TextBox x:Name="tbDiagnosis" FontWeight="SemiBold" 
-                                 TextWrapping="Wrap" AcceptsReturn="True"
-                                 BorderThickness="0" Background="Transparent"
-                                 IsReadOnly="True"/>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Vertical" Margin="0,5">
-                        <TextBlock Text="Лечение:" Foreground="#FF666666"/>
-                        <TextBox x:Name="tbTreatment" FontWeight="SemiBold" 
-                                 TextWrapping="Wrap" AcceptsReturn="True"
-                                 BorderThickness="0" Background="Transparent"
-                                 IsReadOnly="True"/>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Vertical" Margin="0,5">
-                        <TextBlock Text="Назначения:" Foreground="#FF666666"/>
-                        <TextBox x:Name="tbPrescription" FontWeight="SemiBold" 
-                                 TextWrapping="Wrap" AcceptsReturn="True"
-                                 BorderThickness="0" Background="Transparent"
-                                 IsReadOnly="True"/>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Vertical" Margin="0,5">
-                        <TextBlock Text="Рекомендации:" Foreground="#FF666666"/>
-                        <TextBox x:Name="tbRecommendations" FontWeight="SemiBold" 
-                                 TextWrapping="Wrap" AcceptsReturn="True"
-                                 BorderThickness="0" Background="Transparent"
-                                 IsReadOnly="True"/>
-                    </StackPanel>
-                    <!-- Панель действий -->
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-                        <Button x:Name="btnEdit" Content="Редактировать" Width="120" Margin="0,0,10,0"
-Style="{StaticResource ActionButtonStyle}" Click="btnEdit_Click"/>
-                        <Button x:Name="btnDelete" Content="Удалить" Width="120"
-Style="{StaticResource DangerButtonStyle}" Click="btnDelete_Click"/>
-                    </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="0,5">
+                    <TextBlock Text="Диагноз:" Foreground="#FF666666"/>
+                    <TextBox x:Name="tbDiagnosis" BorderThickness="0" Background="#FFF5F5F5"
+                             TextWrapping="Wrap" IsReadOnly="True" MaxHeight="60"/>
                 </StackPanel>
-                
-            </Border>
-            
+
+                <StackPanel Orientation="Vertical" Margin="0,5">
+                    <TextBlock Text="Лечение:" Foreground="#FF666666"/>
+                    <TextBox x:Name="tbTreatment" BorderThickness="0" Background="#FFF5F5F5"
+                             TextWrapping="Wrap" IsReadOnly="True" MaxHeight="60"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical" Margin="0,5">
+                    <TextBlock Text="Рекомендации:" Foreground="#FF666666"/>
+                    <TextBox x:Name="tbRecommendations" BorderThickness="0" Background="#FFF5F5F5"
+                             TextWrapping="Wrap" IsReadOnly="True" MaxHeight="60"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+                    <Button x:Name="btnEdit" Content="Редактировать" 
+                            Background="#FF1E88E5" Style="{StaticResource ActionButton}"/>
+                    <Button x:Name="btnDelete" Content="Удалить" 
+                            Background="#FFE53935" Style="{StaticResource ActionButton}"/>
+                </StackPanel>
+            </StackPanel>
         </Grid>
-        
     </Border>
-    
 </UserControl>

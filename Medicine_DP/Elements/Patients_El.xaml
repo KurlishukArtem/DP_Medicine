@@ -6,32 +6,30 @@
              xmlns:local="clr-namespace:Medicine_DP.Elements"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <DropShadowEffect x:Key="ShadowEffect" BlurRadius="10" ShadowDepth="3" Opacity="0.2"/>
+    <Style x:Key="DetailLabel" TargetType="TextBlock">
+        <Setter Property="Width" Value="120"/>
+        <Setter Property="Foreground" Value="#FF666666"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
 
-        <Style x:Key="ActionButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#FF1E88E5"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Padding" Value="10,5"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Effect">
-                <Setter.Value>
-                    <DropShadowEffect BlurRadius="4" ShadowDepth="2" Opacity="0.2"/>
-                </Setter.Value>
-            </Setter>
-        </Style>
+    <Style x:Key="DetailValue" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
 
-        <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource ActionButtonStyle}">
-            <Setter Property="Background" Value="#FFE53935"/>
-        </Style>
-
+    <Style x:Key="ActionButton" TargetType="Button">
+        <Setter Property="Width" Value="120"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Margin" Value="5,0"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
     </UserControl.Resources>
 
-    <Border Background="#FFF5F5F5" CornerRadius="10" Padding="15"
-            BorderBrush="#FFE0E0E0" BorderThickness="1"
-            Effect="{StaticResource ShadowEffect}">
+    <Border Background="White" CornerRadius="10" Padding="15"
+            BorderBrush="#FFE0E0E0" BorderThickness="1">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -39,91 +37,99 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Левая колонка - персональная информация -->
-            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="15">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <TextBlock Text="Пациент" 
-                                   FontSize="18" FontWeight="SemiBold" 
-                                   Foreground="#FF333333"/>
-                        <!--<Image Width="20" Height="20" Margin="5,0,0,0"
-                               Source="{Binding gender, Converter={StaticResource GenderIconConverter}}"/>-->
-                    </StackPanel>
+            <!-- Personal Info -->
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Персональные данные" 
+                           FontSize="18" FontWeight="SemiBold" 
+                           Margin="0,0,0,15" Foreground="#FF333333"/>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,5">
                         <TextBlock Text="ФИО:" Width="120" Foreground="#FF666666"/>
                         <TextBlock x:Name="lbFullName" FontWeight="SemiBold"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5">
                         <TextBlock Text="Дата рождения:" Width="120" Foreground="#FF666666"/>
                         <TextBlock x:Name="lbBirthDate" FontWeight="SemiBold"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5">
+                        <TextBlock Text="Пол:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbGender" FontWeight="SemiBold"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,5">
                         <TextBlock Text="Телефон:" Width="120" Foreground="#FF666666"/>
                         <TextBlock x:Name="lbPhone" FontWeight="SemiBold"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <StackPanel Orientation="Horizontal" Grid.Row="4" Margin="0,5">
                         <TextBlock Text="Email:" Width="120" Foreground="#FF666666"/>
                         <TextBlock x:Name="lbEmail" FontWeight="SemiBold"/>
                     </StackPanel>
+                </Grid>
+            </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
-                        <TextBlock Text="Адрес:" Width="120" Foreground="#FF666666"/>
-                        <TextBlock x:Name="lbAddress" FontWeight="SemiBold"/>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-
-            <!-- Разделитель -->
             <Rectangle Grid.Column="1" Fill="#FFEEEEEE" Width="1" HorizontalAlignment="Center"/>
 
-            <!-- Правая колонка - документы и доп. информация -->
-            <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="15">
-                <StackPanel>
-                    <TextBlock Text="Документы и информация" 
-                               FontSize="18" FontWeight="SemiBold" 
-                               Margin="0,0,0,15" Foreground="#FF333333"/>
+            <!-- Documents and Address -->
+            <StackPanel Grid.Column="2">
+                <TextBlock Text="Документы и адрес" 
+                           FontSize="18" FontWeight="SemiBold" 
+                           Margin="0,0,0,15" Foreground="#FF333333"/>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,5">
                         <TextBlock Text="Паспорт:" Width="120" Foreground="#FF666666"/>
                         <TextBlock x:Name="lbPassport" FontWeight="SemiBold"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5">
                         <TextBlock Text="СНИЛС:" Width="120" Foreground="#FF666666"/>
                         <TextBlock x:Name="lbSnils" FontWeight="SemiBold"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5">
                         <TextBlock Text="Полис:" Width="120" Foreground="#FF666666"/>
                         <TextBlock x:Name="lbPolicy" FontWeight="SemiBold"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
-                        <TextBlock Text="Дата регистрации:" Width="120" Foreground="#FF666666"/>
-                        <TextBlock x:Name="lbRegDate" FontWeight="SemiBold"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,5">
+                        <TextBlock Text="Адрес:" Width="120" Foreground="#FF666666"/>
+                        <TextBlock x:Name="lbAddress" FontWeight="SemiBold"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Vertical" Margin="0,5">
+                    <StackPanel Orientation="Vertical" Grid.Row="4" Margin="0,5">
                         <TextBlock Text="Примечания:" Foreground="#FF666666"/>
-                        <TextBox x:Name="tbNotes" FontWeight="SemiBold" 
-                                 TextWrapping="Wrap" AcceptsReturn="True"
-                                 BorderThickness="0" Background="Transparent"
-                                 IsReadOnly="True"/>
+                        <TextBox x:Name="tbNotes" BorderThickness="0" Background="#FFF5F5F5"
+                                 TextWrapping="Wrap" IsReadOnly="True" MaxHeight="60"/>
                     </StackPanel>
+                </Grid>
 
-                    <!-- Панель действий -->
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-                        <Button x:Name="btnEdit" Content="Редактировать" Width="120" Margin="0,0,10,0"
-Style="{StaticResource ActionButtonStyle}" Click="btnEdit_Click"/>
-                        <Button x:Name="btnDelete" Content="Удалить" Width="120"
-Style="{StaticResource DangerButtonStyle}" Click="btnDelete_Click"/>
-                    </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+                    <Button x:Name="btnEdit" Content="Редактировать" 
+                            Background="#FF1E88E5" Style="{StaticResource ActionButton}"/>
+                    <Button x:Name="btnDelete" Content="Удалить" 
+                            Background="#FFE53935" Style="{StaticResource ActionButton}"/>
                 </StackPanel>
-            </Border>
+            </StackPanel>
         </Grid>
     </Border>
 </UserControl>

@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Medicine_DP.Config;
 using Medicine_DP.Models;
 using Medicine_DP.Windows;
 
@@ -21,6 +22,7 @@ namespace Medicine_DP.Elements
     public partial class Rooms_El : UserControl
     {
         public rooms _rooms;
+        public DataContext _context = new DataContext();
         public Rooms_El(rooms room)
         {
             InitializeComponent();
@@ -56,7 +58,8 @@ namespace Medicine_DP.Elements
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-
+            _context.rooms.Remove(_rooms);
+            _context.SaveChanges();
         }
     }
 }

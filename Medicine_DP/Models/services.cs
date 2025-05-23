@@ -9,10 +9,11 @@ namespace Medicine_DP.Models
     {
         [Key]
         public int service_id { get; set; }
+
         public string service_name { get; set; }
         public string description { get; set; }
-        public double price { get; set; }
+        public decimal price { get; set; }
         public string category { get; set; }
-        public int is_active { get; set; }
+        public bool is_active { get; set; } = true;
     }
 }

@@ -10,11 +10,12 @@ namespace Medicine_DP.Models
     {
         [Key]
         public int patient_id { get; set; }
+
         public string first_name { get; set; }
         public string last_name { get; set; }
         public string middle_name { get; set; }
         public DateTime birth_date { get; set; }
-        public char gender { get; set; }
+        public string gender { get; set; }
         public string phone_number { get; set; }
         public string email { get; set; }
         public string address { get; set; }
@@ -22,7 +23,9 @@ namespace Medicine_DP.Models
         public string passport_number { get; set; }
         public string snils { get; set; }
         public string policy_number { get; set; }
-        public DateTime registration_date { get; set; }
+        public DateTime registration_date { get; set; } = DateTime.Now;
         public string notes { get; set; }
+        public string login { get; set; }
+        public string password_hash { get; set; }
     }
 }

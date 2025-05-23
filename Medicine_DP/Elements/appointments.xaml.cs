@@ -55,70 +55,71 @@ namespace Medicine_DP.Elements
         {
             try
             {
-                // 1. Подтверждение удаления
-                var confirmMessage = $"Вы уверены, что хотите удалить запись на прием?\n\n" +
-                                   $"ID: {appointments_mod.appointment_id}\n" +
-                                   $"Дата: {appointments_mod.appointment_date:dd.MM.yyyy}\n" +
-                                   $"Пациент: {lb_patient_id.Text}";
+                var confirmResult = MessageBox.Show(
+                    $"Вы действительно хотите удалить запись на прием?\n\n" +
+                    $"Дата: {appointments_mod.appointment_date:dd.MM.yyyy}\n" +
+                    $"Пациент: {lb_patient_id.Text}",
+                    "Подтверждение удаления",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
 
-                if (MessageBox.Show(confirmMessage, "Подтверждение удаления",
-                                  MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
-                {
+                if (confirmResult != MessageBoxResult.Yes)
                     return;
-                }
 
-                // 2. Обработка всех зависимых таблиц
-                using (var transaction = _context.Database.BeginTransaction())
+                using (var context = new DataContext())
+                using (var transaction = context.Database.BeginTransaction())
                 {
                     try
                     {
-                        // a) Удаление связанных prescription записей
-                        var medicalRecords = _context.medical_records
-                            .Where(mr => mr.appointment_id == appointments_mod.appointment_id)
-                            .ToList();
+                        int appointmentId = appointments_mod.appointment_id;
 
-                        foreach (var record in medicalRecords)
-                        {
-                            var prescriptions = _context.prescriptions
-                                .Where(p => p.record_id == record.record_id)
-                                .ToList();
+                        // 1. Удаляем связанные prescriptions
+                        context.Database.ExecuteSqlRaw(
+                            @"DELETE p FROM prescriptions p 
+                      INNER JOIN medical_records mr ON p.record_id = mr.record_id 
+                      WHERE mr.appointment_id = {0}",
+                            appointmentId);
 
-                            _context.prescriptions.RemoveRange(prescriptions);
-                        }
+                        // 2. Удаляем медицинские записи
+                        context.Database.ExecuteSqlRaw(
+                            "DELETE FROM medical_records WHERE appointment_id = {0}",
+                            appointmentId);
 
-                        // b) Удаление medical_records
-                        _context.medical_records.RemoveRange(medicalRecords);
+                        // 3. Удаляем платежи
+                        context.Database.ExecuteSqlRaw(
+                            "DELETE FROM payments WHERE appointment_id = {0}",
+                            appointmentId);
 
-                        // c) Удаление payments
-                        var payments = _context.payments
-                            .Where(p => p.appointment_id == appointments_mod.appointment_id)
-                            .ToList();
+                        // 4. Удаляем саму запись на прием
+                        context.Database.ExecuteSqlRaw(
+                            "DELETE FROM appointments WHERE appointment_id = {0}",
+                            appointmentId);
 
-                        _context.payments.RemoveRange(payments);
-
-                        // d) Удаление основной записи
-                        _context.appointments.Remove(appointments_mod);
-
-                        // Сохранение всех изменений
-                        _context.SaveChanges();
                         transaction.Commit();
 
-                        MessageBox.Show("Запись на прием и все связанные данные успешно удалены",
-                                      "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show("Запись на прием успешно удалена", "Успех",
+                                      MessageBoxButton.OK, MessageBoxImage.Information);
+
                         _main.CreateUIapps();
+                        
+                    }
+                    catch (DbUpdateException dbEx)
+                    {
+                        transaction.Rollback();
+                        MessageBox.Show($"Ошибка базы данных: {dbEx.InnerException?.Message}",
+                                      "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        MessageBox.Show($"Ошибка при удалении: {ex.Message}\n\n" +
-                                      $"Подробности: {ex.InnerException?.Message}",
-                                      "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка",
+                                      MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка",
+                MessageBox.Show($"Непредвиденная ошибка: {ex.Message}", "Ошибка",
                               MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

@@ -9,11 +9,12 @@ namespace Medicine_DP.Models
     {
         [Key]
         public int test_id { get; set; }
+
         public string test_name { get; set; }
         public string description { get; set; }
         public string preparation { get; set; }
         public string normal_values { get; set; }
-        public double price { get; set; }
+        public decimal price { get; set; }
         public string category { get; set; }
     }
 }

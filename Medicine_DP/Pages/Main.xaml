@@ -215,11 +215,7 @@
                     Click="payments_Click"
                     Margin="5,0"/>
 
-                    <Button x:Name="rooms" 
-                    Content="Кабинеты" 
-                    Style="{StaticResource NavButtonStyle}"
-                    Click="rooms_Click"
-                    Margin="5,0"/>
+                   
 
                     <Button x:Name="shedules" 
                     Content="Расписание" 
@@ -234,10 +230,10 @@
                     Margin="5,0"/>
 
                     <Button x:Name="cabinet_page" 
-Content="личный кабинет" 
-Style="{StaticResource NavButtonStyle}"
-Click="cabinet_Click"
-Margin="5,0"/>
+                        Content="личный кабинет" 
+                        Style="{StaticResource NavButtonStyle}"
+                        Click="cabinet_Click"
+                        Margin="5,0"/>
                 </StackPanel>
             </ScrollViewer>
         </Border>

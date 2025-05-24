@@ -129,10 +129,7 @@ namespace Medicine_DP.Pages
             CreateUI(new DataContext().payments);
         }
 
-        private void rooms_Click(object sender, RoutedEventArgs e)
-        {
-            CreateUI(new DataContext().rooms);
-        }
+        
 
         private void schedules_Click(object sender, RoutedEventArgs e)
         {

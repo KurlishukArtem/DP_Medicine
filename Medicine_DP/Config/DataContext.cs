@@ -28,5 +28,16 @@ namespace Medicine_DP.Config
         {
             optionsBuilder.UseMySql(Connect.Config.connection, Connect.Config.version);
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<schedules>(entity =>
+            {
+                entity.HasOne(s => s.employee)
+                      .WithMany(e => e.schedules)
+                      .HasForeignKey(s => s.employee_id)
+                      .HasConstraintName("FK_schedules_employees");
+            });
+        }
     }
 }

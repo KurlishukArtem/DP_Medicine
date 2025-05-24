@@ -46,8 +46,8 @@ namespace Medicine_DP.Elements
 
         private void LoadAppointmentData()
         {
-            try
-            {
+            //try
+            //{
                 // Основные данные о приеме
                 lbDate.Text = _appointment.appointment_date.ToString("dd.MM.yyyy");
                 lbTime.Text = _appointment.start_time.ToString();
@@ -80,17 +80,17 @@ namespace Medicine_DP.Elements
 
                 var service = _context.services
                     .FirstOrDefault(s => s.service_id == _appointment.service_id);
-                lbService.Text = service?.service_name ?? "Неизвестно";
+                lbService.Text = service.service_name ?? "Неизвестно";
 
-                var room = _context.rooms
+                var room = _context.appointments
                     .FirstOrDefault(r => r.room_id == _appointment.room_id);
-                lbRoom.Text = room?.room_type ?? "Неизвестно";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+                lbRoom.Text = room.room_id.ToString();
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
+            //        MessageBoxButton.OK, MessageBoxImage.Error);
+            //}
         }
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
@@ -123,10 +123,11 @@ namespace Medicine_DP.Elements
 
                 using (var transaction = await _context.Database.BeginTransactionAsync())
                 {
-                    try
-                    {
-                        // Удаление связанных записей
-                        var records = await _context.medical_records
+                try
+                {
+                    // Удаление связанных записей
+                    var records = await _context.medical_records
+                            .AsNoTracking()
                             .Where(mr => mr.appointment_id == _appointment.appointment_id)
                             .ToListAsync();
 
@@ -154,27 +155,26 @@ namespace Medicine_DP.Elements
                             MessageBoxButton.OK, MessageBoxImage.Information);
 
                         _mainPage?.CreateUIapps();
-                    }
+            }
                     catch (DbUpdateException dbEx)
                     {
-                        await transaction.RollbackAsync();
-                        MessageBox.Show($"Ошибка базы данных: {dbEx.InnerException?.Message}",
-                            "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                await transaction.RollbackAsync();
+                MessageBox.Show($"Ошибка базы данных: {dbEx.InnerException?.Message}",
+                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
                     catch (Exception ex)
                     {
-                        await transaction.RollbackAsync();
-                        MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
+                await transaction.RollbackAsync();
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+        }
             catch (Exception ex)
             {
                 MessageBox.Show($"Непредвиденная ошибка: {ex.Message}", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
+}
     }
 }

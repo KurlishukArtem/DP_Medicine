@@ -42,8 +42,9 @@
 
         <!-- Кабинет -->
         <TextBlock Grid.Row="4" Text="Кабинет:"/>
-        <ComboBox x:Name="cbRooms" Grid.Row="4" Margin="120,0,0,5" 
-                 DisplayMemberPath="room_number" SelectedValuePath="room_id"/>
+        
+        <TextBox x:Name="cbRooms" Grid.Row="4" Grid.Column="1" 
+        Margin="120,0,0,5" IsReadOnly="True"/>
 
         <!-- Дата приема -->
         <TextBlock Grid.Row="5" Text="Дата приема:"/>

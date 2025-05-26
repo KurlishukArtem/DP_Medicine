@@ -25,5 +25,6 @@ namespace Medicine_DP.Models
         public string login { get; set; }
         public string password_hash { get; set; }
         public int is_active { get; set; }
+        public int rooms { get; set; }
     }
 }

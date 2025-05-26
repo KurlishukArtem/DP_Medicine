@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Medicine_DP.Config;
 using Medicine_DP.Models;
+using Medicine_DP.Pages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Medicine_DP.Windows
@@ -22,7 +23,7 @@ namespace Medicine_DP.Windows
     /// </summary>
     public partial class AddAppointmentWindow : Window
     {
-        private readonly DataContext _context = new DataContext();
+        private readonly DataContext _context = Main._main._context;
         private List<TimeSpan> _availableTimes = new List<TimeSpan>();
         public AddAppointmentWindow()
         {
@@ -95,6 +96,9 @@ namespace Medicine_DP.Windows
             dynamic selectedDoctor = cbDoctors.SelectedItem;
             int doctorId = selectedDoctor.employee_id;
             DateTime selectedDate = dpDate.SelectedDate.Value;
+            
+            employees _empl = _context.employees.FirstOrDefault(x=>x.employee_id==doctorId);
+
 
             int dayOfWeek = (int)selectedDate.DayOfWeek;
             if (dayOfWeek == 0) dayOfWeek = 7;
@@ -102,7 +106,7 @@ namespace Medicine_DP.Windows
             // Исправленный запрос
             var schedule = _context.schedules
                 .AsNoTracking()
-                .FirstOrDefault(s => s.employee_id == doctorId &&
+                .Where(s => s.employee_id == doctorId &&
                                    s.day_of_week == dayOfWeek &&
                                    s.is_working_day);                                                   
 
@@ -124,17 +128,13 @@ namespace Medicine_DP.Windows
 
                 // Генерируем доступные временные слоты
                 _availableTimes.Clear();
-                TimeSpan currentTime = schedule.start_time;
-                TimeSpan endTime = schedule.end_time;
-                TimeSpan slotDuration = TimeSpan.FromMinutes(30);
+               
 
-                while (currentTime < endTime)
+                
+
+                foreach ( var item in schedule )
                 {
-                    if (!bookedTimes.Contains(currentTime))
-                    {
-                        _availableTimes.Add(currentTime);
-                    }
-                    currentTime = currentTime.Add(slotDuration);
+                _availableTimes.Add(item.start_time);
                 }
 
                 // Отображаем доступное время
@@ -142,8 +142,8 @@ namespace Medicine_DP.Windows
                     .Select(t => t.ToString(@"hh\:mm"))
                     .ToList();
 
-                // Показываем кабинет
-                tbRoom.Text = schedule.room_id?.ToString() ?? "Не указан";
+            // Показываем кабинет
+                tbRoom.Text = _empl.rooms.ToString();
             //}
             //catch (Exception ex)
             //{

@@ -36,6 +36,7 @@ namespace Medicine_DP.Elements
             lbPolicy.Text = patient.policy_number ?? "Не указано";
             //lbRegDate.Text = patient.registration_date.ToString("dd.MM.yyyy");
             tbNotes.Text = patient.notes ?? "Нет примечаний";
+            lbGender.Text = patient.gender.ToString();
         }
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)

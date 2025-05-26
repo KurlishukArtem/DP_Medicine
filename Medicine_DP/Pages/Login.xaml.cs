@@ -24,7 +24,7 @@ namespace Medicine_DP.Pages
     {
         
         Models.employees employees;
-        DataContext dataContext = new DataContext();
+        private readonly DataContext dataContext = Main._main._context;
         public Login()
         {
             InitializeComponent();

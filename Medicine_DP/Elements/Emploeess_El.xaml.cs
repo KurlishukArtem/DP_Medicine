@@ -12,6 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Medicine_DP.Config;
 using Medicine_DP.Models;
+using Medicine_DP.Pages;
 using Medicine_DP.Windows;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +24,7 @@ namespace Medicine_DP.Elements
     public partial class Emploeess_El : UserControl
     {
         private readonly employees _employee;
-        private readonly DataContext _context = new DataContext();
+        private readonly DataContext _context = Main._main._context;
 
         public Brush IsActiveColor
         {
@@ -80,8 +81,8 @@ namespace Medicine_DP.Elements
 
         private async void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
+            //try
+            //{
                 var confirmResult = MessageBox.Show(
                     $"Вы действительно хотите удалить сотрудника?\n\n" +
                     $"{_employee.last_name} {_employee.first_name} {_employee.middle_name}\n" +
@@ -94,24 +95,24 @@ namespace Medicine_DP.Elements
 
                 using (var transaction = await _context.Database.BeginTransactionAsync())
                 {
-                    try
-                    {
-                        // Проверка связанных записей
-                        bool hasAppointments = await _context.appointments
-                            .AnyAsync(a => a.employee_id == _employee.employee_id);
+                    //try
+                    //{
+                        //// Проверка связанных записей
+                        //bool hasAppointments = await _context.appointments
+                        //    .AnyAsync(a => a.employee_id == _employee.employee_id);
 
-                        bool hasMedicalRecords = await _context.medical_records
-                            .AnyAsync(m => m.employee_id == _employee.employee_id);
+                        //bool hasMedicalRecords = await _context.medical_records
+                        //    .AnyAsync(m => m.employee_id == _employee.employee_id);
 
-                        bool hasSchedules = await _context.schedules
-                            .AnyAsync(s => s.employee_id == _employee.employee_id);
+                        //bool hasSchedules = await _context.schedules
+                        //    .AnyAsync(s => s.employee_id == _employee.employee_id);
 
-                        if (hasAppointments || hasMedicalRecords || hasSchedules)
-                        {
-                            MessageBox.Show("Нельзя удалить сотрудника, так как есть связанные записи",
-                                "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                            return;
-                        }
+                        //if (hasAppointments || hasMedicalRecords || hasSchedules)
+                        //{
+                        //    MessageBox.Show("Нельзя удалить сотрудника, так как есть связанные записи",
+                        //        "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        //    return;
+                        //}
 
                         _context.employees.Remove(_employee);
                         await _context.SaveChangesAsync();
@@ -119,26 +120,26 @@ namespace Medicine_DP.Elements
 
                         MessageBox.Show("Сотрудник успешно удален", "Успех",
                             MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                    catch (DbUpdateException dbEx)
-                    {
-                        await transaction.RollbackAsync();
-                        MessageBox.Show($"Ошибка базы данных: {dbEx.InnerException?.Message}",
-                            "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    catch (Exception ex)
-                    {
-                        await transaction.RollbackAsync();
-                        MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    //}
+                    //catch (DbUpdateException dbEx)
+                    //{
+                    //    await transaction.RollbackAsync();
+                    //    MessageBox.Show($"Ошибка базы данных: {dbEx.InnerException?.Message}",
+                    //        "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    await transaction.RollbackAsync();
+                    //    MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка",
+                    //        MessageBoxButton.OK, MessageBoxImage.Error);
+                    //}
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Непредвиденная ошибка: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show($"Непредвиденная ошибка: {ex.Message}", "Ошибка",
+            //        MessageBoxButton.OK, MessageBoxImage.Error);
+            //}
         }
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)

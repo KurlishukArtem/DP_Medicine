@@ -12,6 +12,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Medicine_DP.Config;
 using Medicine_DP.Elements;
+using Medicine_DP.Models;
+using Medicine_DP.Pages;
 
 namespace Medicine_DP.Windows
 {
@@ -22,8 +24,10 @@ namespace Medicine_DP.Windows
     {
         private Models.appointments _appointment;
         private bool _isNewAppointment;
+        private readonly DataContext _context = Main._main._context;
+       
 
-        public DataContext _context = new DataContext();
+        
         public string WindowTitle => _isNewAppointment ? "Новая запись на прием" : "Редактирование записи";
         public Visibility ShowAppointmentId => _isNewAppointment ? Visibility.Collapsed : Visibility.Visible;
 
@@ -51,6 +55,7 @@ namespace Medicine_DP.Windows
 
         private void LoadComboBoxData()
         {
+            
             try
             {
                 // Загрузка пациентов
@@ -77,8 +82,13 @@ namespace Medicine_DP.Windows
                 // Загрузка услуг
                 cbServices.ItemsSource = _context.services.ToList();
 
+                dynamic selectedDoctor = cbDoctors.SelectedItem;
+                int doctorId = selectedDoctor.employee_id;
+                employees _empl = _context.employees.FirstOrDefault(x => x.employee_id == doctorId);
+
+
                 // Загрузка кабинетов
-                cbRooms.ItemsSource = _context.rooms.ToList();
+                cbRooms.Text = _empl.rooms.ToString();
             }
             catch (Exception ex)
             {
@@ -107,7 +117,7 @@ namespace Medicine_DP.Windows
             cbPatients.SelectedValue = _appointment.patient_id;
             cbDoctors.SelectedValue = _appointment.employee_id;
             cbServices.SelectedValue = _appointment.service_id;
-            cbRooms.SelectedValue = _appointment.room_id;
+            cbRooms.Text = _appointment.room_id.ToString();
             dpAppointmentDate.SelectedDate = _appointment.appointment_date;
 
             // Преобразование времени из int (минуты) в TimeSpan
@@ -146,16 +156,16 @@ namespace Medicine_DP.Windows
                 _appointment.patient_id = (int)cbPatients.SelectedValue;
                 _appointment.employee_id = (int)cbDoctors.SelectedValue;
                 _appointment.service_id = (int)cbServices.SelectedValue;
-                _appointment.room_id = (int)cbRooms.SelectedValue;
+                _appointment.room_id = (int.Parse(cbRooms.Text));
                 _appointment.appointment_date = dpAppointmentDate.SelectedDate.Value;
 
                 // Преобразование времени в минуты (int)
-                var time = TimeSpan.Parse(cbTimeSlots.SelectedItem.ToString());
-                _appointment.start_time = (int)time.TotalMinutes;
+                var time = new TimeSpan(20,30,00);    /* TimeSpan.Parse(cbTimeSlots.SelectedItem.ToString());*/
+                _appointment.start_time = (int)time.TotalMinutes; ; 
 
                 _appointment.status = ((ComboBoxItem)cbStatus.SelectedItem).Tag.ToString();
                 _appointment.notes = txtNotes.Text;
-
+                _context.appointments.Update(_appointment);
                 _context.SaveChanges();
 
                 MessageBox.Show("Запись успешно сохранена", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -173,9 +183,9 @@ namespace Medicine_DP.Windows
             if (cbPatients.SelectedItem == null ||
                 cbDoctors.SelectedItem == null ||
                 cbServices.SelectedItem == null ||
-                cbRooms.SelectedItem == null ||
+                cbRooms.Text == null ||
                 dpAppointmentDate.SelectedDate == null ||
-                cbTimeSlots.SelectedItem == null ||
+                //cbTimeSlots.SelectedItem == null ||
                 cbStatus.SelectedItem == null)
             {
                 MessageBox.Show("Заполните все обязательные поля", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);

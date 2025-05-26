@@ -101,9 +101,9 @@
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
                     <Button x:Name="btnEdit" Content="Редактировать" 
-                            Background="#FF1E88E5" Style="{StaticResource ActionButton}"/>
+                            Background="#FF1E88E5" Style="{StaticResource ActionButton}" Click="btnEdit_Click"/>
                     <Button x:Name="btnDelete" Content="Удалить" 
-                            Background="#FFE53935" Style="{StaticResource ActionButton}"/>
+                            Background="#FFE53935" Style="{StaticResource ActionButton}" Click="btnDelete_Click"/>
                 </StackPanel>
             </StackPanel>
         </Grid>

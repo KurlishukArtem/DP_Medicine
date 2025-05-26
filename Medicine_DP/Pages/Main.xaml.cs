@@ -22,12 +22,13 @@ namespace Medicine_DP.Pages
     public partial class Main : Page
     {
         public static string _loginUser;
-        public Main _main;
+        public static Main _main;
         public DataContext _context = new DataContext();
         Models.employees employeess;
         public Main(string loginUser = null)
         {
             InitializeComponent();
+            _main = this;
             _loginUser = loginUser;
             
         }

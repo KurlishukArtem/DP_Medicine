@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Medicine_DP.Config;
 using Medicine_DP.Models;
+using Medicine_DP.Pages;
 
 namespace Medicine_DP.Windows
 {
@@ -20,7 +21,7 @@ namespace Medicine_DP.Windows
     /// </summary>
     public partial class Medical_records_Edit_Window : Window
     {
-        private readonly DataContext _context = new DataContext();
+        private readonly DataContext _context = Main._main._context;
         private medical_records _record;
         private bool _isNewRecord;
 

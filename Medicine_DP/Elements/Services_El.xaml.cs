@@ -10,7 +10,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Medicine_DP.Config;
 using Medicine_DP.Models;
+using Medicine_DP.Pages;
 using Medicine_DP.Windows;
 
 namespace Medicine_DP.Elements
@@ -21,6 +23,7 @@ namespace Medicine_DP.Elements
     public partial class Services_El : UserControl
     {
         services _services;
+        private readonly DataContext _context = Main._main._context;
         public Services_El(services service)
         {
             InitializeComponent();

@@ -23,7 +23,7 @@ namespace Medicine_DP.Pages
     /// </summary>
     public partial class Personal_cabinet : Page
     {
-        private DataContext _context = new DataContext();
+        private readonly DataContext _context = Main._main._context;
         private employees _employee;
         private patients _patient;
         

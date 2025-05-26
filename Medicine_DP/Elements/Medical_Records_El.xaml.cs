@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Medicine_DP.Config;
 using Medicine_DP.Models;
+using Medicine_DP.Pages;
 using Medicine_DP.Windows;
 
 namespace Medicine_DP.Elements
@@ -23,7 +24,7 @@ namespace Medicine_DP.Elements
     public partial class Medical_Records_El : UserControl
     {
         private readonly medical_records _medicalRecord;
-        private readonly DataContext _context = new DataContext();
+        private readonly DataContext _context = Main._main._context;
         public Medical_Records_El(medical_records record)
         {
             InitializeComponent();

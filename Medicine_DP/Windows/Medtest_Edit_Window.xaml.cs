@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Medicine_DP.Config;
 using Medicine_DP.Models;
+using Medicine_DP.Pages;
 
 namespace Medicine_DP.Windows
 {
@@ -20,7 +21,7 @@ namespace Medicine_DP.Windows
     public partial class Medtest_Edit_Window : Window
     {
         public medical_tests _test;
-        public DataContext _context = new DataContext();
+        private readonly DataContext _context = Main._main._context;
         public Medtest_Edit_Window(medical_tests test = null)
         {
             InitializeComponent();

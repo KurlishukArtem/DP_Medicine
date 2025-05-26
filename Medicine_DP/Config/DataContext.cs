@@ -19,6 +19,7 @@ namespace Medicine_DP.Config
         public DbSet<services> services { get; set; }
         public DbSet<schedules> schedules { get; set; }
         public DbSet<prescriptions> prescriptions { get; set; }
+        public DbSet<test_results> test_results { get; set; }
         
         public DataContext()
         {
@@ -38,6 +39,26 @@ namespace Medicine_DP.Config
                       .HasForeignKey(s => s.employee_id)
                       .HasConstraintName("FK_schedules_employees");
             });
+
+            //modelBuilder.Entity<appointments>(entity =>
+            //{
+            //    entity.HasOne(a => a.patient)
+            //          .WithMany()
+            //          .HasForeignKey(a => a.patient_id)
+            //          .HasConstraintName("FK_appointments_patients");
+
+            //    entity.HasOne(a => a.employee)
+            //          .WithMany()
+            //          .HasForeignKey(a => a.employee_id)
+            //          .HasConstraintName("FK_appointments_employees");
+
+            //    entity.HasOne(a => a.service)
+            //          .WithMany()
+            //          .HasForeignKey(a => a.service_id)
+            //          .HasConstraintName("FK_appointments_services");
+            //});
+
         }
+
     }
 }

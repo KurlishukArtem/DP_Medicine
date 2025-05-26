@@ -22,7 +22,7 @@ namespace Medicine_DP.Models
         
         public int employee_id { get; set; }
 
-        [ForeignKey("appointment_id")]
+        [ForeignKey("appointment_id")] 
         
         public int? appointment_id { get; set; }
 

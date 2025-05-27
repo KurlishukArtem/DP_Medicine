@@ -109,32 +109,32 @@ namespace Medicine_DP.Elements
         private async void btnDelete_Click(object sender, RoutedEventArgs e)
         {
 
-            //try
-            //{
-            //    var confirm = MessageBox.Show("Удалить запись о приеме?", "Подтверждение", MessageBoxButton.YesNo);
-            //    if (confirm != MessageBoxResult.Yes) return;
+            try
+            {
+                var confirm = MessageBox.Show("Удалить запись о приеме?", "Подтверждение", MessageBoxButton.YesNo);
+                if (confirm != MessageBoxResult.Yes) return;
 
-            //    using (var newContext = new DataContext())
-            //    {
-            //        // Получаем запись без зависимостей
-            //        var appointment = new Models.appointments { appointment_id = _appointment.appointment_id };
-            //        newContext.appointments.Attach(appointment);
-            //        newContext.appointments.Remove(appointment);
+                using (var newContext = new DataContext())
+                {
+                    // Получаем запись без зависимостей
+                    var appointment = new Models.appointments { appointment_id = _appointment.appointment_id };
+                    newContext.appointments.Attach(appointment);
+                    newContext.appointments.Remove(appointment);
 
-            //        await newContext.SaveChangesAsync();
-            //        MessageBox.Show("Запись удалена");
-            //        _mainPage.CreateUIapps();
-            //    }
-            //}
-            //catch (DbUpdateException ex) when (ex.InnerException is MySqlException mysqlEx &&
-            //                                 mysqlEx.Message.Contains("a foreign key constraint fails"))
-            //{
-            //    MessageBox.Show("Нельзя удалить запись, так как есть связанные данные");
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show($"Ошибка: {ex.Message}");
-            //}
+                    await newContext.SaveChangesAsync();
+                    MessageBox.Show("Запись удалена");
+                    _mainPage.CreateUIapps();
+                }
+            }
+            catch (DbUpdateException ex) when (ex.InnerException is MySqlException mysqlEx &&
+                                             mysqlEx.Message.Contains("a foreign key constraint fails"))
+            {
+                MessageBox.Show("Нельзя удалить запись, так как есть связанные данные");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}");
+            }
 
         }
         

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Medicine_DP.Config;
 using Medicine_DP.Models;
 using Medicine_DP.Windows;
 
@@ -47,7 +49,43 @@ namespace Medicine_DP.Elements
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
+            // Запрос подтверждения перед удалением
+            MessageBoxResult result = MessageBox.Show(
+                $"Вы уверены, что хотите удалить пациента {_patients.last_name} {_patients.first_name} {_patients.middle_name}?",
+                "Подтверждение удаления",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
 
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    using (var db = new DataContext()) // Замените YourDbContext на ваш класс контекста
+                    {
+                        // Находим пациента для удаления по ID
+                        var patientToDelete = db.patients.FirstOrDefault(p => p.patient_id == _patients.patient_id);
+
+                        if (patientToDelete != null)
+                        {
+                            // Удаляем пациента из базы данных
+                            db.patients.Remove(patientToDelete);
+                            db.SaveChanges();
+
+                            // Удаляем UserControl из интерфейса
+                            if (Parent is Panel parentPanel)
+                            {
+                                parentPanel.Children.Remove(this);
+                            }
+
+                            MessageBox.Show("Пациент успешно удален.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка при удалении пациента: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
     }
 }

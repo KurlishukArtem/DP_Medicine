@@ -28,7 +28,6 @@ namespace Medicine_DP.Models
         public string login { get; set; }
         public string password_hash { get; set; }
 
-        //public virtual ICollection<appointments> Appointments { get; set; }
-        //public virtual ICollection<medical_records> MedicalRecords { get; set; }
+        
     }
 }

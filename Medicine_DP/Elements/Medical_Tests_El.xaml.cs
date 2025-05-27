@@ -93,9 +93,7 @@ namespace Medicine_DP.Elements
                             MessageBox.Show("Тест успешно удален", "Успех",
                                 MessageBoxButton.OK, MessageBoxImage.Information);
 
-                            // Закрываем родительское окно, если нужно
-                            var parentWindow = Window.GetWindow(this);
-                            parentWindow?.Close();
+                           
                         }
                     }
                 }

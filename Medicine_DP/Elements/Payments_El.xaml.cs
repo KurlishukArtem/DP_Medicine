@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,8 +11,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Medicine_DP.Config;
 using Medicine_DP.Models;
 using Medicine_DP.Windows;
+using Microsoft.EntityFrameworkCore;
 
 namespace Medicine_DP.Elements
 {
@@ -65,7 +68,30 @@ namespace Medicine_DP.Elements
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            
+            //var result = MessageBox.Show(...);
+
+            //if (result == MessageBoxResult.Yes)
+            //{
+              
+                    using (var db = new DataContext())
+                    {
+                        var paymentToDelete =  db.payments
+                            .FirstOrDefault(p => p.payment_id == _payments.payment_id);
+
+                        if (paymentToDelete != null)
+                        {
+                            db.payments.Remove(paymentToDelete);
+                            db.SaveChangesAsync();
+
+                            if (Parent is Panel parentPanel)
+                            {
+                                parentPanel.Children.Remove(this);
+                            }
+
+                        MessageBox.Show("Пациент успешно удален.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    }
+                
         }
     }
 }

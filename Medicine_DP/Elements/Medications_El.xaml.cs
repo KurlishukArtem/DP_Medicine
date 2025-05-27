@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Medicine_DP.Config;
 using Medicine_DP.Models;
 using Medicine_DP.Windows;
 
@@ -45,7 +47,41 @@ namespace Medicine_DP.Elements
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
+            // Запрос подтверждения перед удалением
+            MessageBoxResult result = MessageBox.Show(
+                $"Вы уверены, что хотите удалить лекарство {_medications.name}?",
+                "Подтверждение удаления",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
 
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    using (var db = new DataContext()) // Замените YourDbContext на ваш класс контекста
+                    {
+                        // Находим medication для удаления по ID
+                        var medicationToDelete = db.medications.FirstOrDefault(m => m.medication_id == _medications.medication_id);
+
+                        if (medicationToDelete != null)
+                        {
+                            // Удаляем medication из базы данных
+                            db.medications.Remove(medicationToDelete);
+                            db.SaveChanges();
+
+                            // Удаляем UserControl из интерфейса
+                            var parent = Parent as Panel; // Предполагаем, что родитель - это Panel (StackPanel, WrapPanel и т.д.)
+                            parent?.Children.Remove(this);
+
+                            MessageBox.Show("Лекарство успешно удалено.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка при удалении лекарства: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
     }
 }

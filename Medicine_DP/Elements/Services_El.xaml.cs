@@ -95,7 +95,7 @@ namespace Medicine_DP.Elements
                 catch (DbUpdateException dbEx)
                 {
                     MessageBox.Show($"Ошибка при удалении услуги из базы данных: {dbEx.InnerException?.Message ?? dbEx.Message}",
-                                  "Ошибка базы данных", MessageBoxButton.OK, MessageBoxImage.Error);
+                                  "Ошибка базы данных", MessageBoxButton.OK, MessageBoxImage.Error); 
                 }
                 catch (Exception ex)
                 {

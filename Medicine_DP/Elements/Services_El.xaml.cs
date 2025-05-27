@@ -103,6 +103,6 @@ namespace Medicine_DP.Elements
                                   "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            }
         }
+    }
 }

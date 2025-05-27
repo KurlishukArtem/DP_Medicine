@@ -21,9 +21,5 @@ namespace Medicine_DP.Models
         public string notes { get; set; }
         public DateTime created_at { get; set; } = DateTime.Now;
 
-        // Простые навигационные свойства (без коллекций)
-        //public virtual patients patient { get; set; }
-        //public virtual employees employee { get; set; }
-        //public virtual services service { get; set; }
     }
 }

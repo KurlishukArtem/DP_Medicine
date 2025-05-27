@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +13,7 @@ using System.Windows.Shapes;
 using Medicine_DP.Config;
 using Medicine_DP.Models;
 using Medicine_DP.Pages;
+using Microsoft.EntityFrameworkCore;
 
 namespace Medicine_DP.Windows
 {
@@ -81,16 +83,20 @@ namespace Medicine_DP.Windows
 
             try
             {
-                //if (_isNewEmployee)
-                //{
-                //    _employee = new employees
-                //    {
-                //        password_hash = HashPassword("temp123") // Генерация временного пароля
-                //    };
-                //    _context.employees.Add(_employee);
-                //}
+                // Создаем нового сотрудника или используем существующего
+                if (_isNewEmployee)
+                {
+                    _employee = new employees
+                    {
+                        // Установка значений по умолчанию для нового сотрудника
+                        password_hash = "temp123", // Временный пароль (рекомендуется хеширование)
+                        //created_at = DateTime.Now,
+                        //registration_date = DateTime.Now
+                    };
+                    _context.employees.Add(_employee);
+                }
 
-                // Обновление данных
+                // Обновление данных (общее для нового и существующего сотрудника)
                 _employee.last_name = txtLastName.Text;
                 _employee.first_name = txtFirstName.Text;
                 _employee.middle_name = txtMiddleName.Text;
@@ -104,55 +110,94 @@ namespace Medicine_DP.Windows
                 _employee.address = txtAddress.Text;
                 _employee.login = txtLogin.Text;
                 _employee.is_active = chkIsActive.IsChecked == true ? 1 : 0;
+                //_employee.rooms = int.TryParse(txtRoom.Text, out int room) ? room : 0;
 
-                _context.Update(_employee);
+                // Для нового сотрудника генерируем логин, если не заполнен
+                if (_isNewEmployee && string.IsNullOrEmpty(_employee.login))
+                {
+                    _employee.login = GenerateDefaultLogin();
+                }
+
                 _context.SaveChanges();
 
-                MessageBox.Show("Данные сотрудника успешно сохранены", "Успех",
-                              MessageBoxButton.OK, MessageBoxImage.Information);
-                
+                MessageBox.Show(_isNewEmployee ? "Новый сотрудник успешно добавлен" : "Данные сотрудника успешно обновлены",
+                              "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                DialogResult = true;
                 Close();
+            }
+            catch (DbUpdateException dbEx)
+            {
+                MessageBox.Show($"Ошибка сохранения в базу данных: {dbEx.InnerException?.Message ?? dbEx.Message}",
+                              "Ошибка базы данных", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка сохранения: {ex.Message}", "Ошибка",
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка",
                               MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        // Генерация логина по умолчанию (фамилия + инициалы)
+        private string GenerateDefaultLogin()
+        {
+            string lastName = txtLastName.Text.Trim();
+            string firstName = txtFirstName.Text.Trim();
+            string middleName = txtMiddleName.Text.Trim();
+
+            string initials = string.Empty;
+            if (firstName.Length > 0) initials += firstName[0];
+            if (middleName.Length > 0) initials += middleName[0];
+
+            return $"{lastName}{initials}".ToLower();
+        }
+
+        // Обновленный метод валидации
         private bool ValidateInput()
         {
-            if (string.IsNullOrWhiteSpace(txtLastName.Text) ||
-                string.IsNullOrWhiteSpace(txtFirstName.Text) ||
-                dpBirthDate.SelectedDate == null ||
-                cbGender.SelectedItem == null ||
-                dpHireDate.SelectedDate == null)
+            StringBuilder errors = new StringBuilder();
+
+            // Проверка обязательных полей
+            if (string.IsNullOrWhiteSpace(txtLastName.Text))
+                errors.AppendLine("Фамилия обязательна для заполнения");
+
+            if (string.IsNullOrWhiteSpace(txtFirstName.Text))
+                errors.AppendLine("Имя обязательно для заполнения");
+
+            if (dpBirthDate.SelectedDate == null)
+                errors.AppendLine("Дата рождения обязательна для заполнения");
+            else if (dpBirthDate.SelectedDate > DateTime.Today.AddYears(-18))
+                errors.AppendLine("Сотрудник должен быть старше 18 лет");
+
+            if (cbGender.SelectedItem == null)
+                errors.AppendLine("Укажите пол сотрудника");
+
+            if (dpHireDate.SelectedDate == null)
+                errors.AppendLine("Дата приема на работу обязательна для заполнения");
+            else if (dpBirthDate.SelectedDate != null && dpHireDate.SelectedDate < dpBirthDate.SelectedDate.Value.AddYears(18))
+                errors.AppendLine("Дата приема на работу не может быть раньше совершеннолетия сотрудника");
+
+            // Проверка уникальности логина (только для нового сотрудника)
+            if (_isNewEmployee && !string.IsNullOrEmpty(txtLogin.Text))
             {
-                MessageBox.Show("Заполните все обязательные поля", "Ошибка",
-                              MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
+                bool loginExists = _context.employees.Any(emp => emp.login == txtLogin.Text);
+                if (loginExists)
+                    errors.AppendLine("Этот логин уже занят");
             }
 
-            if (dpBirthDate.SelectedDate > DateTime.Today.AddYears(-18))
+            if (errors.Length > 0)
             {
-                MessageBox.Show("Сотрудник должен быть старше 18 лет", "Ошибка",
-                              MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(errors.ToString(), "Ошибки ввода",
+                               MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
             return true;
         }
 
-        //private string HashPassword(string password)
-        //{
-        //    // Реализация хеширования пароля (например, BCrypt)
-        //    return BCrypt.Net.BCrypt.HashPassword(password);
-        //}
-
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false;
-            Close();
+
         }
     }
 }

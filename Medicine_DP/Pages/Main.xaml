@@ -234,6 +234,12 @@
                         Style="{StaticResource NavButtonStyle}"
                         Click="cabinet_Click"
                         Margin="5,0"/>
+
+                    <Button x:Name="AddPage" 
+                        Content="Оплата" 
+                        Style="{StaticResource NavButtonStyle}"
+                        Click="AddPage_Click"
+                        Margin="5,0"/>
                 </StackPanel>
             </ScrollViewer>
         </Border>

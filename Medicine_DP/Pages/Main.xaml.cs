@@ -159,5 +159,10 @@ namespace Medicine_DP.Pages
         {
             MainWindow.init.OpenPages(new Pages.Personal_cabinet(_loginUser));
         }
+
+        private void AddPage_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow.init.OpenPages(new Pages.Add_Page());
+        }
     }
 }

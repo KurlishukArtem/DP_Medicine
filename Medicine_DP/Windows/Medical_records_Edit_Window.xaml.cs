@@ -101,6 +101,14 @@ namespace Medicine_DP.Windows
             txtTreatment.Text = _record.treatment;
             txtPrescription.Text = _record.prescription;
             txtRecommendations.Text = _record.recommendations;
+            foreach (ComboBoxItem item in cbStatus.Items)
+            {
+                if (item.Tag.ToString() == _record.status)
+                {
+                    cbStatus.SelectedItem = item;
+                    break;
+                }
+            }
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
@@ -124,13 +132,14 @@ namespace Medicine_DP.Windows
                 _record.treatment = txtTreatment.Text;
                 _record.prescription = txtPrescription.Text;
                 _record.recommendations = txtRecommendations.Text;
+                _record.status = (cbStatus.SelectedItem as ComboBoxItem)?.Tag.ToString();
 
                 _context.Update(_record);
                 _context.SaveChanges();
 
                 MessageBox.Show("Медицинская запись успешно сохранена", "Успех",
                               MessageBoxButton.OK, MessageBoxImage.Information);
-                
+
                 Close();
             }
             catch (Exception ex)
@@ -145,7 +154,8 @@ namespace Medicine_DP.Windows
             if (cbPatients.SelectedItem == null ||
                 cbDoctors.SelectedItem == null ||
                 cbAppointments.SelectedItem == null ||
-                dpRecordDate.SelectedDate == null)
+                dpRecordDate.SelectedDate == null ||
+                cbStatus.SelectedItem == null)
             {
                 MessageBox.Show("Заполните все обязательные поля", "Ошибка",
                               MessageBoxButton.OK, MessageBoxImage.Warning);

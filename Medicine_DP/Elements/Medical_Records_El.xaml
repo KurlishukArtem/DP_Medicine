@@ -98,13 +98,17 @@
                     <TextBox x:Name="tbRecommendations" BorderThickness="0" Background="#FFF5F5F5"
                              TextWrapping="Wrap" IsReadOnly="True" MaxHeight="60"/>
                 </StackPanel>
-
+                <StackPanel Orientation="Horizontal" Grid.Row="4" Margin="0,5">
+                    <TextBlock Text="Статус:" Width="120" Foreground="#FF666666"/>
+                    <TextBlock x:Name="lbStatus" FontWeight="SemiBold"/>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
                     <Button x:Name="btnEdit" Content="Редактировать" 
                             Background="#FF1E88E5" Style="{StaticResource ActionButton}" Click="btnEdit_Click"/>
                     <Button x:Name="btnDelete" Content="Удалить" 
                             Background="#FFE53935" Style="{StaticResource ActionButton}" Click="btnDelete_Click"/>
                 </StackPanel>
+                
             </StackPanel>
         </Grid>
     </Border>

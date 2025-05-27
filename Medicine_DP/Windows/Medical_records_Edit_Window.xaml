@@ -17,6 +17,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- ID записи (только для отображения) -->
@@ -42,6 +43,7 @@
         <!-- Дата записи -->
         <TextBlock Grid.Row="4" Text="Дата записи:"/>
         <DatePicker x:Name="dpRecordDate" Grid.Row="4" Margin="120,0,0,5"/>
+        
 
         <!-- Диагноз -->
         <TextBlock Grid.Row="5" Text="Диагноз:"/>
@@ -67,6 +69,13 @@
                 TextWrapping="Wrap" AcceptsReturn="True"
                 VerticalScrollBarVisibility="Auto" Height="60"/>
 
+        <TextBlock Grid.Row="9" Text="Статус:"/>
+        <ComboBox x:Name="cbStatus" Grid.Row="9" Margin="120,0,250,5">
+            <ComboBoxItem Content="Активна" Tag="Активна"/>
+            <ComboBoxItem Content="Завершена" Tag="Завершена"/>
+            <ComboBoxItem Content="Отменена" Tag="Отменена"/>
+            <ComboBoxItem Content="На удержании" Tag="На удержании"/>
+        </ComboBox>
         <!-- Кнопки -->
         <StackPanel Grid.Row="9" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button x:Name="btnSave" Content="Сохранить" Width="100" Margin="0,0,10,0" Click="Save_Click"/>

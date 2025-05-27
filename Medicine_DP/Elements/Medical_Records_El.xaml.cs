@@ -75,6 +75,38 @@ namespace Medicine_DP.Elements
                 MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            try
+            {
+                
+
+                // статус
+                lbStatus.Text = _medicalRecord.status ?? "Активна";
+
+                // Изменяем цвет в зависимости от статуса
+                //switch (_medicalRecord.status?.ToLower())
+                //{
+                //    case "Активна":
+                //        lbStatus.Foreground = Brushes.Green;
+                //        break;
+                //    case "Завершена":
+                //        lbStatus.Foreground = Brushes.Blue;
+                //        break;
+                //    case "Отменена":
+                //        lbStatus.Foreground = Brushes.Red;
+                //        break;
+                //    case "На удержании":
+                //        lbStatus.Foreground = Brushes.Gray;
+                //        break;
+                //    default:
+                //        lbStatus.Foreground = Brushes.Black;
+                //        break;
+                //}
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
@@ -93,35 +125,28 @@ namespace Medicine_DP.Elements
             try
             {
                 var confirmResult = MessageBox.Show(
-                    $"Вы действительно хотите удалить эту медицинскую запись?\n\n" +
+                    $"Вы действительно хотите отменить эту медицинскую запись?\n\n" +
                     $"Дата: {_medicalRecord.record_date:dd.MM.yyyy}\n" +
                     $"Пациент: {lbPatient.Text}",
-                    "Подтверждение удаления",
+                    "Подтверждение отмены",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Warning);
 
                 if (confirmResult != MessageBoxResult.Yes) return;
 
-                // Проверка наличия связанных рецептов
-                bool hasPrescriptions = _context.prescriptions
-                    .Any(p => p.record_id == _medicalRecord.record_id);
-
-                if (hasPrescriptions)
-                {
-                    MessageBox.Show("Нельзя удалить запись, так как к ней привязаны рецепты",
-                        "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                _context.medical_records.Remove(_medicalRecord);
+                // Вместо удаления меняем статус
+                _medicalRecord.status = "Отменена";
                 _context.SaveChanges();
 
-                MessageBox.Show("Медицинская запись успешно удалена", "Успех",
+                // Обновляем отображение
+                LoadMedicalRecordData();
+
+                MessageBox.Show("Медицинская запись отменена", "Успех",
                     MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при удалении: {ex.Message}", "Ошибка",
+                MessageBox.Show($"Ошибка при отмене записи: {ex.Message}", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

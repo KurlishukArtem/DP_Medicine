@@ -15,15 +15,12 @@ namespace Medicine_DP.Models
         public int record_id { get; set; }
 
         [ForeignKey("patient_id")]
-        
         public int patient_id { get; set; }
 
         [ForeignKey("employee_id")]
-        
         public int employee_id { get; set; }
 
-        [ForeignKey("appointment_id")] 
-        
+        [ForeignKey("appointment_id")]
         public int? appointment_id { get; set; }
 
         public DateTime record_date { get; set; } = DateTime.Now;
@@ -31,6 +28,10 @@ namespace Medicine_DP.Models
         public string treatment { get; set; }
         public string prescription { get; set; }
         public string recommendations { get; set; }
+
+        [Required]
+        [StringLength(20)]
+        public string status { get; set; } = "Активна"; // Активна, completed, cancelled, archived
 
 
     }

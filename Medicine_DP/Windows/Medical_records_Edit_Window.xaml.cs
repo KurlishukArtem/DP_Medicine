@@ -32,8 +32,8 @@ namespace Medicine_DP.Windows
             InitializeComponent();
             DataContext = this;
 
-            _record = record;
-            _isNewRecord = _record == null;
+            _record = record ?? new medical_records();
+            _isNewRecord = record == null;
 
             LoadComboBoxData();
 
@@ -44,6 +44,7 @@ namespace Medicine_DP.Windows
             else
             {
                 dpRecordDate.SelectedDate = DateTime.Today;
+                cbStatus.SelectedIndex = 0; // Выбираем "Активна" по умолчанию
             }
         }
 

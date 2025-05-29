@@ -8,7 +8,103 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Add_Page">
 
-    <Grid Background="AliceBlue">
-        <Button x:Name="AddEmloyes" Click="AddEmloyes_Click" Height="50" Width="50" Content="добавить"/>
+    <Grid Background="#FFF0F8FF">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <Border Grid.Row="0" Background="#FF4682B4" Padding="10">
+            <TextBlock Text="Медицинская информационная система" 
+                   Foreground="White" 
+                   FontSize="18" 
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"/>
+            
+        </Border>
+        <Button x:Name="btnDelete" Content="Назад" 
+Click="back_Click" Width="80" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="23"/>
+        <!-- Основное содержимое -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <UniformGrid Columns="2" Margin="20">
+                <!-- Сотрудники -->
+                <Border Background="White" CornerRadius="8" Margin="10" 
+                    BorderBrush="#FF4682B4" BorderThickness="1">
+                    <StackPanel>
+                        <Label Content="Сотрудники" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Button x:Name="AddEmloyes" Click="AddEmloyes_Click" 
+                            Height="60" Width="120" Content="Добавить" 
+                            Margin="10" Background="#FF4682B4" Foreground="White"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Записи -->
+                <Border Background="White" CornerRadius="8" Margin="10" 
+                    BorderBrush="#FF4682B4" BorderThickness="1">
+                    <StackPanel>
+                        <Label Content="Записи" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Button x:Name="AddRecord" Click="AddRecord_Click" 
+                            Height="60" Width="120" Content="Добавить" 
+                            Margin="10" Background="#FF4682B4" Foreground="White"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Медикаменты -->
+                <Border Background="White" CornerRadius="8" Margin="10" 
+                    BorderBrush="#FF4682B4" BorderThickness="1">
+                    <StackPanel>
+                        <Label Content="Медикаменты" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Button x:Name="AddMedications" Click="AddMedications_Click" 
+                            Height="60" Width="120" Content="Добавить" 
+                            Margin="10" Background="#FF4682B4" Foreground="White"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Мед-тесты -->
+                <Border Background="White" CornerRadius="8" Margin="10" 
+                    BorderBrush="#FF4682B4" BorderThickness="1">
+                    <StackPanel>
+                        <Label Content="Мед-тесты" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Button x:Name="AddTest" Click="AddTest_Click" 
+                            Height="60" Width="120" Content="Добавить" 
+                            Margin="10" Background="#FF4682B4" Foreground="White"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Пациенты -->
+                <Border Background="White" CornerRadius="8" Margin="10" 
+                    BorderBrush="#FF4682B4" BorderThickness="1">
+                    <StackPanel>
+                        <Label Content="Пациенты" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Button x:Name="AddPatient" Click="AddPatient_Click" 
+                            Height="60" Width="120" Content="Добавить" 
+                            Margin="10" Background="#FF4682B4" Foreground="White"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Оплата -->
+                <Border Background="White" CornerRadius="8" Margin="10" 
+                    BorderBrush="#FF4682B4" BorderThickness="1">
+                    <StackPanel>
+                        <Label Content="Оплата" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Button x:Name="AddPayment" Click="AddPayment_Click" 
+                            Height="60" Width="120" Content="Добавить" 
+                            Margin="10" Background="#FF4682B4" Foreground="White"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Услуги -->
+                <Border Background="White" CornerRadius="8" Margin="10" 
+                    BorderBrush="#FF4682B4" BorderThickness="1">
+                    <StackPanel>
+                        <Label Content="Услуги" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Button x:Name="AddService" Click="AddService_Click" 
+                            Height="60" Width="120" Content="Добавить" 
+                            Margin="10" Background="#FF4682B4" Foreground="White"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+        </ScrollViewer>
     </Grid>
 </Page>

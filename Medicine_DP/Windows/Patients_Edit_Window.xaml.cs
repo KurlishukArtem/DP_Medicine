@@ -12,6 +12,7 @@ using System.Windows.Shapes;
 using Medicine_DP.Config;
 using Medicine_DP.Models;
 using Medicine_DP.Pages;
+using Microsoft.EntityFrameworkCore;
 
 namespace Medicine_DP.Windows
 {
@@ -37,10 +38,10 @@ namespace Medicine_DP.Windows
                 txtMiddleName.Text = patient.middle_name;
                 dpBirthDate.SelectedDate = patient.birth_date;
 
-                //if (patient.gender == Char.Parse("M"))
-                //    rbMale.IsChecked = true;
-                //else
-                //    rbFemale.IsChecked = true;
+                if (patient.gender == Char.Parse("M"))
+                    rbMale.IsChecked = true;
+                else
+                    rbFemale.IsChecked = true;
 
                 txtPhone.Text = patient.phone_number;
                 txtEmail.Text = patient.email;
@@ -95,10 +96,10 @@ namespace Medicine_DP.Windows
                         passport_number = txtPassportNumber.Text,
                         snils = txtSnils.Text,
                         policy_number = txtPolicyNumber.Text,
-                        registration_date = dpRegistrationDate.SelectedDate.Value,
+                        registration_date = dpRegistrationDate.SelectedDate ?? DateTime.Now,
                         notes = txtNotes.Text
                     };
-                    _context.patients.Add(_patient);
+                    _context.patients.Add(_patient); // Только Add для нового пациента
                 }
                 else
                 {
@@ -117,9 +118,10 @@ namespace Medicine_DP.Windows
                     _patient.policy_number = txtPolicyNumber.Text;
                     _patient.notes = txtNotes.Text;
 
-                    _context.patients.Update(_patient);
+                    // Для существующего пациента помечаем как измененный
+                    _context.Entry(_patient).State = EntityState.Modified;
                 }
-                _context.patients.Update(_patient);
+
                 _context.SaveChanges();
                 MessageBox.Show("Данные пациента успешно сохранены", "Успех",
                                MessageBoxButton.OK, MessageBoxImage.Information);

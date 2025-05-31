@@ -45,8 +45,8 @@ namespace Medicine_DP.Windows
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
+            //try
+            //{
                 // Валидация данных
                 if (string.IsNullOrWhiteSpace(txtServiceName.Text))
                     throw new Exception("Название услуги обязательно для заполнения");
@@ -79,14 +79,14 @@ namespace Medicine_DP.Windows
                 MessageBox.Show("Данные услуги успешно сохранены", "Успех",
                     MessageBoxButton.OK, MessageBoxImage.Information);
 
-                this.DialogResult = true;
+                
                 this.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при сохранении: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show($"Ошибка при сохранении: {ex.Message}", "Ошибка",
+            //        MessageBoxButton.OK, MessageBoxImage.Error);
+            //}
         }
     }
 }

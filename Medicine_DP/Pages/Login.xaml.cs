@@ -24,7 +24,7 @@ namespace Medicine_DP.Pages
     {
         
         Models.employees employees;
-        private readonly DataContext dataContext = Main._main._context;
+        private readonly DataContext dataContext = new DataContext();
         public Login()
         {
             InitializeComponent();
@@ -34,23 +34,30 @@ namespace Medicine_DP.Pages
         {
             string loginUser = UsernameTextBox.Text;
             string passwordBox = Password.Password.ToString();
+
             try
             {
-                var empl = dataContext.employees.Where(x => x.login == loginUser && x.password_hash == passwordBox).First();
+                // Сначала проверяем сотрудников
+                var empl = dataContext.employees.FirstOrDefault(x => x.login == loginUser && x.password_hash == passwordBox);
                 if (empl != null)
                 {
                     MainWindow.init.OpenPages(new Pages.Main(loginUser));
-                }
-                else
-                {
-                    MessageBox.Show("проверьте корректность ввода!", "Ошибка");
                     return;
                 }
+
+                // Затем проверяем пациентов
+                var patient = dataContext.patients.FirstOrDefault(x => x.login == loginUser && x.password_hash == passwordBox);
+                if (patient != null)
+                {
+                    MainWindow.init.OpenPages(new Pages.Main(loginUser));
+                    return;
+                }
+
+                MessageBox.Show("Неверный логин или пароль!", "Ошибка");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("проверьте корректность ввода!", "Ошибка");
-                return;
+                MessageBox.Show($"Ошибка при входе: {ex.Message}", "Ошибка");
             }
         }
     }

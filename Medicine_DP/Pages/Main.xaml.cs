@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,7 +31,47 @@ namespace Medicine_DP.Pages
             InitializeComponent();
             _main = this;
             _loginUser = loginUser;
-            
+            ConfigureUIForUserRole();
+        }
+
+        private void ConfigureUIForUserRole()
+        {
+            // Проверяем сначала сотрудников, затем пациентов
+            bool isEmployee = _context.employees.Any(e => e.login == _loginUser);
+            bool isPatient = _context.patients.Any(p => p.login == _loginUser);
+
+            if (isPatient) // Если это пациент
+            {
+                // Скрываем кнопки, которые не должны быть доступны пациенту
+                employees.Visibility = Visibility.Collapsed;
+                medical_tests.Visibility = Visibility.Collapsed;
+                medications.Visibility = Visibility.Collapsed;
+                patients.Visibility = Visibility.Collapsed;
+                payments.Visibility = Visibility.Collapsed;
+                createAppointment.Visibility = Visibility.Collapsed;
+                AddPage.Visibility = Visibility.Collapsed;
+
+                // Оставляем только нужные пункты
+                appointments.Visibility = Visibility.Visible;
+                medical_records.Visibility = Visibility.Visible;
+                cabinet_page.Visibility = Visibility.Visible;
+            }
+            else if (isEmployee) // Если это сотрудник
+            {
+                // Показываем все кнопки
+                employees.Visibility = Visibility.Visible;
+                medical_tests.Visibility = Visibility.Visible;
+                medications.Visibility = Visibility.Visible;
+                patients.Visibility = Visibility.Visible;
+                payments.Visibility = Visibility.Visible;
+                createAppointment.Visibility = Visibility.Visible;
+                AddPage.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                // Если пользователь не найден (не должно происходить после успешного входа)
+                MessageBox.Show("Не удалось определить роль пользователя", "Ошибка");
+            }
         }
 
         public void CreateUIapps()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using System.Windows.Controls;
 
@@ -9,6 +10,7 @@ namespace Medicine_DP.Models
     public class patients
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int patient_id { get; set; }
 
         public string first_name { get; set; }

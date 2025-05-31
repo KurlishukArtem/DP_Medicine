@@ -43,7 +43,7 @@ Click="back_Click" Width="80" Height="30" VerticalAlignment="Top" HorizontalAlig
                 <Border Background="White" CornerRadius="8" Margin="10" 
                     BorderBrush="#FF4682B4" BorderThickness="1">
                     <StackPanel>
-                        <Label Content="Записи" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Label Content="Результаты посещения" FontWeight="Bold" HorizontalAlignment="Center"/>
                         <Button x:Name="AddRecord" Click="AddRecord_Click" 
                             Height="60" Width="120" Content="Добавить" 
                             Margin="10" Background="#FF4682B4" Foreground="White"/>

@@ -93,19 +93,21 @@ namespace Medicine_DP.Windows
                     {
                         appointment_id = appointment.appointment_id,
                         patient_id = appointment.patient_id,
-                        amount = _payment.amount,
+                        amount = decimal.Parse(txtAmount.Text),
                         payment_date = dpPaymentDate.SelectedDate.Value,
                         payment_method = cbPaymentMethod.Text,
                         status = ((ComboBoxItem)cbStatus.SelectedItem).Tag.ToString()
                     };
+                    MessageBox.Show(_payment.ToString());
                     _context.payments.Add(_payment);
+
                 }
                 else
                 {
                     // Обновление существующего платежа
                     _payment.appointment_id = appointment.appointment_id;
                     _payment.patient_id = appointment.patient_id;
-                    _payment.amount = _payment.amount;
+                    _payment.amount = decimal.Parse(txtAmount.Text);
                     _payment.payment_date = dpPaymentDate.SelectedDate.Value;
                     _payment.payment_method = cbPaymentMethod.Text;
                     _payment.status = ((ComboBoxItem)cbStatus.SelectedItem).Tag.ToString();

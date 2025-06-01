@@ -26,6 +26,40 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
+
+        <Style x:Key="EditButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF4285F4"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10 5"/>
+            <Setter Property="Margin" Value="0 10 5 0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+CornerRadius="4"
+Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF3367D6"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DeleteButtonStyle" TargetType="Button" BasedOn="{StaticResource EditButtonStyle}">
+            <Setter Property="Background" Value="#FFEA4335"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FFD33426"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <Border Background="White" CornerRadius="10" Padding="15"
@@ -119,11 +153,13 @@
                     </StackPanel>
                 </Grid>
 
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
-                    <Button x:Name="btnEdit" Content="Редактировать" 
-                            Background="#FF1E88E5" Style="{StaticResource ActionButton}" Click="btnEdit_Click"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 15 0 0">
+                    <Button x:Name="btnEdit" Content="Изменить" 
+Style="{StaticResource EditButtonStyle}"
+Click="btnEdit_Click"/>
                     <Button x:Name="btnDelete" Content="Удалить" 
-                            Background="#FFE53935" Style="{StaticResource ActionButton}" Click="btnDelete_Click"/>
+Style="{StaticResource DeleteButtonStyle}"
+Click="btnDelete_Click"/>
                 </StackPanel>
             </StackPanel>
         </Grid>

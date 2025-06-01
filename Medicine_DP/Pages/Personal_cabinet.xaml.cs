@@ -26,11 +26,11 @@ namespace Medicine_DP.Pages
         private readonly DataContext _context = Main._main._context;
         private employees _employee;
         private patients _patient;
-        
+        string _username;
         public Personal_cabinet(string username)
         {
             InitializeComponent();
-
+            _username = username;
             LoadUserData(username);
             LoadAppointments();
         }
@@ -57,7 +57,7 @@ namespace Medicine_DP.Pages
             {
                 // Проверяем, является ли пользователь пациентом
                 _patient = _context.patients
-                    .FirstOrDefault(p => p.phone_number == username || p.email == username);
+                    .FirstOrDefault(p => p.login == username);
 
                 if (_patient != null)
                 {
@@ -110,7 +110,7 @@ namespace Medicine_DP.Pages
 
         private void back_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.Main());
+            MainWindow.init.OpenPages(new Pages.Main(_username));
         }
 
         private void zapis_Click(object sender, RoutedEventArgs e)

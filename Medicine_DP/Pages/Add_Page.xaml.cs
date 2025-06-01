@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,8 +11,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Medicine_DP.Config;
 using Medicine_DP.Elements;
+using Medicine_DP.Models;
 using Medicine_DP.Windows;
+using Microsoft.EntityFrameworkCore;
 
 namespace Medicine_DP.Pages
 {
@@ -20,9 +24,21 @@ namespace Medicine_DP.Pages
     /// </summary>
     public partial class Add_Page : Page
     {
-        public Add_Page()
+        private readonly DataContext _context = Main._main._context;
+        private employees _employee;
+        private patients _patient;
+        string _username;
+        public Add_Page(string username = null)
         {
             InitializeComponent();
+            _username = username;
+            LoadUserData(username);
+        }
+        private void LoadUserData(string username)
+        {
+            // Проверяем, является ли пользователь сотрудником
+            _employee = _context.employees
+                .FirstOrDefault(e => e.login == username);
         }
 
         private void AddEmloyes_Click(object sender, RoutedEventArgs e)
@@ -69,7 +85,7 @@ namespace Medicine_DP.Pages
 
         private void back_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.Main());
+            MainWindow.init.OpenPages(new Pages.Main(_username));
         }
     }
 }

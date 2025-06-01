@@ -203,7 +203,7 @@ namespace Medicine_DP.Pages
 
         private void AddPage_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.init.OpenPages(new Pages.Add_Page());
+            MainWindow.init.OpenPages(new Pages.Add_Page(_loginUser));
         }
     }
 }

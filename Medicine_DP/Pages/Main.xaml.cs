@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Medicine_DP.Config;
+using Medicine_DP.Models;
 using Medicine_DP.Windows;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,6 +43,8 @@ namespace Medicine_DP.Pages
 
             if (isPatient) // Если это пациент
             {
+
+                
                 // Скрываем кнопки, которые не должны быть доступны пациенту
                 employees.Visibility = Visibility.Collapsed;
                 medical_tests.Visibility = Visibility.Collapsed;
@@ -55,6 +58,8 @@ namespace Medicine_DP.Pages
                 appointments.Visibility = Visibility.Visible;
                 medical_records.Visibility = Visibility.Visible;
                 cabinet_page.Visibility = Visibility.Visible;
+
+
             }
             else if (isEmployee) // Если это сотрудник
             {
@@ -76,11 +81,20 @@ namespace Medicine_DP.Pages
 
         public void CreateUIapps()
         {
-            
-            parent.Children.Clear();
-            foreach (var apps in new DataContext().appointments)
+            var Patient = _context.patients.FirstOrDefault(p => p.login == _loginUser);
+            List<appointments> list;
+            if (Patient != null)
             {
-                parent.Children.Add(new Elements.appointments(apps));
+                list = _context.appointments.Where(x=>x.patient_id == Patient.patient_id).ToList();
+            }
+            else
+            {
+                list = _context.appointments.ToList();
+            }
+            parent.Children.Clear();
+            foreach (var apps in list)
+            {
+                parent.Children.Add(new Elements.appointments(apps, _loginUser));
             }
         }
 

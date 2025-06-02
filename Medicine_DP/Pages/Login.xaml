@@ -39,12 +39,9 @@
                  Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
 
             <Label Content="Пароль:"/>
-            <PasswordBox x:Name="Password"/>
+            <PasswordBox x:Name="Password" Margin="0,0,0,20"/>
 
-            <CheckBox x:Name="RememberCheckBox" 
-                  Content="Запомнить меня" 
-                  Margin="0,10"
-                  IsChecked="{Binding RememberMe}"/>
+            
 
             <Button Content="Войти" 
                 Click="Button_Click"

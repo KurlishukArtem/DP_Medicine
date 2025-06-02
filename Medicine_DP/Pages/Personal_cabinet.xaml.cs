@@ -131,6 +131,26 @@ namespace Medicine_DP.Pages
             addAppointmentWindow.Show();
         }
 
+        private void Exit_out_Click(object sender, RoutedEventArgs e)
+        {
+
+            // Создаем диалоговое окно подтверждения
+            MessageBoxResult result = MessageBox.Show(
+                "Вы точно хотите выйти из аккаунта?",
+                "Подтверждение выхода",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            // Если пользователь подтвердил выход
+            if (result == MessageBoxResult.Yes)
+            {
+                // Переходим на страницу входа
+                MainWindow.init.OpenPages(new Pages.Login());
+
+            }
+            // Если пользователь передумал, ничего не делаем
+        }
+
         //private void btnNewAppointment_Click(object sender, RoutedEventArgs e)
         //{
         //    if (_patient != null)

@@ -28,7 +28,7 @@ namespace Medicine_DP.Elements
         private readonly Models.appointments _appointment;
         private readonly Pages.Main _mainPage = Main._main;
         private readonly DataContext _context= Main._main._context;
-
+        public static string _loginUser;
         public Brush StatusColor
         {
             get { return (Brush)GetValue(StatusColorProperty); }
@@ -37,12 +37,35 @@ namespace Medicine_DP.Elements
 
         public static readonly DependencyProperty StatusColorProperty =
             DependencyProperty.Register("StatusColor", typeof(Brush), typeof(appointments));
-        public appointments(Models.appointments appointment)
+        public appointments(Models.appointments appointment, string loginUser = null)
         {
             InitializeComponent();
             _appointment = appointment;
-            
+            _loginUser = loginUser;
             LoadAppointmentData();
+            ConfigureUIForUserRole();
+        }
+        private void ConfigureUIForUserRole()
+        {
+            // Проверяем сначала сотрудников, затем пациентов
+            bool isEmployee = _context.employees.Any(e => e.login == _loginUser);
+            bool isPatient = _context.patients.Any(p => p.login == _loginUser);
+
+            if (isPatient) // Если это пациент
+            {
+                btnDelete.Visibility = Visibility.Collapsed;
+                btnEdit.Visibility = Visibility.Collapsed;
+            }
+            else if (isEmployee) // Если это сотрудник
+            {
+                btnDelete.Visibility = Visibility.Visible;
+                btnEdit.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                // Если пользователь не найден (не должно происходить после успешного входа)
+                MessageBox.Show("Не удалось определить роль пользователя", "Ошибка");
+            }
         }
 
         private void LoadAppointmentData()

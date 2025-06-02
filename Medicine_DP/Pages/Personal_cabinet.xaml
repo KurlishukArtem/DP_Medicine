@@ -198,7 +198,17 @@ Click="back_Click" Width="80" Height="30" VerticalAlignment="Top" HorizontalAlig
                             Background="#FF1E88E5"
                             Foreground="White"
                             FontWeight="SemiBold"
-                            Click="zapis_Click"/> 
+                            Click="zapis_Click"/>
+                    <Button x:Name="Exit_out" 
+        Content="Выход" 
+        HorizontalAlignment="Right" 
+        Margin="0,30,0,0"
+        Padding="15,5" 
+        Width="180" 
+        Background="Red"
+        Foreground="White"
+        FontWeight="SemiBold"
+        Click="Exit_out_Click"/>
                 </StackPanel>
             </ScrollViewer>
         </Border>

@@ -218,7 +218,7 @@
                                 Margin="10,5"/>
 
                         <Button x:Name="AddPage" 
-                                Content="Доп. оплата" 
+                                Content="Добавление" 
                                 Style="{StaticResource NavButtonStyle}"
                                 Click="AddPage_Click"
                                 Margin="10,5"/>

@@ -4,11 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Medicine_DP.Windows"
-        mc:Ignorable="d"
-        Title="Patients_Edit_Window" Height="450" Width="800">
-    <Grid Margin="10">
+        mc:Ignorable="d" Title="Пациенты" Height="650" Width="900"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="15">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -29,79 +28,149 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="20"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- ID пациента -->
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="ID пациента:"/>
-        <TextBlock x:Name="txtPatientId" Grid.Row="0" Grid.Column="1"/>
+        <!-- Основные данные -->
+        <GroupBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" Header="Основная информация" Margin="0,0,0,10">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-        <!-- Фамилия -->
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Фамилия:"/>
-        <TextBox x:Name="txtLastName" Grid.Row="1" Grid.Column="1" Margin="0,0,0,5"/>
+                <!-- ID пациента -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="ID пациента:" VerticalAlignment="Center"/>
+                <TextBlock x:Name="txtPatientId" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center"/>
 
-        <!-- Имя -->
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Имя:"/>
-        <TextBox x:Name="txtFirstName" Grid.Row="2" Grid.Column="1" Margin="0,0,0,5"/>
+                <!-- Фамилия -->
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Фамилия:" VerticalAlignment="Center"/>
+                <TextBox x:Name="txtLastName" Grid.Row="1" Grid.Column="1" Margin="0,0,0,5"/>
 
-        <!-- Отчество -->
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="Отчество:"/>
-        <TextBox x:Name="txtMiddleName" Grid.Row="3" Grid.Column="1" Margin="0,0,0,5"/>
+                <!-- Имя -->
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Имя:" VerticalAlignment="Center"/>
+                <TextBox x:Name="txtFirstName" Grid.Row="2" Grid.Column="1" Margin="0,0,0,5"/>
 
-        <!-- Дата рождения -->
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="Дата рождения:"/>
-        <DatePicker x:Name="dpBirthDate" Grid.Row="4" Grid.Column="1" Margin="0,0,0,5"/>
+                <!-- Отчество -->
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Отчество:" VerticalAlignment="Center"/>
+                <TextBox x:Name="txtMiddleName" Grid.Row="3" Grid.Column="1" Margin="0,0,0,5"/>
 
-        <!-- Пол -->
-        <TextBlock Grid.Row="5" Grid.Column="0" Text="Пол:"/>
-        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,5">
-            <RadioButton x:Name="rbMale" Content="Мужской" GroupName="Gender" Margin="0,0,10,0"/>
-            <RadioButton x:Name="rbFemale" Content="Женский" GroupName="Gender"/>
-        </StackPanel>
+                <!-- Дата рождения -->
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Дата рождения:" VerticalAlignment="Center"/>
+                <DatePicker x:Name="dpBirthDate" Grid.Row="4" Grid.Column="1" Margin="0,0,0,5"/>
 
-        <!-- Телефон -->
-        <TextBlock Grid.Row="6" Grid.Column="0" Text="Телефон:"/>
-        <TextBox x:Name="txtPhone" Grid.Row="6" Grid.Column="1" Margin="0,0,0,5"/>
+                <!-- Пол -->
+                <TextBlock Grid.Row="5" Grid.Column="0" Text="Пол:" VerticalAlignment="Center"/>
+                <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,5">
+                    <RadioButton x:Name="rbMale" Content="Мужской" GroupName="Gender" Margin="0,0,10,0"/>
+                    <RadioButton x:Name="rbFemale" Content="Женский" GroupName="Gender"/>
+                </StackPanel>
 
-        <!-- Email -->
-        <TextBlock Grid.Row="7" Grid.Column="0" Text="Email:"/>
-        <TextBox x:Name="txtEmail" Grid.Row="7" Grid.Column="1" Margin="0,0,0,5"/>
+                <!-- Телефон -->
+                <TextBlock Grid.Row="6" Grid.Column="0" Text="Телефон:" VerticalAlignment="Center"/>
+                <TextBox x:Name="txtPhone" Grid.Row="6" Grid.Column="1" Margin="0,0,0,5"/>
 
-        <!-- Адрес -->
-        <TextBlock Grid.Row="8" Grid.Column="0" Text="Адрес:"/>
-        <TextBox x:Name="txtAddress" Grid.Row="8" Grid.Column="1" Margin="0,0,0,5"/>
+                <!-- Email -->
+                <TextBlock Grid.Row="1" Grid.Column="3" Text="Email:" VerticalAlignment="Center"/>
+                <TextBox x:Name="txtEmail" Grid.Row="1" Grid.Column="4" Margin="0,0,0,5"/>
 
-        <!-- Паспорт (серия) -->
-        <TextBlock Grid.Row="1" Grid.Column="3" Text="Серия паспорта:"/>
-        <TextBox x:Name="txtPassportSeries" Grid.Row="1" Grid.Column="4" Margin="0,0,0,5"/>
+                <!-- Адрес -->
+                <TextBlock Grid.Row="2" Grid.Column="3" Text="Адрес:" VerticalAlignment="Center"/>
+                <TextBox x:Name="txtAddress" Grid.Row="2" Grid.Column="4" Margin="0,0,0,5"/>
 
-        <!-- Паспорт (номер) -->
-        <TextBlock Grid.Row="2" Grid.Column="3" Text="Номер паспорта:"/>
-        <TextBox x:Name="txtPassportNumber" Grid.Row="2" Grid.Column="4" Margin="0,0,0,5"/>
+                <!-- Дата регистрации -->
+                <TextBlock Grid.Row="3" Grid.Column="3" Text="Дата регистрации:" VerticalAlignment="Center"/>
+                <DatePicker x:Name="dpRegistrationDate" Grid.Row="3" Grid.Column="4" Margin="0,0,0,5" IsEnabled="False"/>
+            </Grid>
+        </GroupBox>
 
-        <!-- СНИЛС -->
-        <TextBlock Grid.Row="3" Grid.Column="3" Text="СНИЛС:"/>
-        <TextBox x:Name="txtSnils" Grid.Row="3" Grid.Column="4" Margin="0,0,0,5"/>
+        <!-- Документы -->
+        <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Header="Документы" Margin="0,0,0,10">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-        <!-- Полис -->
-        <TextBlock Grid.Row="4" Grid.Column="3" Text="Номер полиса:"/>
-        <TextBox x:Name="txtPolicyNumber" Grid.Row="4" Grid.Column="4" Margin="0,0,0,5"/>
+                <!-- Паспорт (серия) -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Серия паспорта:" VerticalAlignment="Center"/>
+                <TextBox x:Name="txtPassportSeries" Grid.Row="0" Grid.Column="1" Margin="0,0,0,5"/>
 
-        <!-- Дата регистрации -->
-        <TextBlock Grid.Row="5" Grid.Column="3" Text="Дата регистрации:"/>
-        <DatePicker x:Name="dpRegistrationDate" Grid.Row="5" Grid.Column="4" Margin="0,0,0,5" IsEnabled="False"/>
+                <!-- Паспорт (номер) -->
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Номер паспорта:" VerticalAlignment="Center"/>
+                <TextBox x:Name="txtPassportNumber" Grid.Row="1" Grid.Column="1" Margin="0,0,0,5"/>
+
+                <!-- СНИЛС -->
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="СНИЛС:" VerticalAlignment="Center"/>
+                <TextBox x:Name="txtSnils" Grid.Row="2" Grid.Column="1" Margin="0,0,0,5"/>
+
+                <!-- Полис -->
+                <TextBlock Grid.Row="0" Grid.Column="3" Text="Номер полиса:" VerticalAlignment="Center"/>
+                <TextBox x:Name="txtPolicyNumber" Grid.Row="0" Grid.Column="4" Margin="0,0,0,5"/>
+            </Grid>
+        </GroupBox>
+
+        <!-- Учетные данные -->
+        <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" Header="Учетные данные" Margin="0,0,0,10">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Логин -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Логин:" VerticalAlignment="Center"/>
+                <TextBox x:Name="txtLogin" Grid.Row="0" Grid.Column="1" Margin="0,0,0,5"/>
+
+                <!-- Пароль -->
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Пароль:" VerticalAlignment="Center"/>
+                <PasswordBox x:Name="txtPassword" Grid.Row="1" Grid.Column="1" Margin="0,0,0,5"/>
+            </Grid>
+        </GroupBox>
 
         <!-- Примечания -->
-        <TextBlock Grid.Row="14" Grid.Column="0" Text="Примечания:"/>
-        <TextBox x:Name="txtNotes" Grid.Row="14" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,0,0,5"
-             TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="80"/>
+        <GroupBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" Header="Примечания" Margin="0,0,0,10">
+            <TextBox x:Name="txtNotes" Margin="5" 
+                     TextWrapping="Wrap" AcceptsReturn="True" 
+                     VerticalScrollBarVisibility="Auto" Height="100"/>
+        </GroupBox>
 
         <!-- Кнопки -->
-        <StackPanel Grid.Row="16" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="btnSave" Content="Сохранить" Width="100" Margin="0,0,10,0" Click="Save_Click"/>
-            <Button x:Name="btnCancel" Content="Отмена" Width="100" Click="Cancel_Click"/>
+        <StackPanel Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="5" 
+                    Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="btnSave" Content="Сохранить" Width="120" Height="30" 
+                    Margin="0,0,10,0" Click="Save_Click" FontWeight="Bold"/>
+            <Button x:Name="btnCancel" Content="Отмена" Width="120" Height="30" 
+                    Click="Cancel_Click"/>
         </StackPanel>
     </Grid>
 </Window>

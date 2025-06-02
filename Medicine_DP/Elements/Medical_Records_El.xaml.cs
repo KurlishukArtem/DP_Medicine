@@ -25,13 +25,37 @@ namespace Medicine_DP.Elements
     {
         private readonly medical_records _medicalRecord;
         private readonly DataContext _context = Main._main._context;
-        public Medical_Records_El(medical_records record)
+        public static string _loginUser;
+        public Medical_Records_El(medical_records record, string loginUser)
         {
             InitializeComponent();
+            _loginUser = loginUser;
             _medicalRecord = record;
             LoadMedicalRecordData();
+            ConfigureUIForUserRole();
         }
+        private void ConfigureUIForUserRole()
+        {
+            // Проверяем сначала сотрудников, затем пациентов
+            bool isEmployee = _context.employees.Any(e => e.login == _loginUser);
+            bool isPatient = _context.patients.Any(p => p.login == _loginUser);
 
+            if (isPatient) // Если это пациент
+            {
+                btnDelete.Visibility = Visibility.Collapsed;
+                btnEdit.Visibility = Visibility.Collapsed;
+            }
+            else if (isEmployee) // Если это сотрудник
+            {
+                btnDelete.Visibility = Visibility.Visible;
+                btnEdit.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                // Если пользователь не найден (не должно происходить после успешного входа)
+                MessageBox.Show("Не удалось определить роль пользователя", "Ошибка");
+            }
+        }
         private void LoadMedicalRecordData()
         {
             try

@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Medicine_DP.Config;
 using Medicine_DP.Models;
+using Medicine_DP.Windows;
 
 namespace Medicine_DP.Pages
 {
@@ -59,6 +60,17 @@ namespace Medicine_DP.Pages
             {
                 MessageBox.Show($"Ошибка при входе: {ex.Message}", "Ошибка");
             }
+        }
+
+        private void Reg_Click(object sender, RoutedEventArgs e)
+        {
+            Patients_Edit_Window patients_Edit_ = new Patients_Edit_Window();
+            patients_Edit_.Show();
+        }
+
+        private void Forgot_Password_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
 }

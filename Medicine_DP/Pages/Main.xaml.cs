@@ -104,7 +104,7 @@ namespace Medicine_DP.Pages
             parent.Children.Clear();
             foreach (var apps in new DataContext().employees)
             {
-                parent.Children.Add(new Elements.Emploeess_El(apps));
+                parent.Children.Add(new Elements.Emploeess_El(apps, _loginUser));
             }
         }
 
@@ -118,15 +118,15 @@ namespace Medicine_DP.Pages
 
                 if (item is Models.medical_records record)
                 {
-                    parent.Children.Add(new Elements.Medical_Records_El(record));
+                    parent.Children.Add(new Elements.Medical_Records_El(record, _loginUser));
                 }
                 if (item is Models.medical_tests tests)
                 {
-                    parent.Children.Add(new Elements.Medical_Tests_El(tests));
+                    parent.Children.Add(new Elements.Medical_Tests_El(tests, _loginUser));
                 }
                 if (item is Models.medications med)
                 {
-                    parent.Children.Add(new Elements.Medications_El(med));
+                    parent.Children.Add(new Elements.Medications_El(med, _loginUser));
                 }
                 if (item is Models.patients patients)
                 {
@@ -134,15 +134,19 @@ namespace Medicine_DP.Pages
                 }
                 if (item is Models.payments payments)
                 {
-                    parent.Children.Add(new Elements.Payments_El(payments));
+                    parent.Children.Add(new Elements.Payments_El(payments, _loginUser));
                 }
                 if (item is Models.rooms room)
                 {
                     parent.Children.Add(new Elements.Rooms_El(room));
                 }
-                if (item is Models.services shedules)
+                //if (item is Models.schedules shedules)
+                //{
+                //    parent.Children.Add(new Elements.s(shedules));
+                //}
+                if (item is Models.services services)
                 {
-                    parent.Children.Add(new Elements.Services_El(shedules));
+                    parent.Children.Add(new Elements.Services_El(services, _loginUser));
                 }
             }
         }

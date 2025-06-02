@@ -26,10 +26,12 @@ namespace Medicine_DP.Elements
     {
         services _services;
         private readonly DataContext _context = Main._main._context;
-        public Services_El(services service)
+        public static string _loginUser;
+        public Services_El(services service, string loginUser = null)
         {
             InitializeComponent();
             _services = service;
+            _loginUser = loginUser;
             lbServiceId.Text = service.service_id.ToString();
             lbServiceName.Text = service.service_name;
             lbCategory.Text = service.category ?? "Не указана";
@@ -37,6 +39,29 @@ namespace Medicine_DP.Elements
 
             //lbActiveStatus.Text = service.is_active == 1 ? "Активна" : "Неактивна";
             tbDescription.Text = service.description ?? "Описание отсутствует";
+            ConfigureUIForUserRole();
+        }
+        private void ConfigureUIForUserRole()
+        {
+            // Проверяем сначала сотрудников, затем пациентов
+            bool isEmployee = _context.employees.Any(e => e.login == _loginUser);
+            bool isPatient = _context.patients.Any(p => p.login == _loginUser);
+
+            if (isPatient) // Если это пациент
+            {
+                btnDelete.Visibility = Visibility.Collapsed;
+                btnEdit.Visibility = Visibility.Collapsed;
+            }
+            else if (isEmployee) // Если это сотрудник
+            {
+                btnDelete.Visibility = Visibility.Visible;
+                btnEdit.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                // Если пользователь не найден (не должно происходить после успешного входа)
+                MessageBox.Show("Не удалось определить роль пользователя", "Ошибка");
+            }
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)

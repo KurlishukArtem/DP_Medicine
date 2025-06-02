@@ -22,6 +22,7 @@ namespace Medicine_DP.Windows
     {
         private readonly services _service;
         private readonly DataContext _context = Main._main._context;
+        
         public Service_Window(services service = null)
         {
             InitializeComponent();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,7 +26,7 @@ namespace Medicine_DP.Elements
     {
         private readonly employees _employee;
         private readonly DataContext _context = Main._main._context;
-
+        public static string _loginUser;
         public Brush IsActiveColor
         {
             get { return (Brush)GetValue(IsActiveColorProperty); }
@@ -34,11 +35,36 @@ namespace Medicine_DP.Elements
 
         public static readonly DependencyProperty IsActiveColorProperty =
           DependencyProperty.Register("IsActiveColor", typeof(Brush), typeof(Emploeess_El));
-        public Emploeess_El(employees employee)
+        public Emploeess_El(employees employee, string loginUser)
         {
+
             InitializeComponent();
             _employee = employee;
+            _loginUser = loginUser;
             LoadEmployeeData();
+            ConfigureUIForUserRole();
+        }
+        private void ConfigureUIForUserRole()
+        {
+            // Проверяем сначала сотрудников, затем пациентов
+            bool isEmployee = _context.employees.Any(e => e.login == _loginUser);
+            bool isPatient = _context.patients.Any(p => p.login == _loginUser);
+
+            if (isPatient) // Если это пациент
+            {
+                btnDelete.Visibility = Visibility.Collapsed;
+                btnEdit.Visibility = Visibility.Collapsed;
+            }
+            else if (isEmployee) // Если это сотрудник
+            {
+                btnDelete.Visibility = Visibility.Visible;
+                btnEdit.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                // Если пользователь не найден (не должно происходить после успешного входа)
+                MessageBox.Show("Не удалось определить роль пользователя", "Ошибка");
+            }
         }
         private void LoadEmployeeData()
         {

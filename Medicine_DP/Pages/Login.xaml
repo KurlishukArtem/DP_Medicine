@@ -9,51 +9,143 @@
       Title="Вход">
 
 
+    <Page.Resources>
+        <!-- Стили для кнопок -->
+        <Style x:Key="LoginButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF1E88E5"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1565C0"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#0D47A1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <!-- Стиль для текстовых полей -->
+        <Style x:Key="LoginTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Margin" Value="0,5,0,15"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#B0BEC5"/>
+            <Setter Property="Background" Value="#FAFAFA"/>
+        </Style>
 
-        <!-- Левая часть - логотип и информация -->
-        <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <!--<Image Width="200" Margin="0,0,0,30" Source="/Assets/logo.png"/>-->
-            <TextBlock Text="Med-Clinic" 
-                   FontSize="24" FontWeight="Bold" TextAlignment="Center"
-                   Margin="20"/>
-        </StackPanel>
+        <!-- Стиль для PasswordBox -->
+        <Style x:Key="LoginPasswordBoxStyle" TargetType="PasswordBox">
+            <Setter Property="Margin" Value="0,5,0,20"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#B0BEC5"/>
+            <Setter Property="Background" Value="#FAFAFA"/>
+        </Style>
 
-        <!-- Разделитель -->
-        <Rectangle Grid.Column="1" Width="1" Fill="LightGray" Margin="0,50"/>
+        <!-- Стиль для заголовков -->
+        <Style x:Key="LoginHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,0,0,30"/>
+            <Setter Property="Foreground" Value="#263238"/>
+        </Style>
 
-        <!-- Правая часть - форма входа -->
-        <StackPanel Grid.Column="2" Width="300" VerticalAlignment="Center" Margin="50,0">
-            <TextBlock Text="ВХОД В СИСТЕМУ" 
-                   FontSize="20" FontWeight="Bold" 
-                   Margin="0,0,0,30" HorizontalAlignment="Center"/>
+        <!-- Градиентный фон -->
+        <LinearGradientBrush x:Key="LoginBackground" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#ECEFF1" Offset="0"/>
+            <GradientStop Color="#CFD8DC" Offset="1"/>
+        </LinearGradientBrush>
+    </Page.Resources>
 
-            <Label Content="Логин:"/>
-            <TextBox x:Name="UsernameTextBox" 
-                 Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+    <Grid Background="{StaticResource LoginBackground}">
+        <!-- Основной контейнер -->
+        <Border VerticalAlignment="Center" HorizontalAlignment="Center"
+                Width="700" Height="450"
+                Background="White"
+                CornerRadius="8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <Label Content="Пароль:"/>
-            <PasswordBox x:Name="Password" Margin="0,0,0,20"/>
+                <!-- Левая часть - информация о системе -->
+                <Border Grid.Column="0" Background="#FF1E88E5" CornerRadius="8,0,0,8">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                Margin="30" TextBlock.Foreground="White">
+                        <!--<Image Source="/Assets/logo_white.png" Width="120" Margin="0,0,0,20"/>-->
+                        <TextBlock Text="Med-Clinic" 
+                               FontSize="28" FontWeight="Bold" 
+                               TextAlignment="Center"/>
+                        <TextBlock Text="Медицинская информационная система" 
+                               FontSize="16" Margin="0,10,0,0"
+                               TextAlignment="Center"/>
+                        <TextBlock Text="Версия 2.0" 
+                               FontSize="12" Margin="0,30,0,0"
+                               Opacity="0.8"/>
+                    </StackPanel>
+                </Border>
 
-            
+                <!-- Разделитель -->
+                <Rectangle Grid.Column="1" Width="1" Fill="#E0E0E0" Margin="0,30"/>
 
-            <Button Content="Войти" 
-                Click="Button_Click"
-                Background="#FF1E88E5" 
-                Foreground="White"
-                Padding="10,5"/>
+                <!-- Правая часть - форма входа -->
+                <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="30">
+                    <TextBlock Text="ВХОД В СИСТЕМУ" 
+                           Style="{StaticResource LoginHeaderStyle}"/>
 
-            <TextBlock x:Name="ErrorMessage" 
-                   Text="{Binding ErrorMessage}"
-                   Foreground="Red" 
-                   TextWrapping="Wrap"
-                   Margin="0,20,0,0"/>
-        </StackPanel>
+                    <Label Content="Логин:" FontWeight="SemiBold"/>
+                    <TextBox x:Name="UsernameTextBox" 
+                         Style="{StaticResource LoginTextBoxStyle}"
+                         Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <Label Content="Пароль:" FontWeight="SemiBold"/>
+                    <PasswordBox x:Name="Password" 
+                            Style="{StaticResource LoginPasswordBoxStyle}"/>
+
+                    <Label x:Name="Forgot_Password" 
+                          Content="Забыли пароль?"
+                          Margin="0,0,0,20"
+                           MouseDoubleClick="Forgot_Password_MouseDoubleClick"/>
+
+                    <Button Content="Войти" 
+                        Style="{StaticResource LoginButtonStyle}"
+                        Click="Button_Click"/>
+
+                    <Button Content="Регистрация" 
+                        Style="{StaticResource LoginButtonStyle}"
+                        Click="Reg_Click"
+                        Margin="0,10,0,0"
+                        Background="#78909C"/>
+
+                    <TextBlock x:Name="ErrorMessage" 
+                           Text="{Binding ErrorMessage}"
+                           Foreground="#E53935" 
+                           TextWrapping="Wrap"
+                           Margin="0,20,0,0"
+                           FontWeight="Medium"/>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Page>

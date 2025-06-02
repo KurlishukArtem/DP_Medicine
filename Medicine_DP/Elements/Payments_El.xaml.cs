@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Medicine_DP.Config;
 using Medicine_DP.Models;
+using Medicine_DP.Pages;
 using Medicine_DP.Windows;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,10 +25,14 @@ namespace Medicine_DP.Elements
     public partial class Payments_El : UserControl
     {
         payments _payments;
-        public Payments_El(payments payment)
+        public static string _loginUser;
+        private readonly DataContext _context = Main._main._context;
+
+        public Payments_El(payments payment, string loginUser)
         {
             InitializeComponent();
             _payments = payment;
+            _loginUser = loginUser;
             lbPaymentId.Text = payment.payment_id.ToString();
             lbAppointmentId.Text = payment.appointment_id.ToString();
             lbPatientId.Text = payment.patient_id.ToString();
@@ -36,8 +41,30 @@ namespace Medicine_DP.Elements
             lbPaymentDate.Text = payment.payment_date.ToString("dd.MM.yyyy HH:mm");
             lbPaymentMethod.Text = GetPaymentMethodDisplay(payment.payment_method);
             lbStatus.Text = GetStatusDisplay(payment.status);
+            ConfigureUIForUserRole();
         }
+        private void ConfigureUIForUserRole()
+        {
+            // Проверяем сначала сотрудников, затем пациентов
+            bool isEmployee = _context.employees.Any(e => e.login == _loginUser);
+            bool isPatient = _context.patients.Any(p => p.login == _loginUser);
 
+            if (isPatient) // Если это пациент
+            {
+                btnDelete.Visibility = Visibility.Collapsed;
+                btnEdit.Visibility = Visibility.Collapsed;
+            }
+            else if (isEmployee) // Если это сотрудник
+            {
+                btnDelete.Visibility = Visibility.Visible;
+                btnEdit.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                // Если пользователь не найден (не должно происходить после успешного входа)
+                MessageBox.Show("Не удалось определить роль пользователя", "Ошибка");
+            }
+        }
         private string GetPaymentMethodDisplay(string method)
         {
             return method switch

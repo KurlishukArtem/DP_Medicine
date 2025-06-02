@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Medicine_DP.Config;
 using Medicine_DP.Models;
+using Medicine_DP.Pages;
 using Medicine_DP.Windows;
 using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
@@ -25,10 +26,13 @@ namespace Medicine_DP.Elements
     public partial class Medical_Tests_El : UserControl
     {
         medical_tests _medtests;
-        public Medical_Tests_El(medical_tests test)
+        public static string _loginUser;
+        private readonly DataContext _context = Main._main._context;
+        public Medical_Tests_El(medical_tests test, string loginUser)
         {
             InitializeComponent();
             _medtests = test;
+            _loginUser = loginUser;
             lbTestId.Text = test.test_id.ToString();
             lbTestName.Text = test.test_name ?? "Не указано";
             lbCategory.Text = test.category ?? "Не указано";
@@ -37,8 +41,30 @@ namespace Medicine_DP.Elements
             tbDescription.Text = test.description ?? "Нет описания";
             tbPreparation.Text = test.preparation ?? "Не требуется";
             tbNormalValues.Text = test.normal_values ?? "Не указаны";
+            ConfigureUIForUserRole();
         }
+        private void ConfigureUIForUserRole()
+        {
+            // Проверяем сначала сотрудников, затем пациентов
+            bool isEmployee = _context.employees.Any(e => e.login == _loginUser);
+            bool isPatient = _context.patients.Any(p => p.login == _loginUser);
 
+            if (isPatient) // Если это пациент
+            {
+                btnDelete.Visibility = Visibility.Collapsed;
+                btnEdit.Visibility = Visibility.Collapsed;
+            }
+            else if (isEmployee) // Если это сотрудник
+            {
+                btnDelete.Visibility = Visibility.Visible;
+                btnEdit.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                // Если пользователь не найден (не должно происходить после успешного входа)
+                MessageBox.Show("Не удалось определить роль пользователя", "Ошибка");
+            }
+        }
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
             Medtest_Edit_Window medtest_Edit_Window = new Medtest_Edit_Window(_medtests);

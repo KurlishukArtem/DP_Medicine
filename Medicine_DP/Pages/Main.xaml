@@ -145,7 +145,7 @@
                         Content="Личный кабинет" 
                         Style="{StaticResource PersonalCabinetButtonStyle}"
                         Click="cabinet_Click"
-                        Margin="0,0,20,0"/>
+                        Margin="0,10,20,10"/>
             </Grid>
         </Grid>
 

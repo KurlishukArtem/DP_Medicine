@@ -109,6 +109,7 @@ namespace Medicine_DP.Windows
                 _employee.hire_date = dpHireDate.SelectedDate.Value;
                 _employee.address = txtAddress.Text;
                 _employee.login = txtLogin.Text;
+                _employee.password_hash = txtPassword.Text;
                 _employee.is_active = chkIsActive.IsChecked == true ? 1 : 0;
                 //_employee.rooms = int.TryParse(txtRoom.Text, out int room) ? room : 0;
 

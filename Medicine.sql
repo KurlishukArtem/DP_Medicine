@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Май 28 2025 г., 11:05
+-- Время создания: Июн 02 2025 г., 22:42
 -- Версия сервера: 5.7.39-log
 -- Версия PHP: 8.1.9
 
@@ -40,6 +40,14 @@ CREATE TABLE `appointments` (
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Дамп данных таблицы `appointments`
+--
+
+INSERT INTO `appointments` (`appointment_id`, `patient_id`, `employee_id`, `service_id`, `room_id`, `appointment_date`, `start_time`, `status`, `notes`, `created_at`) VALUES
+(1, 1, 6, 1, 0, '2025-06-06', 514, 'scheduled', 'adg', '2025-06-02 13:11:49'),
+(2, 2, 6, 1, 0, '2025-06-06', 514, 'scheduled', '', '2025-06-02 14:02:49');
+
 -- --------------------------------------------------------
 
 --
@@ -70,7 +78,8 @@ CREATE TABLE `employees` (
 --
 
 INSERT INTO `employees` (`employee_id`, `first_name`, `last_name`, `middle_name`, `position`, `specialization`, `birth_date`, `gender`, `phone_number`, `email`, `hire_date`, `address`, `login`, `password_hash`, `is_active`, `rooms`) VALUES
-(4, 'Иванов', 'Артём', 'Иванович', 'фыв', 'фыв', '2000-05-14', 'М', '88005553535', 'ыфва', '2025-05-02', 'крутой', 'Alex', '123', 1, 165);
+(5, 'фыв', 'ФЫВ', 'фыар', 'фыа', 'фыа', '2000-06-13', 'M', '85015', '8451', '2025-06-01', 'Cool', 'Col', 'temp123', 1, 0),
+(6, 'Ержан', 'Ержанов', 'Ержанович', 'Врач', 'й', '2000-06-20', 'M', '88005553535', 'ya.hbuk@yandex.ru', '2025-06-04', 'siojnv', 'hat', '555', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -112,7 +121,8 @@ CREATE TABLE `medical_tests` (
 --
 
 INSERT INTO `medical_tests` (`test_id`, `test_name`, `description`, `preparation`, `normal_values`, `price`, `category`) VALUES
-(1, 'adf', 'asf', 'afd', 'saf', '500.00', 'классная');
+(2, 'ihjb', '651', 'iasudn', '51', '500.00', 'uhasjd'),
+(3, 'фы', 'ф', 'фыа', 'фа', '591.00', 'авфыв');
 
 -- --------------------------------------------------------
 
@@ -137,7 +147,8 @@ CREATE TABLE `medications` (
 --
 
 INSERT INTO `medications` (`medication_id`, `name`, `description`, `manufacturer`, `dosage_form`, `dosage`, `quantity_in_stock`, `minimum_stock_level`, `price`) VALUES
-(1, 'adf', 'sadgf', 'fdhga', 'порошок', '2-3 ложки на 0.25 литра', 0, 5, '390.00');
+(1, 'adf', 'sadgf', 'fdhga', 'Таблетки', '2-3 ложки на 0.25 литра', 0, 5, '390.00'),
+(2, 'флоргексидин', 'кул', 'фыв', 'Капсулы', 'ф25', 0, 5, '862.00');
 
 -- --------------------------------------------------------
 
@@ -164,6 +175,15 @@ CREATE TABLE `patients` (
   `login` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп данных таблицы `patients`
+--
+
+INSERT INTO `patients` (`patient_id`, `first_name`, `last_name`, `middle_name`, `birth_date`, `gender`, `phone_number`, `email`, `address`, `passport_series`, `passport_number`, `snils`, `policy_number`, `registration_date`, `notes`, `login`, `password_hash`) VALUES
+(1, 'Иванов', 'Артём', 'Иванович', '2000-05-14', 'М', '88005553535', 'saf', 'asf', '8005556666', '2518', '36541358', '88005553535', '2025-06-02 11:09:36', 'asf', 'Cool', '123'),
+(2, 'Классный', 'Классный', 'Классный', '2025-06-10', 'М', '88005553535', 'ya.erro2018@yandex.ru', 'jgf', '95156', '651658', '6198505', '85912987', '2025-06-02 12:02:12', '651', 'Hex', '0aef60993b73ce4b12e9ee8794206be2b525fdef42dfd911db1775334f1bf516'),
+(4, 'Александ', 'Александров', 'Александрович', '2025-06-11', 'М', '88005553535', 'ya.erro2018@yndex.ru', 'khn', '8658561', '15245326', '25605625', '6165851', '2025-06-02 00:00:00', '', 'Kim', '333');
 
 -- --------------------------------------------------------
 
@@ -218,7 +238,7 @@ CREATE TABLE `schedules` (
 --
 
 INSERT INTO `schedules` (`schedule_id`, `employee_id`, `day_of_week`, `start_time`, `end_time`, `room_id`, `is_working_day`) VALUES
-(1, 4, 5, '08:34:35', '15:30:00', 1, 1);
+(1, 6, 5, '08:34:35', '09:30:00', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -234,6 +254,16 @@ CREATE TABLE `services` (
   `category` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп данных таблицы `services`
+--
+
+INSERT INTO `services` (`service_id`, `service_name`, `description`, `price`, `category`, `is_active`) VALUES
+(1, 'asd', 'asd', '500.00', 'травмы', 1),
+(2, 'фыв', 'фыв', '999.00', 'фыв', 1),
+(3, 'фыв', 'фыа', '0.00', 'Консультация', 1),
+(4, 'фыв', 'фыв', '0.00', 'Лечение', 1);
 
 -- --------------------------------------------------------
 
@@ -341,43 +371,43 @@ ALTER TABLE `test_results`
 -- AUTO_INCREMENT для таблицы `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `appointment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `appointment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT для таблицы `medical_records`
 --
 ALTER TABLE `medical_records`
-  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `medical_tests`
 --
 ALTER TABLE `medical_tests`
-  MODIFY `test_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `test_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `medications`
 --
 ALTER TABLE `medications`
-  MODIFY `medication_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `medication_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `patient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `patient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `prescriptions`
@@ -395,13 +425,13 @@ ALTER TABLE `schedules`
 -- AUTO_INCREMENT для таблицы `services`
 --
 ALTER TABLE `services`
-  MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `test_results`
 --
 ALTER TABLE `test_results`
-  MODIFY `result_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `result_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц

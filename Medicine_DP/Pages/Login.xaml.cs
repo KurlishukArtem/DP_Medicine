@@ -28,9 +28,11 @@ namespace Medicine_DP.Pages
         
         Models.employees employees;
         private readonly DataContext dataContext = new DataContext();
+        
         public Login()
         {
             InitializeComponent();
+            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

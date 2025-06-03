@@ -25,12 +25,13 @@ namespace Medicine_DP.Pages
     {
         private readonly DataContext _context = Main._main._context;
         private employees _employee;
-        private patients _patient;
+        public patients _patient;
         string _username;
-        public Personal_cabinet(string username)
+        public Personal_cabinet(string username, patients patients = null)
         {
             InitializeComponent();
             _username = username;
+            _patient = patients;
             LoadUserData(username);
             LoadAppointments();
         }
@@ -149,6 +150,40 @@ namespace Medicine_DP.Pages
 
             }
             // Если пользователь передумал, ничего не делаем
+        }
+
+        private void btnEditProfile_Click(object sender, RoutedEventArgs e)
+        {
+            if (_employee != null)
+            {
+                // Редактирование данных сотрудника
+                var editWindow = new Employees_Edit_Window(_employee);
+                editWindow.Show();
+
+                // Обновляем данные после редактирования
+                if (editWindow.DialogResult == true)
+                {
+                    LoadUserData(_username);
+                }
+            }
+            else if (_patient != null)
+            {
+                // Редактирование данных пациента
+                var editWindow = new Patients_Edit_Window(_patient);
+                editWindow.Show();
+
+                // Обновляем данные после редактирования
+                if (editWindow.DialogResult == true)
+                {
+                    LoadUserData(_username);
+                }
+                
+            }
+            else
+            {
+                MessageBox.Show("Не удалось определить тип пользователя для редактирования",
+                              "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         //private void btnNewAppointment_Click(object sender, RoutedEventArgs e)

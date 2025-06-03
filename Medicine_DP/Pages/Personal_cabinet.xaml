@@ -7,22 +7,28 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Personal_cabinet">
-    <Page.Resources>
-        <!-- Стили для кнопок -->
-        <Style x:Key="EditButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#FF4285F4"/>
+     <Page.Resources>
+        <!-- Цветовая палитра -->
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#1E88E5"/>
+        <SolidColorBrush x:Key="PrimaryDarkBrush" Color="#1565C0"/>
+        <SolidColorBrush x:Key="LightBackgroundBrush" Color="#FAFAFA"/>
+        <SolidColorBrush x:Key="TextDarkBrush" Color="#212121"/>
+        <SolidColorBrush x:Key="TextLightBrush" Color="#757575"/>
+        
+        <!-- Стиль для кнопок -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="10 5"/>
-            <Setter Property="Margin" Value="0 10 5 0"/>
+            <Setter Property="Padding" Value="12 6"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" 
-                     CornerRadius="4"
-                     Padding="{TemplateBinding Padding}">
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
@@ -30,125 +36,122 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#FF3367D6"/>
+                    <Setter Property="Background" Value="{StaticResource PrimaryDarkBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="DeleteButtonStyle" TargetType="Button" BasedOn="{StaticResource EditButtonStyle}">
-            <Setter Property="Background" Value="#00fe81"/>
+        
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+            <Setter Property="Background" Value="#E0E0E0"/>
+            <Setter Property="Foreground" Value="{StaticResource TextDarkBrush}"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#00fe81"/>
+                    <Setter Property="Background" Value="#BDBDBD"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
-    </Page.Resources>
-    <Grid Margin="15">
-
         
-        <!-- Заголовок с аватаром -->
-        <Border Background="#FF1E88E5" CornerRadius="5" Padding="15">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <!--<Ellipse Width="60" Height="60" Margin="0,0,15,0">
-                    <Ellipse.Fill>
-                        <ImageBrush ImageSource="/Assets/avatar.png"/>
-                    </Ellipse.Fill>
-                </Ellipse>-->
-                
+        <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+            <Setter Property="Background" Value="#F44336"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#D32F2F"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- Стиль для карточек -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="Margin" Value="0 0 0 16"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.1"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Стиль для заголовков -->
+        <Style x:Key="SectionHeaderStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+            <Setter Property="Margin" Value="0 0 0 16"/>
+        </Style>
+        
+        <!-- Стиль для меток данных -->
+        <Style x:Key="DataLabelStyle" TargetType="Label">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource TextDarkBrush}"/>
+            <Setter Property="Margin" Value="0 0 8 8"/>
+        </Style>
+        
+        <!-- Стиль для значений данных -->
+        <Style x:Key="DataValueStyle" TargetType="Label">
+            <Setter Property="Foreground" Value="{StaticResource TextDarkBrush}"/>
+            <Setter Property="Margin" Value="0 0 0 8"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="{StaticResource LightBackgroundBrush}">
+        <!-- Верхняя панель -->
+        <Border Background="{StaticResource PrimaryBrush}" Height="60" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20 0">
                 <Label Content="Личный кабинет" 
-                       FontSize="24" 
-                       FontWeight="Bold" 
-                       Foreground="White"
-                       VerticalAlignment="Top"/>
+                       Foreground="White" 
+                       FontSize="20" 
+                       FontWeight="Bold"/>
             </StackPanel>
         </Border>
-        <Button x:Name="btnDelete" Content="Назад" 
-Style="{StaticResource DeleteButtonStyle}"
-Click="back_Click" Width="80" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="23"/>
-        <!-- Основной контент -->
-        <Border Margin="0,80,0,0" 
-                Background="White" 
-                CornerRadius="5"
-                Padding="30"
-                BorderThickness="1"
-                BorderBrush="#FFE0E0E0">
-            <ScrollViewer>
-                <StackPanel>
-                    <!-- Персональные данные -->
-                    <Label Content="Персональные данные" 
-                           FontSize="18" 
-                           FontWeight="Bold"
-                           Margin="0,0,0,20"
-                           Foreground="#FF1E88E5"/>
+        
+        <!-- Основное содержимое -->
+        <ScrollViewer Margin="20 80 20 20">
+            <StackPanel>
+                <!-- Карточка персональных данных -->
+                <Border Style="{StaticResource CardStyle}">
+                    <StackPanel>
+                        <Label Content="Персональные данные" Style="{StaticResource SectionHeaderStyle}"/>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                    <!-- Основная информация -->
-                    <Grid Margin="0,0,0,20">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="ФИО:" Style="{StaticResource DataLabelStyle}"/>
+                            <Label Grid.Row="0" Grid.Column="1" x:Name="lblFullName" Content="-" Style="{StaticResource DataValueStyle}"/>
 
-                        <Label Grid.Row="0" Grid.Column="0" 
-                               Content="ФИО:" 
-                               FontWeight="SemiBold" 
-                               Margin="0,0,10,10"/>
-                        <Label Grid.Row="0" Grid.Column="1" 
-                               x:Name="lblFullName" 
-                               Content="-" 
-                               Foreground="#FF424242"/>
+                            <Label Grid.Row="1" Grid.Column="0" Content="Дата рождения:" Style="{StaticResource DataLabelStyle}"/>
+                            <Label Grid.Row="1" Grid.Column="1" x:Name="lblBirthDate" Content="-" Style="{StaticResource DataValueStyle}"/>
 
-                        <Label Grid.Row="1" Grid.Column="0" 
-                               Content="Дата рождения:" 
-                               FontWeight="SemiBold" 
-                               Margin="0,0,10,10"/>
-                        <Label Grid.Row="1" Grid.Column="1" 
-                               x:Name="lblBirthDate" 
-                               Content="-" 
-                               Foreground="#FF424242"/>
+                            <Label Grid.Row="2" Grid.Column="0" Content="Телефон:" Style="{StaticResource DataLabelStyle}"/>
+                            <Label Grid.Row="2" Grid.Column="1" x:Name="lblPhone" Content="-" Style="{StaticResource DataValueStyle}"/>
 
-                        <Label Grid.Row="2" Grid.Column="0" 
-                               Content="Телефон:" 
-                               FontWeight="SemiBold" 
-                               Margin="0,0,10,10"/>
-                        <Label Grid.Row="2" Grid.Column="1" 
-                               x:Name="lblPhone" 
-                               Content="-" 
-                               Foreground="#FF424242"/>
+                            <Label Grid.Row="3" Grid.Column="0" Content="Email:" Style="{StaticResource DataLabelStyle}"/>
+                            <Label Grid.Row="3" Grid.Column="1" x:Name="lblEmail" Content="-" Style="{StaticResource DataValueStyle}"/>
 
-                        <Label Grid.Row="3" Grid.Column="0" 
-                               Content="Email:" 
-                               FontWeight="SemiBold" 
-                               Margin="0,0,10,10"/>
-                        <Label Grid.Row="3" Grid.Column="1" 
-                               x:Name="lblEmail" 
-                               Content="-" 
-                               Foreground="#FF424242"/>
-
-                        <Label Grid.Row="4" Grid.Column="0" 
-                               Content="Адрес:" 
-                               FontWeight="SemiBold" 
-                               Margin="0,0,10,10"/>
-                        <Label Grid.Row="4" Grid.Column="1" 
-                               x:Name="lblAddress" 
-                               Content="-" 
-                               Foreground="#FF424242"/>
-                    </Grid>
-
-                    <!-- Медицинские данные (только для пациентов) -->
-                    <StackPanel x:Name="patientPanel" Visibility="Collapsed">
-                        <Label Content="Медицинские данные" 
-                               FontSize="16" 
-                               FontWeight="Bold"
-                               Margin="0,20,0,15"
-                               Foreground="#FF1E88E5"/>
-
+                            <Label Grid.Row="4" Grid.Column="0" Content="Адрес:" Style="{StaticResource DataLabelStyle}"/>
+                            <Label Grid.Row="4" Grid.Column="1" x:Name="lblAddress" Content="-" Style="{StaticResource DataValueStyle}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+                
+                <!-- Карточка медицинских данных (для пациентов) -->
+                <Border x:Name="patientPanel" Style="{StaticResource CardStyle}" Visibility="Collapsed">
+                    <StackPanel>
+                        <Label Content="Медицинские данные" Style="{StaticResource SectionHeaderStyle}"/>
+                        
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -159,59 +162,40 @@ Click="back_Click" Width="80" Height="30" VerticalAlignment="Top" HorizontalAlig
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" 
-                                   Content="Номер полиса:" 
-                                   FontWeight="SemiBold" 
-                                   Margin="0,0,10,10"/>
-                            <Label Grid.Row="0" Grid.Column="1" 
-                                   x:Name="lblPolicy" 
-                                   Content="-" 
-                                   Foreground="#FF424242"/>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Номер полиса:" Style="{StaticResource DataLabelStyle}"/>
+                            <Label Grid.Row="0" Grid.Column="1" x:Name="lblPolicy" Content="-" Style="{StaticResource DataValueStyle}"/>
 
-                            <Label Grid.Row="1" Grid.Column="0" 
-                                   Content="СНИЛС:" 
-                                   FontWeight="SemiBold" 
-                                   Margin="0,0,10,10"/>
-                            <Label Grid.Row="1" Grid.Column="1" 
-                                   x:Name="lblSnils" 
-                                   Content="-" 
-                                   Foreground="#FF424242"/>
+                            <Label Grid.Row="1" Grid.Column="0" Content="СНИЛС:" Style="{StaticResource DataLabelStyle}"/>
+                            <Label Grid.Row="1" Grid.Column="1" x:Name="lblSnils" Content="-" Style="{StaticResource DataValueStyle}"/>
                         </Grid>
                     </StackPanel>
-
-                    <!-- Кнопка редактирования -->
-                    <Button x:Name="btnEditProfile" 
-                            Content="Редактировать профиль" 
-                            HorizontalAlignment="Right" 
-                            Margin="0,30,0,0"
-                            Padding="15,5" 
-                            Width="180" 
-                            Background="#FF1E88E5"
-                            Foreground="White"
-                            FontWeight="SemiBold"/>
-                    <Button x:Name="zapis" 
-                            Content="Записаться на приём" 
-                            HorizontalAlignment="Right" 
-                            Margin="0,30,0,0"
-                            Padding="15,5" 
-                            Width="180" 
-                            Background="#FF1E88E5"
-                            Foreground="White"
-                            FontWeight="SemiBold"
-                            Click="zapis_Click"/>
-                    <Button x:Name="Exit_out" 
-        Content="Выход" 
-        HorizontalAlignment="Right" 
-        Margin="0,30,0,0"
-        Padding="15,5" 
-        Width="180" 
-        Background="Red"
-        Foreground="White"
-        FontWeight="SemiBold"
-        Click="Exit_out_Click"/>
-                </StackPanel>
-            </ScrollViewer>
-        </Border>
-            
+                </Border>
+                
+                <!-- Карточка действий -->
+                <Border Style="{StaticResource CardStyle}">
+                    <StackPanel>
+                        <Label Content="Действия" Style="{StaticResource SectionHeaderStyle}"/>
+                        
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button x:Name="btnBack" Content="Назад" 
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Click="back_Click" Margin="0 0 10 0"/>
+                            
+                            <Button x:Name="btnEditProfile" Content="Редактировать профиль" 
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    Margin="0 0 10 0" Click="btnEditProfile_Click"/>
+                                    
+                            <Button x:Name="zapis" Content="Записаться на приём" 
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    Click="zapis_Click" Margin="0 0 10 0"/>
+                                    
+                            <Button x:Name="Exit_out" Content="Выход" 
+                                    Style="{StaticResource DangerButtonStyle}"
+                                    Click="Exit_out_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>

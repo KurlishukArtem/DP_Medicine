@@ -22,7 +22,7 @@ namespace Medicine_DP.Windows
     public partial class Patients_Edit_Window : Window
     {
         public patients _patient;
-        private readonly DataContext _context = Main._main._context;
+        private readonly DataContext _context = new DataContext();
         public Patients_Edit_Window(patients patient = null)
         {
             InitializeComponent();

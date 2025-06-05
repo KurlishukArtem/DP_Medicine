@@ -25,11 +25,22 @@ namespace Medicine_DP.Windows
     {
         private readonly DataContext _context = Main._main._context;
         private List<TimeSpan> _availableTimes = new List<TimeSpan>();
+        private readonly Models.appointments _appointment;
+
+
+        private bool _isEditMode = false;
         public AddAppointmentWindow(Models.appointments appointment = null)
         {
             InitializeComponent();
             _context = new DataContext();
+            _appointment = appointment;
+            _isEditMode = _appointment != null;
             LoadData();
+
+            if (_isEditMode)
+            {
+                LoadAppointmentData();
+            }
         }
         private void LoadData()
         {
@@ -53,7 +64,7 @@ namespace Medicine_DP.Windows
                         FullName = $"{e.last_name} {e.first_name} {e.middle_name}",
                         e.specialization
                     })
-                    .ToList();
+                        .ToList();
 
                 // Загрузка услуг
                 cbServices.ItemsSource = _context.services
@@ -67,12 +78,65 @@ namespace Medicine_DP.Windows
 
                 dpDate.SelectedDate = DateTime.Today;
                 dpDate.DisplayDateStart = DateTime.Today;
-        }
+            }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка загрузки данных: {ex.Message}");
             }
-}
+        }
+
+        private void LoadAppointmentData()
+        {
+            // Установка пациента
+            var patient = _context.patients.FirstOrDefault(p => p.patient_id == _appointment.patient_id);
+            if (patient != null)
+            {
+                cbPatients.SelectedItem = cbPatients.Items
+                    .Cast<dynamic>()
+                    .FirstOrDefault(i => i.patient_id == patient.patient_id);
+            }
+
+            // Установка врача
+            var doctor = _context.employees.FirstOrDefault(d => d.employee_id == _appointment.employee_id);
+            if (doctor != null)
+            {
+                cbDoctors.SelectedItem = cbDoctors.Items
+                    .Cast<dynamic>()
+                    .FirstOrDefault(i => i.employee_id == doctor.employee_id);
+
+                tbRoom.Text = doctor.rooms.ToString();
+            }
+
+            // Установка даты
+            dpDate.SelectedDate = _appointment.appointment_date;
+
+            // Установка услуги
+            var service = _context.services.FirstOrDefault(s => s.service_id == _appointment.service_id);
+            if (service != null)
+            {
+                cbServices.SelectedItem = cbServices.Items
+                    .Cast<dynamic>()
+                    .FirstOrDefault(i => i.service_id == service.service_id);
+            }
+
+            // Установка заметок
+            tbNotes.Text = _appointment.notes;
+
+            // После загрузки данных — обновляем доступное время
+            UpdateAvailableTimes();
+
+            // Устанавливаем текущее время после формирования списка
+            if (_availableTimes.Count > 0)
+            {
+                var selectedTime = TimeSpan.FromMinutes(_appointment.start_time);
+                int index = _availableTimes.FindIndex(t => t == selectedTime);
+                if (index >= 0)
+                {
+                    cbTime.SelectedIndex = index;
+                }
+            }
+        }
+
         private void cbDoctors_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cbDoctors.SelectedItem == null || dpDate.SelectedDate == null)
@@ -94,23 +158,21 @@ namespace Medicine_DP.Windows
             try
             {
                 dynamic selectedDoctor = cbDoctors.SelectedItem;
-            int doctorId = selectedDoctor.employee_id;
-            DateTime selectedDate = dpDate.SelectedDate.Value;
-            
-            employees _empl = _context.employees.FirstOrDefault(x=>x.employee_id==doctorId);
+                int doctorId = selectedDoctor.employee_id;
+                DateTime selectedDate = dpDate.SelectedDate.Value;
 
+                employees _empl = _context.employees.FirstOrDefault(x => x.employee_id == doctorId);
 
-            int dayOfWeek = (int)selectedDate.DayOfWeek;
-            if (dayOfWeek == 0) dayOfWeek = 7;
+                int dayOfWeek = (int)selectedDate.DayOfWeek;
+                if (dayOfWeek == 0) dayOfWeek = 7;
 
-            // Исправленный запрос
-            var schedule = _context.schedules
-                .AsNoTracking()
-                .Where(s => s.employee_id == doctorId &&
-                                   s.day_of_week == dayOfWeek &&
-                                   s.is_working_day);                                                   
+                var schedule = _context.schedules
+                    .AsNoTracking()
+                    .Where(s => s.employee_id == doctorId &&
+                                s.day_of_week == dayOfWeek &&
+                                s.is_working_day);
 
-            if (schedule == null)
+                if (!schedule.Any())
                 {
                     MessageBox.Show("Врач не работает в выбранный день");
                     cbTime.ItemsSource = null;
@@ -121,20 +183,17 @@ namespace Medicine_DP.Windows
                 // Получаем занятые времена
                 var bookedTimes = _context.appointments
                     .Where(a => a.employee_id == doctorId &&
-                               a.appointment_date == selectedDate &&
-                               a.status != "cancelled")
+                                a.appointment_date == selectedDate &&
+                                a.status != "cancelled")
                     .Select(a => TimeSpan.FromMinutes(a.start_time))
                     .ToList();
 
                 // Генерируем доступные временные слоты
                 _availableTimes.Clear();
-               
 
-                
-
-                foreach ( var item in schedule )
+                foreach (var item in schedule)
                 {
-                _availableTimes.Add(item.start_time);
+                    _availableTimes.Add(item.start_time);
                 }
 
                 // Отображаем доступное время
@@ -142,14 +201,14 @@ namespace Medicine_DP.Windows
                     .Select(t => t.ToString(@"hh\:mm"))
                     .ToList();
 
-            // Показываем кабинет
+                // Показываем кабинет
                 tbRoom.Text = _empl.rooms.ToString();
-        }
+            }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка при обновлении времени: {ex.Message}");
             }
-}
+        }
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
@@ -157,23 +216,50 @@ namespace Medicine_DP.Windows
             {
                 if (!ValidateInput()) return;
 
-                var appointment = new appointments
+                int patientId = ((dynamic)cbPatients.SelectedItem).patient_id;
+                int employeeId = ((dynamic)cbDoctors.SelectedItem).employee_id;
+                int serviceId = ((dynamic)cbServices.SelectedItem).service_id;
+                int? roomId = int.TryParse(tbRoom.Text, out int room) ? room : (int?)null;
+                DateTime date = dpDate.SelectedDate.Value;
+                int timeMinutes = (int)_availableTimes[cbTime.SelectedIndex].TotalMinutes;
+                string notes = tbNotes.Text.Trim();
+
+                if (_isEditMode)
                 {
-                    patient_id = ((dynamic)cbPatients.SelectedItem).patient_id,
-                    employee_id = ((dynamic)cbDoctors.SelectedItem).employee_id,
-                    service_id = ((dynamic)cbServices.SelectedItem).service_id,
-                    room_id = int.TryParse(tbRoom.Text, out int room) ? room : (int?)null,
-                    appointment_date = dpDate.SelectedDate.Value,
-                    start_time = (int)_availableTimes[cbTime.SelectedIndex].TotalMinutes,
-                    notes = tbNotes.Text,
-                    status = "scheduled"
-                };
+                    // Редактирование существующей записи
+                    _appointment.patient_id = patientId;
+                    _appointment.employee_id = employeeId;
+                    _appointment.service_id = serviceId;
+                    _appointment.room_id = roomId;
+                    _appointment.appointment_date = date;
+                    _appointment.start_time = timeMinutes;
+                    _appointment.notes = notes;
 
-                _context.appointments.Add(appointment);
+                    _context.appointments.Update(_appointment);
+                }
+                else
+                {
+                    // Создание новой записи
+                    var newAppointment = new appointments
+                    {
+                        patient_id = patientId,
+                        employee_id = employeeId,
+                        service_id = serviceId,
+                        room_id = roomId,
+                        appointment_date = date,
+                        start_time = timeMinutes,
+                        notes = notes,
+                        status = "scheduled",
+                        created_at = DateTime.Now
+                    };
+
+                    _context.appointments.Add(newAppointment);
+                }
+
                 _context.SaveChanges();
-
                 MessageBox.Show("Запись успешно сохранена");
-                
+                DialogResult = true;
+                Close();
             }
             catch (Exception ex)
             {

@@ -121,21 +121,16 @@ namespace Medicine_DP.Pages
 
             // Настраиваем окно
 
-            addAppointmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner; // Позиционируем по центру родительского окна
+            addAppointmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner; 
 
-            //// Подписываемся на событие закрытия окна (если нужно обновить данные после закрытия)
-            //addAppointmentWindow.Closed += (s, args) =>
-            //{
-            //    // Здесь можно обновить данные в главном окне, если нужно
-            //    // Например: RefreshAppointmentsList();
-            //};
+            
             addAppointmentWindow.Show();
         }
 
         private void Exit_out_Click(object sender, RoutedEventArgs e)
         {
 
-            // Создаем диалоговое окно подтверждения
+            // Создал диалоговое окно подтверждения
             MessageBoxResult result = MessageBox.Show(
                 "Вы точно хотите выйти из аккаунта?",
                 "Подтверждение выхода",
@@ -157,7 +152,7 @@ namespace Medicine_DP.Pages
             if (_employee != null)
             {
                 // Редактирование данных сотрудника
-                var editWindow = new Employees_Edit_Window(_employee);
+                var editWindow = new Emploeess_Edit_Window(_employee);
                 editWindow.Show();
 
                 // Обновляем данные после редактирования

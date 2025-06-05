@@ -74,6 +74,7 @@ namespace Medicine_DP.Windows
             dpHireDate.SelectedDate = _employee.hire_date;
             txtAddress.Text = _employee.address;
             txtLogin.Text = _employee.login;
+            txtPassword.Text = _employee.password_hash;
             chkIsActive.IsChecked = _employee.is_active == 1;
         }
 
@@ -124,7 +125,7 @@ namespace Medicine_DP.Windows
                 MessageBox.Show(_isNewEmployee ? "Новый сотрудник успешно добавлен" : "Данные сотрудника успешно обновлены",
                               "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                DialogResult = true;
+                //DialogResult = true;
                 Close();
             }
             catch (DbUpdateException dbEx)

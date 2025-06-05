@@ -119,7 +119,7 @@ namespace Medicine_DP.Elements
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
-            var editWindow = new appointments_Edit_Window(_appointment);
+            var editWindow = new AddAppointmentWindow(_appointment);
             editWindow.Closed += (s, args) =>
             {
                 

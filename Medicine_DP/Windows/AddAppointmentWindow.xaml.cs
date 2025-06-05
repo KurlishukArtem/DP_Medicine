@@ -25,7 +25,7 @@ namespace Medicine_DP.Windows
     {
         private readonly DataContext _context = Main._main._context;
         private List<TimeSpan> _availableTimes = new List<TimeSpan>();
-        public AddAppointmentWindow()
+        public AddAppointmentWindow(Models.appointments appointment = null)
         {
             InitializeComponent();
             _context = new DataContext();
@@ -33,8 +33,8 @@ namespace Medicine_DP.Windows
         }
         private void LoadData()
         {
-            //try
-            //{
+            try
+            {
                 // Загрузка пациентов
                 cbPatients.ItemsSource = _context.patients
                     .Select(p => new
@@ -67,12 +67,12 @@ namespace Medicine_DP.Windows
 
                 dpDate.SelectedDate = DateTime.Today;
                 dpDate.DisplayDateStart = DateTime.Today;
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show($"Ошибка загрузки данных: {ex.Message}");
-            //}
         }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}");
+            }
+}
         private void cbDoctors_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cbDoctors.SelectedItem == null || dpDate.SelectedDate == null)
@@ -91,9 +91,9 @@ namespace Medicine_DP.Windows
 
         private void UpdateAvailableTimes()
         {
-            //try
-            //{
-            dynamic selectedDoctor = cbDoctors.SelectedItem;
+            try
+            {
+                dynamic selectedDoctor = cbDoctors.SelectedItem;
             int doctorId = selectedDoctor.employee_id;
             DateTime selectedDate = dpDate.SelectedDate.Value;
             
@@ -144,12 +144,12 @@ namespace Medicine_DP.Windows
 
             // Показываем кабинет
                 tbRoom.Text = _empl.rooms.ToString();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show($"Ошибка при обновлении времени: {ex.Message}");
-            //}
         }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при обновлении времени: {ex.Message}");
+            }
+}
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {

@@ -180,7 +180,7 @@ namespace Medicine_DP.Windows
                     return;
                 }
 
-                // Получаем занятые времена
+                
                 var bookedTimes = _context.appointments
                     .Where(a => a.employee_id == doctorId &&
                                 a.appointment_date == selectedDate &&
@@ -188,7 +188,7 @@ namespace Medicine_DP.Windows
                     .Select(a => TimeSpan.FromMinutes(a.start_time))
                     .ToList();
 
-                // Генерируем доступные временные слоты
+               
                 _availableTimes.Clear();
 
                 foreach (var item in schedule)
@@ -196,12 +196,12 @@ namespace Medicine_DP.Windows
                     _availableTimes.Add(item.start_time);
                 }
 
-                // Отображаем доступное время
+                
                 cbTime.ItemsSource = _availableTimes
                     .Select(t => t.ToString(@"hh\:mm"))
                     .ToList();
 
-                // Показываем кабинет
+                
                 tbRoom.Text = _empl.rooms.ToString();
             }
             catch (Exception ex)
@@ -258,7 +258,7 @@ namespace Medicine_DP.Windows
 
                 _context.SaveChanges();
                 MessageBox.Show("Запись успешно сохранена");
-                DialogResult = true;
+                //DialogResult = true;
                 Close();
             }
             catch (Exception ex)

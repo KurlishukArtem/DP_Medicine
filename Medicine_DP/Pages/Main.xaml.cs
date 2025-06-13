@@ -140,10 +140,10 @@ namespace Medicine_DP.Pages
                 {
                     parent.Children.Add(new Elements.Rooms_El(room));
                 }
-                //if (item is Models.schedules shedules)
-                //{
-                //    parent.Children.Add(new Elements.s(shedules));
-                //}
+                if (item is Models.schedules shedules)
+                {
+                    parent.Children.Add(new Elements.Shedules_El(shedules, _loginUser));
+                }
                 if (item is Models.services services)
                 {
                     parent.Children.Add(new Elements.Services_El(services, _loginUser));
@@ -196,6 +196,10 @@ namespace Medicine_DP.Pages
             CreateUI(new DataContext().services);
         }
 
+        private void EditShedules_Click(object sender, RoutedEventArgs e)
+        {
+            CreateUI(new DataContext().schedules);
+        }
         private void createAppointment_Click(object sender, RoutedEventArgs e)
         {
             // Создаем экземпляр окна для добавления новой записи
@@ -223,5 +227,7 @@ namespace Medicine_DP.Pages
         {
             MainWindow.init.OpenPages(new Pages.Add_Page(_loginUser));
         }
+
+        
     }
 }

@@ -222,6 +222,11 @@
                                 Style="{StaticResource NavButtonStyle}"
                                 Click="AddPage_Click"
                                 Margin="10,5"/>
+                        <Button x:Name="EditShedules" 
+                            Content="Рассписание" 
+                            Style="{StaticResource NavButtonStyle}"
+                            Click="EditShedules_Click"
+                            Margin="10,5"/>
                     </StackPanel>
                 </ScrollViewer>
             </Border>

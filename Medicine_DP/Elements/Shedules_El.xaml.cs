@@ -22,7 +22,7 @@ namespace Medicine_DP.Elements
     /// </summary>
     public partial class Shedules_El : UserControl
     {
-        private readonly schedules _schedule;
+        public schedules _schedule;
         private readonly DataContext _context = Main._main._context;
         public static string _loginUser;
 
@@ -41,14 +41,9 @@ namespace Medicine_DP.Elements
             lbScheduleId.Text = _schedule.schedule_id.ToString();
 
             // ФИО врача
-            if (_schedule.employee != null)
-            {
-                lbDoctorName.Text = _schedule.employee_id.ToString(); /*$"{_schedule.employee.last_name} {_schedule.employee.first_name} {_schedule.employee.middle_name}";*/
-            }
-            else
-            {
-                lbDoctorName.Text = "Неизвестно";
-            }
+            
+            lbDoctorName.Text = _schedule.employee_id.ToString(); 
+            
 
             // День недели
             lbDayOfWeek.Text = GetDayName(_schedule.day_of_week);

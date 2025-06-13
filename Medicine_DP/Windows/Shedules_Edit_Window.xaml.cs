@@ -118,12 +118,91 @@ namespace Medicine_DP.Windows
                     MessageBox.Show("Расписание успешно изменено", "Изменение", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
 
-                this.DialogResult = true;
+                
                 this.Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка сохранения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void Shablon_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (cbDoctor.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите врача", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                int employeeId = (int)cbDoctor.SelectedValue;
+
+                // Проверяем, выбран ли день недели
+                if (!int.TryParse(txtDayOfWeek.Text, out int dayOfWeek) || dayOfWeek < 1 || dayOfWeek > 7)
+                {
+                    MessageBox.Show("Введите корректный день недели (от 1 до 7)", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                TimeSpan start = new TimeSpan(8, 30, 0); // 08:30
+                TimeSpan end = new TimeSpan(18, 0, 0);  // 18:00
+                TimeSpan interval = TimeSpan.FromMinutes(30);
+
+                // Получаем номер кабинета
+                int? roomId = string.IsNullOrWhiteSpace(txtRoom.Text) ? (int?)null : int.Parse(txtRoom.Text);
+
+                bool isWorkingDay = cbIsWorkingDay.IsChecked == true;
+
+                // Очищаем предыдущие записи (если это редактирование существующего расписания одного дня)
+                var existingSchedules = _context.schedules
+                    .Where(s => s.employee_id == employeeId && s.day_of_week == dayOfWeek)
+                    .ToList();
+
+                if (existingSchedules.Count > 0)
+                {
+                    var confirm = MessageBox.Show(
+                        $"Врач уже имеет расписание на этот день. Удалить старые записи и применить шаблон?",
+                        "Подтверждение",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
+
+                    if (confirm == MessageBoxResult.Yes)
+                    {
+                        _context.schedules.RemoveRange(existingSchedules);
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+
+                // Генерируем слоты с 8:30 до 18:00 каждые 30 мин
+                for (TimeSpan time = start; time < end; time = time.Add(interval))
+                {
+                    var scheduleSlot = new schedules
+                    {
+                        employee_id = employeeId,
+                        day_of_week = dayOfWeek,
+                        start_time = time,
+                        end_time = time.Add(interval),
+                        room_id = roomId,
+                        is_working_day = isWorkingDay
+                    };
+
+                    _context.schedules.Add(scheduleSlot);
+                }
+
+                _context.SaveChanges();
+                MessageBox.Show("Шаблон расписания успешно применён", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                this.DialogResult = true;
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при создании шаблона: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

@@ -8,100 +8,162 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Add_Page">
 
-    <Grid Background="#FFF0F8FF">
+    <Page.Resources>
+        <!-- Ресурсы из Main -->
+        <SolidColorBrush x:Key="PrimaryColor" Color="#3D5AFE"/>
+        <SolidColorBrush x:Key="PrimaryDarkColor" Color="#0039CB"/>
+        <SolidColorBrush x:Key="BackgroundLight" Color="#F5F5F6"/>
+        <SolidColorBrush x:Key="TextLightColor" Color="#FFFFFF"/>
+
+        <LinearGradientBrush x:Key="SidebarGradient" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#1E3D8B" Offset="0"/>
+            <GradientStop Color="#1E88E5" Offset="1"/>
+        </LinearGradientBrush>
+
+        <Style x:Key="TopBarStyle" TargetType="Grid">
+            <Setter Property="Background" Value="{StaticResource SidebarGradient}"/>
+        </Style>
+
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryDarkColor}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SectionHeaderStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <DropShadowEffect x:Key="ShadowEffect" BlurRadius="10" ShadowDepth="2" Color="#40000000"/>
+    </Page.Resources>
+
+    <Grid Background="{StaticResource BackgroundLight}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Заголовок -->
-        <Border Grid.Row="0" Background="#FF4682B4" Padding="10">
-            <TextBlock Text="Медицинская информационная система" 
-                   Foreground="White" 
-                   FontSize="18" 
-                   FontWeight="Bold"
-                   HorizontalAlignment="Center"/>
-            
-        </Border>
-        <Button x:Name="btnDelete" Content="Назад" 
-Click="back_Click" Width="80" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="23"/>
+        <!-- Верхняя панель -->
+        <Grid Style="{StaticResource TopBarStyle}" Height="60">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Медицинская система" 
+                       Foreground="White" 
+                       FontSize="18"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       Margin="20,0"
+                       FontFamily="Segoe UI"/>
+
+            <Button x:Name="btnBack" 
+                    Grid.Column="1"
+                    Content="Назад" 
+                    Style="{StaticResource NavButtonStyle}"
+                    Click="back_Click"
+                    Margin="0,8,20,10"
+                    Width="100"/>
+        </Grid>
+
         <!-- Основное содержимое -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <UniformGrid Columns="2" Margin="20">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20">
+            <UniformGrid Columns="2" HorizontalAlignment="Center">
                 <!-- Сотрудники -->
                 <Border Background="White" CornerRadius="8" Margin="10" 
-                    BorderBrush="#FF4682B4" BorderThickness="1">
+                        Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
-                        <Label Content="Сотрудники" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Label Content="Сотрудники" Style="{StaticResource SectionHeaderStyle}"/>
                         <Button x:Name="AddEmloyes" Click="AddEmloyes_Click" 
-                            Height="60" Width="120" Content="Добавить" 
-                            Margin="10" Background="#FF4682B4" Foreground="White"/>
+                                Content="Добавить" Style="{StaticResource NavButtonStyle}"/>
                     </StackPanel>
                 </Border>
 
-                <!-- Записи -->
+                <!-- Результаты посещения -->
                 <Border Background="White" CornerRadius="8" Margin="10" 
-                    BorderBrush="#FF4682B4" BorderThickness="1">
+                        Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
-                        <Label Content="Результаты посещения" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Label Content="Результаты посещения" Style="{StaticResource SectionHeaderStyle}"/>
                         <Button x:Name="AddRecord" Click="AddRecord_Click" 
-                            Height="60" Width="120" Content="Добавить" 
-                            Margin="10" Background="#FF4682B4" Foreground="White"/>
+                                Content="Добавить" Style="{StaticResource NavButtonStyle}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Медикаменты -->
                 <Border Background="White" CornerRadius="8" Margin="10" 
-                    BorderBrush="#FF4682B4" BorderThickness="1">
+                        Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
-                        <Label Content="Медикаменты" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Label Content="Медикаменты" Style="{StaticResource SectionHeaderStyle}"/>
                         <Button x:Name="AddMedications" Click="AddMedications_Click" 
-                            Height="60" Width="120" Content="Добавить" 
-                            Margin="10" Background="#FF4682B4" Foreground="White"/>
+                                Content="Добавить" Style="{StaticResource NavButtonStyle}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Мед-тесты -->
                 <Border Background="White" CornerRadius="8" Margin="10" 
-                    BorderBrush="#FF4682B4" BorderThickness="1">
+                        Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
-                        <Label Content="Мед-тесты" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Label Content="Мед-тесты" Style="{StaticResource SectionHeaderStyle}"/>
                         <Button x:Name="AddTest" Click="AddTest_Click" 
-                            Height="60" Width="120" Content="Добавить" 
-                            Margin="10" Background="#FF4682B4" Foreground="White"/>
+                                Content="Добавить" Style="{StaticResource NavButtonStyle}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Пациенты -->
                 <Border Background="White" CornerRadius="8" Margin="10" 
-                    BorderBrush="#FF4682B4" BorderThickness="1">
+                        Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
-                        <Label Content="Пациенты" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Label Content="Пациенты" Style="{StaticResource SectionHeaderStyle}"/>
                         <Button x:Name="AddPatient" Click="AddPatient_Click" 
-                            Height="60" Width="120" Content="Добавить" 
-                            Margin="10" Background="#FF4682B4" Foreground="White"/>
+                                Content="Добавить" Style="{StaticResource NavButtonStyle}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Оплата -->
                 <Border Background="White" CornerRadius="8" Margin="10" 
-                    BorderBrush="#FF4682B4" BorderThickness="1">
+                        Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
-                        <Label Content="Оплата" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Label Content="Оплата" Style="{StaticResource SectionHeaderStyle}"/>
                         <Button x:Name="AddPayment" Click="AddPayment_Click" 
-                            Height="60" Width="120" Content="Добавить" 
-                            Margin="10" Background="#FF4682B4" Foreground="White"/>
+                                Content="Добавить" Style="{StaticResource NavButtonStyle}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Услуги -->
                 <Border Background="White" CornerRadius="8" Margin="10" 
-                    BorderBrush="#FF4682B4" BorderThickness="1">
+                        Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
-                        <Label Content="Услуги" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Label Content="Услуги" Style="{StaticResource SectionHeaderStyle}"/>
                         <Button x:Name="AddService" Click="AddService_Click" 
-                            Height="60" Width="120" Content="Добавить" 
-                            Margin="10" Background="#FF4682B4" Foreground="White"/>
+                                Content="Добавить" Style="{StaticResource NavButtonStyle}"/>
                     </StackPanel>
                 </Border>
             </UniformGrid>

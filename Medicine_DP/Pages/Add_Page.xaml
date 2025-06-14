@@ -77,8 +77,8 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Медицинская система" 
-                       Foreground="White" 
+            <TextBlock Text="Страница добавления"
+                       Foreground="White"
                        FontSize="18"
                        FontWeight="Bold"
                        VerticalAlignment="Center"
@@ -164,6 +164,14 @@
                         <Label Content="Услуги" Style="{StaticResource SectionHeaderStyle}"/>
                         <Button x:Name="AddService" Click="AddService_Click" 
                                 Content="Добавить" Style="{StaticResource NavButtonStyle}"/>
+                    </StackPanel>
+                </Border>
+                <Border Background="White" CornerRadius="8" Margin="10" 
+        Padding="15" Effect="{StaticResource ShadowEffect}">
+                    <StackPanel>
+                        <Label Content="Расписание" Style="{StaticResource SectionHeaderStyle}"/>
+                        <Button x:Name="AddShedule" Click="AddShedule_Click" 
+                Content="Добавить" Style="{StaticResource NavButtonStyle}"/>
                     </StackPanel>
                 </Border>
             </UniformGrid>

@@ -87,5 +87,11 @@ namespace Medicine_DP.Pages
         {
             MainWindow.init.OpenPages(new Pages.Main(_username));
         }
+
+        private void AddShedule_Click(object sender, RoutedEventArgs e)
+        {
+            Shedules_Edit_Window shedules_Edit_Window = new Shedules_Edit_Window();
+            shedules_Edit_Window.Show();
+        }
     }
 }

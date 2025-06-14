@@ -23,9 +23,13 @@ namespace Medicine_DP.Windows
     /// </summary>
     public partial class AddAppointmentWindow : Window
     {
-        private readonly DataContext _context = Main._main._context;
-        private List<TimeSpan> _availableTimes = new List<TimeSpan>();
-        private readonly Models.appointments _appointment;
+        public ComboBox DoctorsComboBox => cbDoctors;
+        public DatePicker DatePicker => dpDate;
+        public ComboBox TimeComboBox => cbTime;
+        public TextBox RoomTextBox => tbRoom;
+        public  DataContext _context = Main._main._context;
+        public List<TimeSpan> _availableTimes = new List<TimeSpan>();
+        public Models.appointments _appointment;
 
 
         private bool _isEditMode = false;
@@ -153,7 +157,7 @@ namespace Medicine_DP.Windows
             UpdateAvailableTimes();
         }
 
-        private void UpdateAvailableTimes()
+        public void UpdateAvailableTimes()
         {
             try
             {

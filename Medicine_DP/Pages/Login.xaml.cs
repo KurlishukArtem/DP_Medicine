@@ -151,21 +151,24 @@ namespace Medicine_DP.Pages
         }
 
         // Метод для проверки валидности email
-        private bool IsValidEmail(string email)
+        public class EmailValidator
         {
-            try
+            public bool IsValidEmail(string email)
             {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
+                try
+                {
+                    var addr = new System.Net.Mail.MailAddress(email);
+                    return addr.Address == email;
+                }
+                catch
+                {
+                    return false;
+                }
             }
         }
 
         // Метод для генерации случайного пароля
-        private string GenerateRandomPassword(int length)
+        public string GenerateRandomPassword(int length)
         {
             const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
             var random = new Random();

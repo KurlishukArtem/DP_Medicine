@@ -157,7 +157,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- Левая панель навигации -->
-            <Border Grid.Column="0" Background="{StaticResource SidebarGradient}">
+            <Border Grid.Column="0" Background="#323339">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Disabled"
                               Padding="0,20,0,0">
@@ -176,7 +176,7 @@
                                 Margin="10,5"/>
 
                         <Button x:Name="medical_records" 
-                                Content="Мед. карты" 
+                                Content="Диагнозы" 
                                 Style="{StaticResource NavButtonStyle}"
                                 Click="medical_records_Click"
                                 Margin="10,5"/>
@@ -188,7 +188,7 @@
                                 Margin="10,5"/>
 
                         <Button x:Name="medications" 
-                                Content="Лекарства" 
+                                Content="Медикаменты" 
                                 Style="{StaticResource NavButtonStyle}"
                                 Click="medications_Click"
                                 Margin="10,5"/>
@@ -206,11 +206,15 @@
                                 Margin="10,5"/>
 
                         <Button x:Name="shedules" 
-                                Content="Расписание" 
+                                Content="Услуги" 
                                 Style="{StaticResource NavButtonStyle}"
                                 Click="schedules_Click"
                                 Margin="10,5"/>
-
+                        <Button x:Name="EditShedules" 
+                                Content="Расписание" 
+                                Style="{StaticResource NavButtonStyle}"
+                                Click="EditShedules_Click"
+                                Margin="10,5"/>
                         <Button x:Name="createAppointment" 
                                 Content="Новая запись" 
                                 Style="{StaticResource NavButtonStyle}"
@@ -222,11 +226,7 @@
                                 Style="{StaticResource NavButtonStyle}"
                                 Click="AddPage_Click"
                                 Margin="10,5"/>
-                        <Button x:Name="EditShedules" 
-                            Content="Рассписание" 
-                            Style="{StaticResource NavButtonStyle}"
-                            Click="EditShedules_Click"
-                            Margin="10,5"/>
+                        
                     </StackPanel>
                 </ScrollViewer>
             </Border>

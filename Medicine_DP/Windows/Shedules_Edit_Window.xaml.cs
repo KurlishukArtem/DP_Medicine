@@ -197,7 +197,7 @@ namespace Medicine_DP.Windows
 
                 _context.SaveChanges();
                 MessageBox.Show("Шаблон расписания успешно применён", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                this.DialogResult = true;
+                
                 this.Close();
             }
             catch (Exception ex)

@@ -102,38 +102,37 @@ namespace Medicine_DP.Elements
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            var confirm = MessageBox.Show(
-                $"Вы уверены, что хотите удалить расписание для врача '{_schedule.employee.last_name}'?",
-                "Подтверждение удаления",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
-
-            if (confirm != MessageBoxResult.Yes) return;
-
             try
             {
                 using (var context = new DataContext())
                 {
-                    var scheduleToDelete = context.schedules.FirstOrDefault(s => s.schedule_id == _schedule.schedule_id);
+                    // Находим запись для удаления
+                    var scheduleToDelete = context.schedules
+                        .FirstOrDefault(s => s.schedule_id == _schedule.schedule_id);
 
                     if (scheduleToDelete == null)
                     {
-                        MessageBox.Show("Запись не найдена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Запись не найдена", "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
 
-                    // Проверяем наличие связанных записей (например, приемов)
+                    // Получаем день недели как число
+                    int dayOfWeekNumber = scheduleToDelete.day_of_week;
+
+                    // Проверяем наличие связанных записей (клиентская оценка)
                     bool hasAppointments = context.appointments
+                        .AsEnumerable() // Переключаем на клиентскую оценку
                         .Any(a => a.employee_id == scheduleToDelete.employee_id &&
-                                  a.appointment_date.DayOfWeek == (DayOfWeek)Enum.ToObject(typeof(DayOfWeek), scheduleToDelete.day_of_week));
+                               (int)a.appointment_date.DayOfWeek == dayOfWeekNumber);
 
                     if (hasAppointments)
                     {
                         MessageBox.Show("Невозможно удалить расписание — есть записи на приём в этот день.\n" +
-                                        "Сначала отмените или перенесите записи.",
-                                        "Ошибка удаления",
-                                        MessageBoxButton.OK,
-                                        MessageBoxImage.Error);
+                                       "Сначала отмените или перенесите записи.",
+                                       "Ошибка удаления",
+                                       MessageBoxButton.OK,
+                                       MessageBoxImage.Error);
                         return;
                     }
 
@@ -146,12 +145,14 @@ namespace Medicine_DP.Elements
                         parentPanel.Children.Remove(this);
                     }
 
-                    MessageBox.Show("Расписание успешно удалено", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Расписание успешно удалено", "Успех",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при удалении: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка при удалении: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

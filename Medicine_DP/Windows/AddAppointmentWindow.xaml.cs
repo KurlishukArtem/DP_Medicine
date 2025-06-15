@@ -225,7 +225,7 @@ namespace Medicine_DP.Windows
                 int serviceId = ((dynamic)cbServices.SelectedItem).service_id;
                 int? roomId = int.TryParse(tbRoom.Text, out int room) ? room : (int?)null;
                 DateTime date = dpDate.SelectedDate.Value;
-                int timeMinutes = (int)_availableTimes[cbTime.SelectedIndex].TotalMinutes;
+                int timeMinutes = (int)_availableTimes[cbTime.SelectedIndex].TotalHours;
                 string notes = tbNotes.Text.Trim();
 
                 if (_isEditMode)

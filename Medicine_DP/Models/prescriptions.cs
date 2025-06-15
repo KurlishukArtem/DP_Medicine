@@ -13,7 +13,7 @@ namespace Medicine_DP.Models
         public int prescription_id { get; set; }
 
         [ForeignKey("record_id")]
-        
+
         public int record_id { get; set; }
 
         [ForeignKey("medication_id")]

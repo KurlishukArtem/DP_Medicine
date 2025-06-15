@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Xml;
 using Medicine_DP.Config;
 using Medicine_DP.Models;
 using Medicine_DP.Pages;
@@ -116,14 +117,26 @@ namespace Medicine_DP.Windows
         {
             if (!ValidateInput()) return;
 
-            try
-            {
-                if (_isNewRecord)
+            //try
+            //{
+            medical_records medical_Records = new medical_records();
+                if (medical_Records == null)
                 {
-                    _record = new medical_records();
+
+                medical_Records.patient_id = int.Parse(cbPatients.Text);
+                medical_Records.employee_id = int.Parse(cbDoctors.Text);
+                medical_Records.appointment_id = int.Parse(cbAppointments.Text);
+                medical_Records.record_date = DateTime.Parse(dpRecordDate.Text);
+                medical_Records.diagnosis = txtDiagnosis.Text;
+                medical_Records.treatment = txtTreatment.Text;
+                medical_Records.prescription = txtPrescription.Text;
+                medical_Records.recommendations = txtRecommendations.Text;
+                medical_Records.status = cbAppointments.Text;
+                   
                     _context.medical_records.Add(_record);
                 }
-
+            else
+            {
                 // Обновление данных
                 _record.patient_id = (int)cbPatients.SelectedValue;
                 _record.employee_id = (int)cbDoctors.SelectedValue;
@@ -136,18 +149,19 @@ namespace Medicine_DP.Windows
                 _record.status = (cbStatus.SelectedItem as ComboBoxItem)?.Tag.ToString();
 
                 _context.Update(_record);
+            }
                 _context.SaveChanges();
 
                 MessageBox.Show("Медицинская запись успешно сохранена", "Успех",
                               MessageBoxButton.OK, MessageBoxImage.Information);
 
                 Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка сохранения: {ex.Message}", "Ошибка",
-                              MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show($"Ошибка сохранения: {ex.Message}", "Ошибка",
+            //                  MessageBoxButton.OK, MessageBoxImage.Error);
+            //}
         }
 
         private bool ValidateInput()
@@ -168,8 +182,8 @@ namespace Medicine_DP.Windows
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false;
-            Close();
+
+            this.Close();
         }
     }
 }

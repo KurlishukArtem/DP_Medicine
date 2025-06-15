@@ -25,6 +25,8 @@ namespace Medicine_DP.Elements
         public schedules _schedule;
         private readonly DataContext _context = Main._main._context;
         public static string _loginUser;
+        public patients _patients;
+        employees _employees;
 
         public Shedules_El(schedules schedule, string loginUser = null)
         {
@@ -41,9 +43,11 @@ namespace Medicine_DP.Elements
             lbScheduleId.Text = _schedule.schedule_id.ToString();
 
             // ФИО врача
-            
-            lbDoctorName.Text = _schedule.employee_id.ToString(); 
-            
+            var doctor = _context.employees.FirstOrDefault(x=>x.employee_id==_schedule.employee_id);
+            lbDoctorName.Text = doctor != null ?
+                $"{doctor.last_name} {doctor.first_name} {doctor.middle_name}" :
+                "Неизвестно";
+
 
             // День недели
             lbDayOfWeek.Text = GetDayName(_schedule.day_of_week);

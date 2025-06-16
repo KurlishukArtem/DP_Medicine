@@ -27,12 +27,12 @@ namespace Medicine_DP.Windows
         public DatePicker DatePicker => dpDate;
         public ComboBox TimeComboBox => cbTime;
         public TextBox RoomTextBox => tbRoom;
-        public  DataContext _context = Main._main._context;
+        public DataContext _context = Main._main._context;
         public List<TimeSpan> _availableTimes = new List<TimeSpan>();
         public Models.appointments _appointment;
 
-
         private bool _isEditMode = false;
+
         public AddAppointmentWindow(Models.appointments appointment = null)
         {
             InitializeComponent();
@@ -46,6 +46,7 @@ namespace Medicine_DP.Windows
                 LoadAppointmentData();
             }
         }
+
         private void LoadData()
         {
             try
@@ -68,7 +69,7 @@ namespace Medicine_DP.Windows
                         FullName = $"{e.last_name} {e.first_name} {e.middle_name}",
                         e.specialization
                     })
-                        .ToList();
+                    .ToList();
 
                 // Загрузка услуг
                 cbServices.ItemsSource = _context.services
@@ -132,7 +133,7 @@ namespace Medicine_DP.Windows
             // Устанавливаем текущее время после формирования списка
             if (_availableTimes.Count > 0)
             {
-                var selectedTime = TimeSpan.FromMinutes(_appointment.start_time);
+                var selectedTime = _appointment.start_time;
                 int index = _availableTimes.FindIndex(t => t == selectedTime);
                 if (index >= 0)
                 {
@@ -184,15 +185,13 @@ namespace Medicine_DP.Windows
                     return;
                 }
 
-                
                 var bookedTimes = _context.appointments
                     .Where(a => a.employee_id == doctorId &&
                                 a.appointment_date == selectedDate &&
                                 a.status != "cancelled")
-                    .Select(a => TimeSpan.FromMinutes(a.start_time))
+                    .Select(a => a.start_time)
                     .ToList();
 
-               
                 _availableTimes.Clear();
 
                 foreach (var item in schedule)
@@ -200,12 +199,13 @@ namespace Medicine_DP.Windows
                     _availableTimes.Add(item.start_time);
                 }
 
-                
+                // Удаляем уже занятое время
+                _availableTimes = _availableTimes.Except(bookedTimes).ToList();
+
                 cbTime.ItemsSource = _availableTimes
                     .Select(t => t.ToString(@"hh\:mm"))
                     .ToList();
 
-                
                 tbRoom.Text = _empl.rooms.ToString();
             }
             catch (Exception ex)
@@ -225,7 +225,7 @@ namespace Medicine_DP.Windows
                 int serviceId = ((dynamic)cbServices.SelectedItem).service_id;
                 int? roomId = int.TryParse(tbRoom.Text, out int room) ? room : (int?)null;
                 DateTime date = dpDate.SelectedDate.Value;
-                int timeMinutes = (int)_availableTimes[cbTime.SelectedIndex].TotalHours;
+                TimeSpan selectedTime = _availableTimes[cbTime.SelectedIndex];
                 string notes = tbNotes.Text.Trim();
 
                 if (_isEditMode)
@@ -236,7 +236,7 @@ namespace Medicine_DP.Windows
                     _appointment.service_id = serviceId;
                     _appointment.room_id = roomId;
                     _appointment.appointment_date = date;
-                    _appointment.start_time = timeMinutes;
+                    _appointment.start_time = selectedTime;
                     _appointment.notes = notes;
 
                     _context.appointments.Update(_appointment);
@@ -251,7 +251,7 @@ namespace Medicine_DP.Windows
                         service_id = serviceId,
                         room_id = roomId,
                         appointment_date = date,
-                        start_time = timeMinutes,
+                        start_time = selectedTime,
                         notes = notes,
                         status = "scheduled",
                         created_at = DateTime.Now
@@ -262,7 +262,6 @@ namespace Medicine_DP.Windows
 
                 _context.SaveChanges();
                 MessageBox.Show("Запись успешно сохранена");
-                //DialogResult = true;
                 Close();
             }
             catch (Exception ex)

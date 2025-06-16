@@ -85,51 +85,24 @@ namespace Medicine_DP.Elements
 
         private void LoadAppointmentData()
         {
-            //try
-            //{
-            // Основные данные о приеме
-            lbDate.Text = _appointment.appointment_date.ToString("dd.MM.yyyy");
-            lbTime.Text = _appointment.start_time.ToString();
-            lbStatus.Text = _appointment.status;
-            tbNotes.Text = string.IsNullOrEmpty(_appointment.notes) ? "Нет заметок" : _appointment.notes;
-            lbCreated.Text = _appointment.created_at.ToString("g");
-
-            // Установка цвета статуса
-            StatusColor = _appointment.status switch
+            try
             {
-                "scheduled" => Brushes.Green,
-                "completed" => Brushes.Blue,
-                "canceled" => Brushes.Red,
-                "no-show" => Brushes.Orange,
-                _ => Brushes.Gray
-            };
+                // Комбинируем дату и время для отображения
+                DateTime appointmentDateTime = _appointment.appointment_date.Date.Add(_appointment.start_time);
 
-            // Загрузка связанных данных
-            var patient = _context.patients
-                .FirstOrDefault(p => p.patient_id == _appointment.patient_id);
-            lbPatient.Text = patient != null ?
-                $"{patient.last_name} {patient.first_name} {patient.middle_name}" :
-                "Неизвестно";
+                lbDate.Text = appointmentDateTime.ToString("dd.MM.yyyy");
+                lbTime.Text = appointmentDateTime.ToString("HH:mm");
+                lbStatus.Text = _appointment.status;
+                tbNotes.Text = string.IsNullOrEmpty(_appointment.notes) ? "Нет заметок" : _appointment.notes;
+                lbCreated.Text = _appointment.created_at.ToString("g");
 
-            var doctor = _context.employees
-                .FirstOrDefault(e => e.employee_id == _appointment.employee_id);
-            lbDoctor.Text = doctor != null ?
-                $"{doctor.last_name} {doctor.first_name} {doctor.middle_name}" :
-                "Неизвестно";
-
-            var service = _context.services
-                .FirstOrDefault(s => s.service_id == _appointment.service_id);
-            lbService.Text = service.service_name ?? "Неизвестно";
-
-            var room = _context.appointments
-                .FirstOrDefault(r => r.room_id == _appointment.room_id);
-            lbRoom.Text = room.room_id.ToString();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
-            //        MessageBoxButton.OK, MessageBoxImage.Error);
-            //}
+                // ... остальной код загрузки данных ...
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)

@@ -118,20 +118,25 @@ namespace Medicine_DP.Pages
 
         public void CreateUIapps()
         {
-            var Patient = _context.patients.FirstOrDefault(p => p.login == _loginUser);
-            List<appointments> list;
-            if (Patient != null)
+            var patient = _context.patients.FirstOrDefault(p => p.login == _loginUser);
+            IQueryable<appointments> query = _context.appointments;
+
+            if (patient != null)
             {
-                list = _context.appointments.Where(x=>x.patient_id == Patient.patient_id).ToList();
+                query = query.Where(x => x.patient_id == patient.patient_id);
             }
-            else
-            {
-                list = _context.appointments.ToList();
-            }
+
+            // Сортируем по дате и времени
+            var appointmentsList = query
+                .OrderBy(a => a.appointment_date)
+                .ThenBy(a => a.start_time)
+                .ToList();
+
             parent.Children.Clear();
-            foreach (var apps in list)
+
+            foreach (var app in appointmentsList)
             {
-                parent.Children.Add(new Elements.appointments(apps, _loginUser));
+                parent.Children.Add(new Elements.appointments(app, _loginUser));
             }
         }
 

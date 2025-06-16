@@ -16,7 +16,7 @@ namespace Medicine_DP.Models
         public int service_id { get; set; }
         public int? room_id { get; set; }
         public DateTime appointment_date { get; set; }
-        public int start_time { get; set; }
+        public TimeSpan start_time { get; set; }
         public string status { get; set; } = "scheduled";
         public string notes { get; set; }
         public DateTime created_at { get; set; } = DateTime.Now;

@@ -47,24 +47,39 @@ namespace Medicine_DP.Elements
         }
         private void ConfigureUIForUserRole()
         {
-            // Проверяем сначала сотрудников, затем пациентов
-            bool isEmployee = _context.employees.Any(e => e.login == _loginUser);
-            bool isPatient = _context.patients.Any(p => p.login == _loginUser);
+            var currentUser = _context.employees.FirstOrDefault(e => e.login == _loginUser);
 
-            if (isPatient) // Если это пациент
+            if (currentUser == null)
             {
-                btnDelete.Visibility = Visibility.Collapsed;
-                btnEdit.Visibility = Visibility.Collapsed;
+                // Проверяем, может это пациент
+                bool isPatient = _context.patients.Any(p => p.login == _loginUser);
+                if (isPatient)
+                {
+                    btnDelete.Visibility = Visibility.Collapsed;
+                    btnEdit.Visibility = Visibility.Collapsed;
+                    return;
+                }
+
+                MessageBox.Show("Не удалось определить роль пользователя", "Ошибка");
+                return;
             }
-            else if (isEmployee) // Если это сотрудник
+
+            // Если пользователь - врач
+            if (currentUser.position == "Врач")
             {
+                // Скрываем кнопки, если запись не принадлежит этому врачу
+                bool isOwnAppointment = _appointment.employee_id == currentUser.employee_id;
+                btnDelete.Visibility = isOwnAppointment ? Visibility.Visible : Visibility.Collapsed;
+                btnEdit.Visibility = isOwnAppointment ? Visibility.Visible : Visibility.Collapsed;
+
+                // Можно также скрыть/показать весь элемент управления
+                this.Visibility = isOwnAppointment ? Visibility.Visible : Visibility.Collapsed;
+            }
+            else if (currentUser.position == "Администратор")
+            {
+                // Администратор видит все записи
                 btnDelete.Visibility = Visibility.Visible;
                 btnEdit.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                // Если пользователь не найден (не должно происходить после успешного входа)
-                MessageBox.Show("Не удалось определить роль пользователя", "Ошибка");
             }
         }
 

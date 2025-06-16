@@ -37,14 +37,12 @@ namespace Medicine_DP.Pages
 
         private void ConfigureUIForUserRole()
         {
-            // Проверяем сначала сотрудников, затем пациентов
-            bool isEmployee = _context.employees.Any(e => e.login == _loginUser);
-            bool isPatient = _context.patients.Any(p => p.login == _loginUser);
+            // Находим текущего пользователя (если это сотрудник)
+            var currentEmployee = _context.employees.FirstOrDefault(e => e.login == _loginUser);
+            var isPatient = _context.patients.Any(p => p.login == _loginUser);
 
             if (isPatient) // Если это пациент
             {
-
-                
                 // Скрываем кнопки, которые не должны быть доступны пациенту
                 employees.Visibility = Visibility.Collapsed;
                 medical_tests.Visibility = Visibility.Collapsed;
@@ -58,24 +56,62 @@ namespace Medicine_DP.Pages
                 appointments.Visibility = Visibility.Visible;
                 medical_records.Visibility = Visibility.Visible;
                 cabinet_page.Visibility = Visibility.Visible;
-
-
             }
-            else if (isEmployee) // Если это сотрудник
+            else if (currentEmployee != null) // Если это сотрудник
             {
-                // Показываем все кнопки
-                employees.Visibility = Visibility.Visible;
-                medical_tests.Visibility = Visibility.Visible;
-                medications.Visibility = Visibility.Visible;
+                // Базовые настройки для всех сотрудников
                 patients.Visibility = Visibility.Visible;
-                payments.Visibility = Visibility.Visible;
+                medical_records.Visibility = Visibility.Visible;
+                cabinet_page.Visibility = Visibility.Visible;
                 createAppointment.Visibility = Visibility.Visible;
-                AddPage.Visibility = Visibility.Visible;
+
+                // Настройки для разных должностей
+                switch (currentEmployee.position)
+                {
+                    case "Врач":
+                        // Врач видит только связанные с приемами элементы
+                        employees.Visibility = Visibility.Collapsed;
+                        medical_tests.Visibility = Visibility.Visible;
+                        medications.Visibility = Visibility.Visible;
+                        payments.Visibility = Visibility.Collapsed;
+                        AddPage.Visibility = Visibility.Collapsed;
+                        break;
+
+                    case "Администратор":
+                        // Администратор видит все
+                        employees.Visibility = Visibility.Visible;
+                        medical_tests.Visibility = Visibility.Visible;
+                        medications.Visibility = Visibility.Visible;
+                        payments.Visibility = Visibility.Visible;
+                        AddPage.Visibility = Visibility.Visible;
+                        break;
+
+                    default:
+                        // Для других должностей - минимальные права
+                        employees.Visibility = Visibility.Collapsed;
+                        medical_tests.Visibility = Visibility.Collapsed;
+                        medications.Visibility = Visibility.Collapsed;
+                        payments.Visibility = Visibility.Collapsed;
+                        AddPage.Visibility = Visibility.Collapsed;
+                        break;
+                }
             }
             else
             {
                 // Если пользователь не найден (не должно происходить после успешного входа)
                 MessageBox.Show("Не удалось определить роль пользователя", "Ошибка");
+
+                // Скрываем все элементы на случай ошибки
+                employees.Visibility = Visibility.Collapsed;
+                medical_tests.Visibility = Visibility.Collapsed;
+                medications.Visibility = Visibility.Collapsed;
+                patients.Visibility = Visibility.Collapsed;
+                payments.Visibility = Visibility.Collapsed;
+                createAppointment.Visibility = Visibility.Collapsed;
+                AddPage.Visibility = Visibility.Collapsed;
+                appointments.Visibility = Visibility.Collapsed;
+                medical_records.Visibility = Visibility.Collapsed;
+                cabinet_page.Visibility = Visibility.Collapsed;
             }
         }
 

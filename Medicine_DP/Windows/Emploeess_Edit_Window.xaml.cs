@@ -84,15 +84,30 @@ namespace Medicine_DP.Windows
 
             try
             {
+                // Проверка на уникальность email
+                string email = txtEmail.Text;
+                if (_context.employees.Any(emp => emp.email == email && (_isNewEmployee || emp.employee_id != _employee.employee_id)))
+                {
+                    MessageBox.Show("Сотрудник с таким email уже существует", "Ошибка",
+                                  MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Проверка на уникальность login
+                string login = txtLogin.Text;
+                if (_context.employees.Any(emp => emp.login == login && (_isNewEmployee || emp.employee_id != _employee.employee_id)))
+                {
+                    MessageBox.Show("Сотрудник с таким логином уже существует", "Ошибка",
+                                  MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 // Создаем нового сотрудника или используем существующего
                 if (_isNewEmployee)
                 {
                     _employee = new employees
                     {
-                        // Установка значений по умолчанию для нового сотрудника
                         password_hash = "temp123", // Временный пароль (рекомендуется хеширование)
-                        //created_at = DateTime.Now,
-                        //registration_date = DateTime.Now
                     };
                     _context.employees.Add(_employee);
                 }
@@ -106,13 +121,12 @@ namespace Medicine_DP.Windows
                 _employee.birth_date = dpBirthDate.SelectedDate.Value;
                 _employee.gender = ((ComboBoxItem)cbGender.SelectedItem).Tag.ToString()[0];
                 _employee.phone_number = txtPhoneNumber.Text;
-                _employee.email = txtEmail.Text;
+                _employee.email = email;
                 _employee.hire_date = dpHireDate.SelectedDate.Value;
                 _employee.address = txtAddress.Text;
-                _employee.login = txtLogin.Text;
+                _employee.login = login;
                 _employee.password_hash = txtPassword.Text;
                 _employee.is_active = chkIsActive.IsChecked == true ? 1 : 0;
-                //_employee.rooms = int.TryParse(txtRoom.Text, out int room) ? room : 0;
 
                 // Для нового сотрудника генерируем логин, если не заполнен
                 if (_isNewEmployee && string.IsNullOrEmpty(_employee.login))
@@ -125,7 +139,6 @@ namespace Medicine_DP.Windows
                 MessageBox.Show(_isNewEmployee ? "Новый сотрудник успешно добавлен" : "Данные сотрудника успешно обновлены",
                               "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                //DialogResult = true;
                 Close();
             }
             catch (DbUpdateException dbEx)

@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Medicine_DP.Config;
+﻿using Medicine_DP.Config;
 using Medicine_DP.Models;
-using Medicine_DP.Pages;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Windows;
 
 namespace Medicine_DP.Windows
 {
@@ -69,18 +59,24 @@ namespace Medicine_DP.Windows
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
+            if (chkConsent.IsChecked != true)
+            {
+                MessageBox.Show("Вы должны дать согласие на обработку персональных данных.",
+                                "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
             //try
             //{
-                // Валидация обязательных полей
-                if (string.IsNullOrWhiteSpace(txtLastName.Text))
-                    throw new Exception("Фамилия обязательна для заполнения");
-                if (string.IsNullOrWhiteSpace(txtFirstName.Text))
-                    throw new Exception("Имя обязательно для заполнения");
-                if (dpBirthDate.SelectedDate == null)
-                    throw new Exception("Дата рождения обязательна для заполнения");
+            // Валидация обязательных полей
+            if (string.IsNullOrWhiteSpace(txtLastName.Text))
+                throw new Exception("Фамилия обязательна для заполнения");
+            if (string.IsNullOrWhiteSpace(txtFirstName.Text))
+                throw new Exception("Имя обязательно для заполнения");
+            if (dpBirthDate.SelectedDate == null)
+                throw new Exception("Дата рождения обязательна для заполнения");
 
-                if (_patient == null)
-                {
+            if (_patient == null)
+            {
                 // Создание нового пациента
                 _patient = new patients
                 {
@@ -101,35 +97,35 @@ namespace Medicine_DP.Windows
                     login = txtLogin.Text,
                     password_hash = txtPassword.Password
                 };
-                    _context.patients.Add(_patient); // Только Add для нового пациента
-                }
-                else
-                {
-                    // Обновление существующего пациента
-                    _patient.last_name = txtLastName.Text;
-                    _patient.first_name = txtFirstName.Text;
-                    _patient.middle_name = txtMiddleName.Text;
-                    _patient.birth_date = dpBirthDate.SelectedDate.Value;
-                    _patient.gender = rbMale.IsChecked == true ? 'М' : 'Ж';
-                    _patient.phone_number = txtPhone.Text;
-                    _patient.email = txtEmail.Text;
-                    _patient.address = txtAddress.Text;
-                    _patient.passport_series = txtPassportSeries.Text;
-                    _patient.passport_number = txtPassportNumber.Text;
-                    _patient.snils = txtSnils.Text;
-                    _patient.policy_number = txtPolicyNumber.Text;
-                    _patient.notes = txtNotes.Text;
+                _context.patients.Add(_patient); // Только Add для нового пациента
+            }
+            else
+            {
+                // Обновление существующего пациента
+                _patient.last_name = txtLastName.Text;
+                _patient.first_name = txtFirstName.Text;
+                _patient.middle_name = txtMiddleName.Text;
+                _patient.birth_date = dpBirthDate.SelectedDate.Value;
+                _patient.gender = rbMale.IsChecked == true ? 'М' : 'Ж';
+                _patient.phone_number = txtPhone.Text;
+                _patient.email = txtEmail.Text;
+                _patient.address = txtAddress.Text;
+                _patient.passport_series = txtPassportSeries.Text;
+                _patient.passport_number = txtPassportNumber.Text;
+                _patient.snils = txtSnils.Text;
+                _patient.policy_number = txtPolicyNumber.Text;
+                _patient.notes = txtNotes.Text;
                 _patient.login = txtLogin.Text;
                 _patient.password_hash = txtPassword.Password;
 
                 // Для существующего пациента помечаем как измененный
                 _context.Entry(_patient).State = EntityState.Modified;
-                }
+            }
 
-                _context.SaveChanges();
-                MessageBox.Show("Данные пациента успешно сохранены", "Успех",
-                               MessageBoxButton.OK, MessageBoxImage.Information);
-                this.Close();
+            _context.SaveChanges();
+            MessageBox.Show("Данные пациента успешно сохранены", "Успех",
+                           MessageBoxButton.OK, MessageBoxImage.Information);
+            this.Close();
             //}
             //catch (Exception ex)
             //{

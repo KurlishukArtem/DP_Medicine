@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Xml;
-using Medicine_DP.Config;
+﻿using Medicine_DP.Config;
 using Medicine_DP.Models;
 using Medicine_DP.Pages;
+using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
+using System;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace Medicine_DP.Windows
 {
@@ -120,8 +116,8 @@ namespace Medicine_DP.Windows
             //try
             //{
             medical_records medical_Records = new medical_records();
-                if (medical_Records == null)
-                {
+            if (medical_Records == null)
+            {
 
                 medical_Records.patient_id = int.Parse(cbPatients.Text);
                 medical_Records.employee_id = int.Parse(cbDoctors.Text);
@@ -132,9 +128,9 @@ namespace Medicine_DP.Windows
                 medical_Records.prescription = txtPrescription.Text;
                 medical_Records.recommendations = txtRecommendations.Text;
                 medical_Records.status = cbAppointments.Text;
-                   
-                    _context.medical_records.Add(_record);
-                }
+
+                _context.medical_records.Add(_record);
+            }
             else
             {
                 // Обновление данных
@@ -150,18 +146,115 @@ namespace Medicine_DP.Windows
 
                 _context.Update(_record);
             }
-                _context.SaveChanges();
+            _context.SaveChanges();
 
-                MessageBox.Show("Медицинская запись успешно сохранена", "Успех",
-                              MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Медицинская запись успешно сохранена", "Успех",
+                          MessageBoxButton.OK, MessageBoxImage.Information);
 
-                Close();
+            var patient = _context.patients.FirstOrDefault(p => p.patient_id == _record.patient_id);
+            if (patient != null && !string.IsNullOrWhiteSpace(patient.email))
+            {
+                string fullName = $"{patient.last_name} {patient.first_name}";
+                var pdfBytes = MedicalReportGenerator.GenerateMedicalReport(
+                                fullName,
+                                _record.diagnosis,
+                                _record.treatment,
+                                _record.prescription,
+                                _record.recommendations
+                            );
+
+                // Временный файл для отправки
+                string tempFilePath = Path.Combine(Path.GetTempPath(), $"diagnosis_{Guid.NewGuid()}.pdf");
+                File.WriteAllBytes(tempFilePath, pdfBytes);
+
+                SendDiagnosisPdfByEmail(patient.email, fullName, tempFilePath);
+            }
+            Close();
+
             //}
             //catch (Exception ex)
             //{
             //    MessageBox.Show($"Ошибка сохранения: {ex.Message}", "Ошибка",
             //                  MessageBoxButton.OK, MessageBoxImage.Error);
             //}
+        }
+
+        private void SendDiagnosisPdfByEmail(string toEmail, string patientName, string pdfPath)
+        {
+            try
+            {
+                var fromAddress = new MailAddress("xeniaao@yandex.ru", "Медицинская система");
+                var toAddress = new MailAddress(toEmail, patientName);
+                const string fromPassword = "nlfxehuparchzfqs";
+                string subject = "Ваш диагноз";
+                string body = $"Здравствуйте, {patientName}!\n\nВо вложении — ваш медицинский диагноз в формате PDF.";
+
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.yandex.ru",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                };
+
+                using var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    Body = body
+                };
+
+                message.Attachments.Add(new Attachment(pdfPath));
+                smtp.Send(message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при отправке PDF: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                // Удаление временного файла
+                if (File.Exists(pdfPath))
+                    File.Delete(pdfPath);
+            }
+        }
+
+
+        public static class MedicalReportGenerator
+        {
+            public static byte[] GenerateMedicalReport(string patientName, string diagnosis, string treatment, string prescription, string recommendations)
+            {
+                QuestPDF.Settings.License = LicenseType.Community;
+                var pdfBytes = Document.Create(container =>
+                {
+                    container.Page(page =>
+                    {
+                        page.Margin(40);
+                        page.DefaultTextStyle(x => x.FontSize(14));
+
+                        page.Header().Text("Медицинское заключение").SemiBold().FontSize(20).AlignCenter();
+
+                        page.Content().Column(col =>
+                        {
+                            col.Spacing(10);
+
+                            col.Item().Text($"Имя пациента: {patientName}");
+                            col.Item().Text($"Диагноз: {diagnosis}");
+                            col.Item().Text($"Лечение: {treatment}");
+                            col.Item().Text($"Назначения: {prescription}");
+                            col.Item().Text($"Рекомендации: {recommendations}");
+                        });
+
+                        page.Footer().AlignCenter().Text(txt =>
+                        {
+                            txt.Span("Отчёт создан автоматически");
+                        });
+                    });
+                }).GeneratePdf();
+
+                return pdfBytes;
+            }
         }
 
         private bool ValidateInput()

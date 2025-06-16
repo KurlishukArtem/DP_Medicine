@@ -162,11 +162,14 @@
             <TextBox x:Name="txtNotes" Margin="5" 
                      TextWrapping="Wrap" AcceptsReturn="True" 
                      VerticalScrollBarVisibility="Auto" Height="100"/>
+            
         </GroupBox>
 
         <!-- Кнопки -->
         <StackPanel Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="5" 
                     Orientation="Horizontal" HorizontalAlignment="Right">
+            <CheckBox x:Name="chkConsent" Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="5" 
+            Content="Я даю согласие на обработку персональных данных" Margin="20"/>
             <Button x:Name="btnSave" Content="Сохранить" Width="120" Height="30" 
                     Margin="0,0,10,0" Click="Save_Click" FontWeight="Bold"/>
             <Button x:Name="btnCancel" Content="Отмена" Width="120" Height="30" 

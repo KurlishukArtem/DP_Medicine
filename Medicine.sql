@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Июн 15 2025 г., 23:29
+-- Время создания: Июн 17 2025 г., 02:29
 -- Версия сервера: 5.7.39-log
 -- Версия PHP: 8.1.9
 
@@ -34,7 +34,7 @@ CREATE TABLE `appointments` (
   `service_id` int(11) DEFAULT NULL,
   `room_id` int(11) DEFAULT NULL,
   `appointment_date` date NOT NULL,
-  `start_time` int(11) NOT NULL,
+  `start_time` time NOT NULL,
   `status` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT 'scheduled',
   `notes` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP
@@ -45,10 +45,8 @@ CREATE TABLE `appointments` (
 --
 
 INSERT INTO `appointments` (`appointment_id`, `patient_id`, `employee_id`, `service_id`, `room_id`, `appointment_date`, `start_time`, `status`, `notes`, `created_at`) VALUES
-(1, 1, 8, 1, 0, '2025-06-16', 13, 'completed', 'adg', '2025-06-02 13:11:49'),
-(2, 4, 6, 2, 0, '2025-06-06', 514, 'scheduled', '', '2025-06-04 02:56:31'),
-(3, 4, 8, 1, 0, '2025-06-16', 1192, 'scheduled', '', '2025-06-12 19:53:09'),
-(4, 4, 8, 3, 0, '2025-06-16', 780, 'scheduled', '', '2025-06-14 10:45:52');
+(5, 4, 6, 2, 501, '2025-06-18', '16:30:00', 'scheduled', 'asd', '2025-06-17 04:11:28'),
+(6, 1, 6, 1, 501, '2025-06-18', '08:30:00', 'scheduled', 'asd', '2025-06-17 04:26:45');
 
 -- --------------------------------------------------------
 
@@ -82,7 +80,7 @@ CREATE TABLE `employees` (
 INSERT INTO `employees` (`employee_id`, `first_name`, `last_name`, `middle_name`, `position`, `specialization`, `birth_date`, `gender`, `phone_number`, `email`, `hire_date`, `address`, `login`, `password_hash`, `is_active`, `rooms`) VALUES
 (5, 'фыв', 'ФЫВ', 'фыар', 'фыа', 'фыа', '2000-06-13', 'M', '85015', '8451', '2025-06-01', 'Cool', 'Col', 'temp123', 1, 0),
 (6, 'Ержанн', 'Ержанов', 'Ержанович', 'Врач', 'классная', '2000-06-20', 'M', '88005553535', 'ya.hbuk@yandex.ru', '2025-06-04', 'siojnv', 'hat', '222', 1, 501),
-(7, 'Александр', 'Александров', 'Александрович', 'sd', 'gvad', '2000-06-24', 'М', '88005553535', 'cool@gmail.ru', '2025-05-02', 'Сибирская', 'Alex', 'Alex', 1, 165),
+(7, 'Александр', 'Александров', 'Александрович', 'Администратор', 'gvad', '2000-06-24', 'М', '88005553535', 'cool@gmail.ru', '2025-05-02', 'Сибирская', 'Alex', 'Alex', 1, 165),
 (8, 'Ксения', 'Суханова', 'Чеевна', 'программист', 'художник(австрийский)', '2000-06-13', 'M', '8028', 'ksen@yandes.ry', '2025-06-12', 'asf', 'Ksen', '555', 1, 0);
 
 -- --------------------------------------------------------
@@ -103,14 +101,6 @@ CREATE TABLE `medical_records` (
   `recommendations` text COLLATE utf8mb4_unicode_ci,
   `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Дамп данных таблицы `medical_records`
---
-
-INSERT INTO `medical_records` (`record_id`, `patient_id`, `employee_id`, `appointment_id`, `record_date`, `diagnosis`, `treatment`, `prescription`, `recommendations`, `status`) VALUES
-(1, 1, 5, 1, '2025-06-03 00:00:00', '123', '123', '123', 'выпа', 'Отменена'),
-(2, 1, 6, 2, '2025-06-15 00:00:00', 'asd', 'asd', '12', '1', 'Активна');
 
 -- --------------------------------------------------------
 
@@ -216,15 +206,6 @@ CREATE TABLE `payments` (
   `status` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT 'completed'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Дамп данных таблицы `payments`
---
-
-INSERT INTO `payments` (`payment_id`, `appointment_id`, `patient_id`, `amount`, `payment_date`, `payment_method`, `status`) VALUES
-(1, 1, 1, '123.00', '2025-06-03 00:00:00', 'Наличные', 'completed'),
-(2, 2, 4, '9000.00', '2025-06-14 00:00:00', 'Наличные', 'completed'),
-(3, 1, 1, '531.00', '2025-06-14 00:00:00', 'Наличные', 'completed');
-
 -- --------------------------------------------------------
 
 --
@@ -265,25 +246,6 @@ INSERT INTO `schedules` (`schedule_id`, `employee_id`, `day_of_week`, `start_tim
 (2, 6, 5, '15:00:00', '16:30:00', 1, 1),
 (5, 7, 3, '09:00:00', '09:30:00', 3, 1),
 (6, 7, 3, '10:15:45', '10:35:45', 3, 1),
-(8, 6, 3, '08:30:00', '09:00:00', 1, 1),
-(9, 6, 3, '16:30:00', '17:00:00', 1, 1),
-(10, 6, 3, '16:00:00', '16:30:00', 1, 1),
-(11, 6, 3, '15:30:00', '16:00:00', 1, 1),
-(12, 6, 3, '15:00:00', '15:30:00', 1, 1),
-(13, 6, 3, '14:30:00', '15:00:00', 1, 1),
-(14, 6, 3, '14:00:00', '14:30:00', 1, 1),
-(15, 6, 3, '13:30:00', '14:00:00', 1, 1),
-(16, 6, 3, '17:00:00', '17:30:00', 1, 1),
-(17, 6, 3, '13:00:00', '13:30:00', 1, 1),
-(18, 6, 3, '12:00:00', '12:30:00', 1, 1),
-(19, 6, 3, '11:30:00', '12:00:00', 1, 1),
-(20, 6, 3, '11:00:00', '11:30:00', 1, 1),
-(21, 6, 3, '10:30:00', '11:00:00', 1, 1),
-(22, 6, 3, '10:00:00', '10:30:00', 1, 1),
-(23, 6, 3, '09:30:00', '10:00:00', 1, 1),
-(24, 6, 3, '09:00:00', '09:30:00', 1, 1),
-(25, 6, 3, '12:30:00', '13:00:00', 1, 1),
-(26, 6, 3, '17:30:00', '18:00:00', 1, 1),
 (27, 8, 1, '08:30:00', '09:00:00', 1, 1),
 (28, 8, 1, '16:30:00', '17:00:00', 1, 1),
 (29, 8, 1, '16:00:00', '16:30:00', 1, 1),
@@ -321,7 +283,26 @@ INSERT INTO `schedules` (`schedule_id`, `employee_id`, `day_of_week`, `start_tim
 (61, 8, 2, '09:30:00', '10:00:00', 1, 1),
 (62, 8, 2, '09:00:00', '09:30:00', 1, 1),
 (63, 8, 2, '12:30:00', '13:00:00', 1, 1),
-(64, 8, 2, '17:30:00', '18:00:00', 1, 1);
+(64, 8, 2, '17:30:00', '18:00:00', 1, 1),
+(65, 6, 3, '08:30:00', '09:00:00', 1, 1),
+(66, 6, 3, '16:30:00', '17:00:00', 1, 1),
+(67, 6, 3, '16:00:00', '16:30:00', 1, 1),
+(68, 6, 3, '15:30:00', '16:00:00', 1, 1),
+(69, 6, 3, '15:00:00', '15:30:00', 1, 1),
+(70, 6, 3, '14:30:00', '15:00:00', 1, 1),
+(71, 6, 3, '14:00:00', '14:30:00', 1, 1),
+(72, 6, 3, '13:30:00', '14:00:00', 1, 1),
+(73, 6, 3, '17:00:00', '17:30:00', 1, 1),
+(74, 6, 3, '13:00:00', '13:30:00', 1, 1),
+(75, 6, 3, '12:00:00', '12:30:00', 1, 1),
+(76, 6, 3, '11:30:00', '12:00:00', 1, 1),
+(77, 6, 3, '11:00:00', '11:30:00', 1, 1),
+(78, 6, 3, '10:30:00', '11:00:00', 1, 1),
+(79, 6, 3, '10:00:00', '10:30:00', 1, 1),
+(80, 6, 3, '09:30:00', '10:00:00', 1, 1),
+(81, 6, 3, '09:00:00', '09:30:00', 1, 1),
+(82, 6, 3, '12:30:00', '13:00:00', 1, 1),
+(83, 6, 3, '17:30:00', '18:00:00', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -454,7 +435,7 @@ ALTER TABLE `test_results`
 -- AUTO_INCREMENT для таблицы `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `appointment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `appointment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT для таблицы `employees`
@@ -466,7 +447,7 @@ ALTER TABLE `employees`
 -- AUTO_INCREMENT для таблицы `medical_records`
 --
 ALTER TABLE `medical_records`
-  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `medical_tests`
@@ -502,7 +483,7 @@ ALTER TABLE `prescriptions`
 -- AUTO_INCREMENT для таблицы `schedules`
 --
 ALTER TABLE `schedules`
-  MODIFY `schedule_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `schedule_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT для таблицы `services`

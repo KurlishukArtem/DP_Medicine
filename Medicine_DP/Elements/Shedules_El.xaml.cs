@@ -43,11 +43,10 @@ namespace Medicine_DP.Elements
             lbScheduleId.Text = _schedule.schedule_id.ToString();
 
             // ФИО врача
-            var doctor = _context.employees.FirstOrDefault(x=>x.employee_id==_schedule.employee_id);
+            var doctor = _context.employees.FirstOrDefault(x => x.employee_id == _schedule.employee_id);
             lbDoctorName.Text = doctor != null ?
                 $"{doctor.last_name} {doctor.first_name} {doctor.middle_name}" :
                 "Неизвестно";
-
 
             // День недели
             lbDayOfWeek.Text = GetDayName(_schedule.day_of_week);
@@ -66,40 +65,63 @@ namespace Medicine_DP.Elements
         private string GetDayName(int dayNumber)
         {
             string[] days = {
-                "Воскресенье", "Понедельник", "Вторник",
-                "Среда", "Четверг", "Пятница", "Суббота"
-            };
+            "Воскресенье", "Понедельник", "Вторник",
+            "Среда", "Четверг", "Пятница", "Суббота"
+        };
 
             return dayNumber >= 1 && dayNumber <= 7 ? days[dayNumber - 1] : "Неизвестно";
         }
 
         private void ConfigureUIForUserRole()
         {
-            bool isEmployee = _context.employees.Any(e => e.login == _loginUser);
+            var currentUser = _context.employees.FirstOrDefault(e => e.login == _loginUser);
             bool isPatient = _context.patients.Any(p => p.login == _loginUser);
 
             if (isPatient)
             {
-                btnEdit.Visibility = Visibility.Collapsed;
-                btnDelete.Visibility = Visibility.Collapsed;
+                // Пациенты не видят расписаний вообще
+                this.Visibility = Visibility.Collapsed;
+                return;
             }
-            else if (isEmployee)
+            else if (currentUser != null)
             {
-                btnEdit.Visibility = Visibility.Visible;
-                btnDelete.Visibility = Visibility.Visible;
+                // Администратор видит все расписания
+                if (currentUser.position == "Администратор")
+                {
+                    btnEdit.Visibility = Visibility.Visible;
+                    btnDelete.Visibility = Visibility.Visible;
+                }
+                // Врач видит только свои расписания
+                else if (currentUser.position == "Врач")
+                {
+                    if (currentUser.employee_id != _schedule.employee_id)
+                    {
+                        this.Visibility = Visibility.Collapsed;
+                        return;
+                    }
+                    btnEdit.Visibility = Visibility.Visible;
+                    btnDelete.Visibility = Visibility.Visible;
+                }
+                // Остальные сотрудники не видят расписаний
+                else
+                {
+                    this.Visibility = Visibility.Collapsed;
+                    return;
+                }
             }
             else
             {
                 MessageBox.Show("Не удалось определить роль пользователя", "Ошибка");
+                this.Visibility = Visibility.Collapsed;
             }
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            var editWindow = new Windows.Shedules_Edit_Window(_schedule); // Предполагается окно редактирования
+            var editWindow = new Windows.Shedules_Edit_Window(_schedule);
             editWindow.Closed += (s, args) =>
             {
-                LoadScheduleData(); // Обновляем данные после закрытия окна
+                LoadScheduleData();
             };
             editWindow.Show();
         }
@@ -110,7 +132,6 @@ namespace Medicine_DP.Elements
             {
                 using (var context = new DataContext())
                 {
-                    // Находим запись для удаления
                     var scheduleToDelete = context.schedules
                         .FirstOrDefault(s => s.schedule_id == _schedule.schedule_id);
 
@@ -121,12 +142,10 @@ namespace Medicine_DP.Elements
                         return;
                     }
 
-                    // Получаем день недели как число
                     int dayOfWeekNumber = scheduleToDelete.day_of_week;
 
-                    // Проверяем наличие связанных записей (клиентская оценка)
                     bool hasAppointments = context.appointments
-                        .AsEnumerable() // Переключаем на клиентскую оценку
+                        .AsEnumerable()
                         .Any(a => a.employee_id == scheduleToDelete.employee_id &&
                                (int)a.appointment_date.DayOfWeek == dayOfWeekNumber);
 
@@ -143,7 +162,6 @@ namespace Medicine_DP.Elements
                     context.schedules.Remove(scheduleToDelete);
                     context.SaveChanges();
 
-                    // Удаляем элемент из интерфейса
                     if (Parent is Panel parentPanel)
                     {
                         parentPanel.Children.Remove(this);

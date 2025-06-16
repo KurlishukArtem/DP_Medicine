@@ -34,28 +34,57 @@ namespace Medicine_DP.Elements
             LoadMedicalRecordData();
             ConfigureUIForUserRole();
         }
+
         private void ConfigureUIForUserRole()
         {
-            // Проверяем сначала сотрудников, затем пациентов
-            bool isEmployee = _context.employees.Any(e => e.login == _loginUser);
+            var currentUser = _context.employees.FirstOrDefault(e => e.login == _loginUser);
             bool isPatient = _context.patients.Any(p => p.login == _loginUser);
 
             if (isPatient) // Если это пациент
             {
+                // Пациенты видят только свои записи
+                if (_medicalRecord.patient_id != _context.patients.First(p => p.login == _loginUser).patient_id)
+                {
+                    this.Visibility = Visibility.Collapsed;
+                    return;
+                }
                 btnDelete.Visibility = Visibility.Collapsed;
                 btnEdit.Visibility = Visibility.Collapsed;
             }
-            else if (isEmployee) // Если это сотрудник
+            else if (currentUser != null) // Если это сотрудник
             {
-                btnDelete.Visibility = Visibility.Visible;
-                btnEdit.Visibility = Visibility.Visible;
+                // Администратор видит все записи
+                if (currentUser.position == "Администратор")
+                {
+                    btnDelete.Visibility = Visibility.Visible;
+                    btnEdit.Visibility = Visibility.Visible;
+                }
+                // Врач видит только свои записи
+                else if (currentUser.position == "Врач")
+                {
+                    if (currentUser.employee_id != _medicalRecord.employee_id)
+                    {
+                        this.Visibility = Visibility.Collapsed;
+                        return;
+                    }
+                    btnDelete.Visibility = Visibility.Visible;
+                    btnEdit.Visibility = Visibility.Visible;
+                }
+                // Остальные сотрудники не видят ничего
+                else
+                {
+                    this.Visibility = Visibility.Collapsed;
+                    return;
+                }
             }
             else
             {
-                // Если пользователь не найден (не должно происходить после успешного входа)
+                // Если пользователь не найден
+                this.Visibility = Visibility.Collapsed;
                 MessageBox.Show("Не удалось определить роль пользователя", "Ошибка");
             }
         }
+
         private void LoadMedicalRecordData()
         {
             try
@@ -93,38 +122,9 @@ namespace Medicine_DP.Elements
                 tbDiagnosis.Text = _medicalRecord.diagnosis ?? "Не указано";
                 tbTreatment.Text = _medicalRecord.treatment ?? "Не указано";
                 tbRecommendations.Text = _medicalRecord.recommendations ?? "Не указано";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            try
-            {
-                
 
                 // статус
                 lbStatus.Text = _medicalRecord.status ?? "Активна";
-
-                // Изменяем цвет в зависимости от статуса
-                //switch (_medicalRecord.status?.ToLower())
-                //{
-                //    case "Активна":
-                //        lbStatus.Foreground = Brushes.Green;
-                //        break;
-                //    case "Завершена":
-                //        lbStatus.Foreground = Brushes.Blue;
-                //        break;
-                //    case "Отменена":
-                //        lbStatus.Foreground = Brushes.Red;
-                //        break;
-                //    case "На удержании":
-                //        lbStatus.Foreground = Brushes.Gray;
-                //        break;
-                //    default:
-                //        lbStatus.Foreground = Brushes.Black;
-                //        break;
-                //}
             }
             catch (Exception ex)
             {
@@ -138,7 +138,6 @@ namespace Medicine_DP.Elements
             var editWindow = new Medical_records_Edit_Window(_medicalRecord);
             editWindow.Closed += (s, args) =>
             {
-                // Обновляем данные после редактирования
                 LoadMedicalRecordData();
             };
             editWindow.ShowDialog();
@@ -158,11 +157,8 @@ namespace Medicine_DP.Elements
 
                 if (confirmResult != MessageBoxResult.Yes) return;
 
-                // Вместо удаления меняем статус
                 _medicalRecord.status = "Отменена";
                 _context.SaveChanges();
-
-                // Обновляем отображение
                 LoadMedicalRecordData();
 
                 MessageBox.Show("Медицинская запись отменена", "Успех",

@@ -75,6 +75,7 @@ namespace Medicine_DP.Pages
                         medications.Visibility = Visibility.Visible;
                         payments.Visibility = Visibility.Collapsed;
                         AddPage.Visibility = Visibility.Collapsed;
+                        
                         break;
 
                     case "Администратор":

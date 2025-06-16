@@ -25,57 +25,103 @@ namespace Medicine_DP.Elements
     /// </summary>
     public partial class Medical_Tests_El : UserControl
     {
-        medical_tests _medtests;
-        public static string _loginUser;
+        private readonly medical_tests _medtests;
+        private readonly string _loginUser;
         private readonly DataContext _context = Main._main._context;
+
         public Medical_Tests_El(medical_tests test, string loginUser)
         {
             InitializeComponent();
             _medtests = test;
             _loginUser = loginUser;
+
+            // Загрузка данных теста
             lbTestId.Text = test.test_id.ToString();
             lbTestName.Text = test.test_name ?? "Не указано";
             lbCategory.Text = test.category ?? "Не указано";
             lbPrice.Text = $"{test.price:N2} руб.";
-
             tbDescription.Text = test.description ?? "Нет описания";
             tbPreparation.Text = test.preparation ?? "Не требуется";
             tbNormalValues.Text = test.normal_values ?? "Не указаны";
+
             ConfigureUIForUserRole();
         }
+
         private void ConfigureUIForUserRole()
         {
-            // Проверяем сначала сотрудников, затем пациентов
-            bool isEmployee = _context.employees.Any(e => e.login == _loginUser);
-            bool isPatient = _context.patients.Any(p => p.login == _loginUser);
+            var currentEmployee = _context.employees.FirstOrDefault(e => e.login == _loginUser);
+            var isPatient = _context.patients.Any(p => p.login == _loginUser);
 
-            if (isPatient) // Если это пациент
+            if (isPatient)
             {
+                // Настройки для пациентов
                 btnDelete.Visibility = Visibility.Collapsed;
                 btnEdit.Visibility = Visibility.Collapsed;
             }
-            else if (isEmployee) // Если это сотрудник
+            else if (currentEmployee != null)
             {
-                btnDelete.Visibility = Visibility.Visible;
-                btnEdit.Visibility = Visibility.Visible;
+                // Настройки для сотрудников в зависимости от должности
+                switch (currentEmployee.position)
+                {
+                    case "Врач":
+                        // Врачи могут только просматривать тесты
+                        btnDelete.Visibility = Visibility.Collapsed;
+                        btnEdit.Visibility = Visibility.Collapsed;
+                        break;
+
+                    case "Администратор":
+                        // Администраторы имеют полный доступ
+                        btnDelete.Visibility = Visibility.Visible;
+                        btnEdit.Visibility = Visibility.Visible;
+                        break;
+
+
+                    default:
+                        // Остальные сотрудники - только просмотр
+                        btnDelete.Visibility = Visibility.Collapsed;
+                        btnEdit.Visibility = Visibility.Collapsed;
+                        break;
+                }
             }
             else
             {
-                // Если пользователь не найден (не должно происходить после успешного входа)
                 MessageBox.Show("Не удалось определить роль пользователя", "Ошибка");
+                btnDelete.Visibility = Visibility.Collapsed;
+                btnEdit.Visibility = Visibility.Collapsed;
             }
         }
+
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
-            Medtest_Edit_Window medtest_Edit_Window = new Medtest_Edit_Window(_medtests);
-            medtest_Edit_Window.Show();
+            var currentEmployee = _context.employees.FirstOrDefault(e => e.login == _loginUser);
+            if (currentEmployee?.position == "Лаборант" || currentEmployee?.position == "Администратор")
+            {
+                Medtest_Edit_Window medtest_Edit_Window = new Medtest_Edit_Window(_medtests);
+                medtest_Edit_Window.Closed += (s, args) =>
+                {
+                    // Обновление данных после редактирования
+                    lbTestName.Text = _medtests.test_name ?? "Не указано";
+                    lbCategory.Text = _medtests.category ?? "Не указано";
+                    lbPrice.Text = $"{_medtests.price:N2} руб.";
+                    tbDescription.Text = _medtests.description ?? "Нет описания";
+                    tbPreparation.Text = _medtests.preparation ?? "Не требуется";
+                    tbNormalValues.Text = _medtests.normal_values ?? "Не указаны";
+                };
+                medtest_Edit_Window.Show();
+            }
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
+            var currentEmployee = _context.employees.FirstOrDefault(e => e.login == _loginUser);
+            if (currentEmployee?.position != "Администратор")
+            {
+                MessageBox.Show("У вас нет прав на удаление тестов", "Ошибка прав доступа");
+                return;
+            }
+
             try
             {
-                // Подтверждение удаления
                 var confirmResult = MessageBox.Show(
                     $"Вы действительно хотите удалить этот тест?\n\n" +
                     $"Название: {_medtests.test_name}\n" +
@@ -90,7 +136,6 @@ namespace Medicine_DP.Elements
 
                 using (var context = new DataContext())
                 {
-                    // Проверяем связанные записи в test_results
                     bool hasTestResults = context.test_results
                         .Any(tr => tr.test_id == _medtests.test_id);
 
@@ -104,10 +149,6 @@ namespace Medicine_DP.Elements
                         return;
                     }
 
-                    // Проверяем связанные записи в prescriptions (если есть связь)
-                    // Если в вашей БД есть связь между тестами и рецептами, добавьте проверку здесь
-
-                    // Находим тест для удаления
                     var testToDelete = context.medical_tests.Find(_medtests.test_id);
                     if (testToDelete != null)
                     {
@@ -118,19 +159,14 @@ namespace Medicine_DP.Elements
                         {
                             MessageBox.Show("Тест успешно удален", "Успех",
                                 MessageBoxButton.OK, MessageBoxImage.Information);
-
-                           
+                            // Можно добавить событие для обновления UI
                         }
                     }
                 }
             }
             catch (DbUpdateException dbEx)
             {
-                string errorMessage = "Ошибка базы данных:\n";
-               
-                    errorMessage += dbEx.Message;
-                
-
+                string errorMessage = "Ошибка базы данных:\n" + dbEx.Message;
                 MessageBox.Show(errorMessage, "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }

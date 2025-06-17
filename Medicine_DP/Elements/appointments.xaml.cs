@@ -134,7 +134,7 @@ namespace Medicine_DP.Elements
             var service = _context.services
                 .FirstOrDefault(s => s.service_id == _appointment.service_id);
             lbService.Text = service?.service_name ?? "Неизвестно";
-
+            
             // Номер кабинета (может быть null)
             lbRoom.Text = _appointment.room_id?.ToString() ?? "Не указан";
         }

@@ -109,7 +109,7 @@ Padding="{TemplateBinding Padding}">
                     <StackPanel Orientation="Horizontal" Grid.Row="4" Margin="0,5">
                         <TextBlock Text="Статус:" Style="{StaticResource DetailLabel}"/>
                         <Border CornerRadius="4" Padding="5,2" Background="{Binding StatusColor}">
-                            <TextBlock x:Name="lbStatus" Foreground="White" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="lbStatus" Foreground="Black" FontWeight="SemiBold"/>
                         </Border>
                     </StackPanel>
                 </Grid>

@@ -151,15 +151,25 @@ Padding="{TemplateBinding Padding}">
                         <TextBox x:Name="tbNotes" BorderThickness="0" Background="#FFF5F5F5"
                                  TextWrapping="Wrap" IsReadOnly="True" MaxHeight="60"/>
                     </StackPanel>
+
                 </Grid>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 15 0 0">
+                    <TextBlock x:Name="lblCancelAppointment" 
+               Text="Отменить запись" 
+               Foreground="Red"
+               Cursor="Hand"
+               TextDecorations="Underline"
+               VerticalAlignment="Center"
+               Margin="0,10,20,0"
+               MouseDown="LblCancelAppointment_MouseDown"/>
                     <Button x:Name="btnEdit" Content="Изменить" 
 Style="{StaticResource EditButtonStyle}"
 Click="btnEdit_Click"/>
                     <Button x:Name="btnDelete" Content="Удалить" 
 Style="{StaticResource DeleteButtonStyle}"
 Click="btnDelete_Click"/>
+                    
                 </StackPanel>
             </StackPanel>
         </Grid>

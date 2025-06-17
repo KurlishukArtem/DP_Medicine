@@ -87,77 +87,159 @@ namespace Medicine_DP.Elements
         {
             try
             {
-                // Комбинируем дату и время для отображения
-                DateTime appointmentDateTime = _appointment.appointment_date.Date.Add(_appointment.start_time);
+                // Форматируем дату и время
+                lbDate.Text = _appointment.appointment_date.ToString("dd.MM.yyyy");
+                lbTime.Text = _appointment.start_time.ToString(@"hh\:mm");
 
-                lbDate.Text = appointmentDateTime.ToString("dd.MM.yyyy");
-                lbTime.Text = appointmentDateTime.ToString("HH:mm");
-                lbStatus.Text = _appointment.status;
+                // Устанавливаем локализованный статус
+                lbStatus.Text = GetLocalizedStatus(_appointment.status);
+
+                // Устанавливаем цвет статуса
+                StatusColor = GetStatusBrush(_appointment.status);
+
+                // Заполняем остальные поля
                 tbNotes.Text = string.IsNullOrEmpty(_appointment.notes) ? "Нет заметок" : _appointment.notes;
                 lbCreated.Text = _appointment.created_at.ToString("g");
 
-                StatusColor = _appointment.status switch
+                // Загружаем связанные данные
+                LoadRelatedData();
 
-                {
-
-                    "scheduled" => Brushes.Green,
-
-                    "completed" => Brushes.Blue,
-
-                    "canceled" => Brushes.Red,
-
-                    "no-show" => Brushes.Orange,
-
-                    _ => Brushes.Gray
-
-                };
-
-
-
-                // Загрузка связанных данных
-
-                var patient = _context.patients
-
-                    .FirstOrDefault(p => p.patient_id == _appointment.patient_id);
-
-                lbPatient.Text = patient != null ?
-
-                    $"{patient.last_name} {patient.first_name} {patient.middle_name}" :
-
-                    "Неизвестно";
-
-
-
-                var doctor = _context.employees
-
-                    .FirstOrDefault(e => e.employee_id == _appointment.employee_id);
-
-                lbDoctor.Text = doctor != null ?
-
-                    $"{doctor.last_name} {doctor.first_name} {doctor.middle_name}" :
-
-                    "Неизвестно";
-
-
-
-                var service = _context.services
-
-                    .FirstOrDefault(s => s.service_id == _appointment.service_id);
-
-                lbService.Text = service.service_name ?? "Неизвестно";
-
-
-
-                var room = _context.appointments
-
-                    .FirstOrDefault(r => r.room_id == _appointment.room_id);
-
-                lbRoom.Text = room.room_id.ToString();
+                // Настраиваем видимость элементов управления
+                ConfigureControlsVisibility();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void LoadRelatedData()
+        {
+            // Загрузка данных пациента
+            var patient = _context.patients
+                .FirstOrDefault(p => p.patient_id == _appointment.patient_id);
+            lbPatient.Text = patient != null
+                ? $"{patient.last_name} {patient.first_name} {patient.middle_name}"
+                : "Неизвестно";
+
+            // Загрузка данных врача
+            var doctor = _context.employees
+                .FirstOrDefault(e => e.employee_id == _appointment.employee_id);
+            lbDoctor.Text = doctor != null
+                ? $"{doctor.last_name} {doctor.first_name} {doctor.middle_name}"
+                : "Неизвестно";
+
+            // Загрузка данных услуги
+            var service = _context.services
+                .FirstOrDefault(s => s.service_id == _appointment.service_id);
+            lbService.Text = service?.service_name ?? "Неизвестно";
+
+            // Номер кабинета (может быть null)
+            lbRoom.Text = _appointment.room_id?.ToString() ?? "Не указан";
+        }
+
+        private string GetLocalizedStatus(string status)
+        {
+            return status switch
+            {
+                "scheduled" => "Запланирована",
+                "completed" => "Завершена",
+                "canceled" => "Отменена",
+                "no-show" => "Неявка",
+                _ => status
+            };
+        }
+
+        private Brush GetStatusBrush(string status)
+        {
+            return status switch
+            {
+                "scheduled" => Brushes.Green,
+                "completed" => Brushes.Blue,
+                "canceled" => Brushes.Red,
+                "no-show" => Brushes.Orange,
+                _ => Brushes.Gray
+            };
+        }
+
+        private void ConfigureControlsVisibility()
+        {
+            // Проверяем роль текущего пользователя
+            var currentUser = _context.employees.FirstOrDefault(e => e.login == _loginUser);
+            var currentPatient = _context.patients.FirstOrDefault(p => p.login == _loginUser);
+
+            // Настройка видимости для пациентов
+            if (currentPatient != null)
+            {
+                bool isPatientAppointment = _appointment.patient_id == currentPatient.patient_id;
+                bool isScheduled = _appointment.status == "scheduled";
+
+                lblCancelAppointment.Visibility = isPatientAppointment && isScheduled
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+
+                btnEdit.Visibility = Visibility.Collapsed;
+                btnDelete.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            // Настройка видимости для сотрудников
+            if (currentUser != null)
+            {
+                bool isAdmin = currentUser.position == "Администратор";
+                bool isDoctorOwner = currentUser.position == "Врач" &&
+                                  currentUser.employee_id == _appointment.employee_id;
+
+                btnEdit.Visibility = isAdmin || isDoctorOwner ? Visibility.Visible : Visibility.Collapsed;
+                btnDelete.Visibility = isAdmin || isDoctorOwner ? Visibility.Visible : Visibility.Collapsed;
+                lblCancelAppointment.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            // Для неавторизованных пользователей скрываем все элементы управления
+            btnEdit.Visibility = Visibility.Collapsed;
+            btnDelete.Visibility = Visibility.Collapsed;
+            lblCancelAppointment.Visibility = Visibility.Collapsed;
+        }
+
+        private async void LblCancelAppointment_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                var result = MessageBox.Show("Вы действительно хотите отменить эту запись?",
+                                           "Подтверждение отмены",
+                                           MessageBoxButton.YesNo,
+                                           MessageBoxImage.Question);
+
+                if (result != MessageBoxResult.Yes) return;
+
+                // Обновляем статус записи
+                _appointment.status = "canceled";
+
+                // Сохраняем изменения в БД
+                using (var context = new DataContext())
+                {
+                    context.appointments.Update(_appointment);
+                    await context.SaveChangesAsync();
+                }
+
+                // Обновляем отображение
+                LoadAppointmentData();
+
+                // Обновляем список записей
+                if (_mainPage != null)
+                {
+                    _mainPage.CreateUIapps();
+                }
+
+                MessageBox.Show("Запись успешно отменена", "Успех",
+                              MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при отмене записи: {ex.Message}", "Ошибка",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -204,6 +286,8 @@ namespace Medicine_DP.Elements
             }
 
         }
+
+       
         
     }
 }

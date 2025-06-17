@@ -74,7 +74,7 @@ namespace Medicine_DP.Pages
                         medical_tests.Visibility = Visibility.Visible;
                         medications.Visibility = Visibility.Visible;
                         payments.Visibility = Visibility.Collapsed;
-                        AddPage.Visibility = Visibility.Collapsed;
+                        AddPage.Visibility = Visibility.Visible;
                         
                         break;
 

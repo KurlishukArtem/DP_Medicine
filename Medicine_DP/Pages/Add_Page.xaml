@@ -9,7 +9,6 @@
       Title="Add_Page">
 
     <Page.Resources>
-        <!-- Ресурсы из Main -->
         <SolidColorBrush x:Key="PrimaryColor" Color="#3D5AFE"/>
         <SolidColorBrush x:Key="PrimaryDarkColor" Color="#0039CB"/>
         <SolidColorBrush x:Key="BackgroundLight" Color="#F5F5F6"/>
@@ -98,7 +97,7 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20">
             <UniformGrid Columns="2" HorizontalAlignment="Center">
                 <!-- Сотрудники -->
-                <Border Background="White" CornerRadius="8" Margin="10" 
+                <Border x:Name="AddEmloyesContainer" Background="White" CornerRadius="8" Margin="10" 
                         Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Сотрудники" Style="{StaticResource SectionHeaderStyle}"/>
@@ -108,7 +107,7 @@
                 </Border>
 
                 <!-- Результаты посещения -->
-                <Border Background="White" CornerRadius="8" Margin="10" 
+                <Border x:Name="AddRecordContainer" Background="White" CornerRadius="8" Margin="10" 
                         Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Результаты посещения" Style="{StaticResource SectionHeaderStyle}"/>
@@ -118,7 +117,7 @@
                 </Border>
 
                 <!-- Медикаменты -->
-                <Border Background="White" CornerRadius="8" Margin="10" 
+                <Border x:Name="AddMedicationsContainer" Background="White" CornerRadius="8" Margin="10" 
                         Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Медикаменты" Style="{StaticResource SectionHeaderStyle}"/>
@@ -128,7 +127,7 @@
                 </Border>
 
                 <!-- Мед-тесты -->
-                <Border Background="White" CornerRadius="8" Margin="10" 
+                <Border x:Name="AddTestContainer" Background="White" CornerRadius="8" Margin="10" 
                         Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Мед-тесты" Style="{StaticResource SectionHeaderStyle}"/>
@@ -138,7 +137,7 @@
                 </Border>
 
                 <!-- Пациенты -->
-                <Border Background="White" CornerRadius="8" Margin="10" 
+                <Border x:Name="AddPatientContainer" Background="White" CornerRadius="8" Margin="10" 
                         Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Пациенты" Style="{StaticResource SectionHeaderStyle}"/>
@@ -148,7 +147,7 @@
                 </Border>
 
                 <!-- Оплата -->
-                <Border Background="White" CornerRadius="8" Margin="10" 
+                <Border x:Name="AddPaymentContainer" Background="White" CornerRadius="8" Margin="10" 
                         Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Оплата" Style="{StaticResource SectionHeaderStyle}"/>
@@ -158,7 +157,7 @@
                 </Border>
 
                 <!-- Услуги -->
-                <Border Background="White" CornerRadius="8" Margin="10" 
+                <Border x:Name="AddServiceContainer" Background="White" CornerRadius="8" Margin="10" 
                         Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Услуги" Style="{StaticResource SectionHeaderStyle}"/>
@@ -166,12 +165,14 @@
                                 Content="Добавить" Style="{StaticResource NavButtonStyle}"/>
                     </StackPanel>
                 </Border>
-                <Border Background="White" CornerRadius="8" Margin="10" 
-        Padding="15" Effect="{StaticResource ShadowEffect}">
+
+                <!-- Расписание -->
+                <Border x:Name="AddSheduleContainer" Background="White" CornerRadius="8" Margin="10" 
+                        Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Расписание" Style="{StaticResource SectionHeaderStyle}"/>
                         <Button x:Name="AddShedule" Click="AddShedule_Click" 
-                Content="Добавить" Style="{StaticResource NavButtonStyle}"/>
+                                Content="Добавить" Style="{StaticResource NavButtonStyle}"/>
                     </StackPanel>
                 </Border>
             </UniformGrid>

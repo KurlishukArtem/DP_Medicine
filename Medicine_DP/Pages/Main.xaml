@@ -122,8 +122,10 @@
     </Page.Resources>
 
     <Grid>
+        
         <!-- Верхняя панель с кнопкой личного кабинета -->
         <Grid Style="{StaticResource TopBarStyle}" Height="60" VerticalAlignment="Top">
+            
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>

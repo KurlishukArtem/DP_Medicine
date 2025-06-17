@@ -116,6 +116,9 @@ namespace Medicine_DP.Pages
             }
         }
 
+        private DatePicker _datePicker;
+        private Button _applyFilterButton;
+
         public void CreateUIapps()
         {
             var patient = _context.patients.FirstOrDefault(p => p.login == _loginUser);
@@ -124,6 +127,21 @@ namespace Medicine_DP.Pages
             if (patient != null)
             {
                 query = query.Where(x => x.patient_id == patient.patient_id);
+            }
+            else
+            {
+                // Для врача добавляем фильтр по employee_id и дате
+                var currentEmployee = _context.employees.FirstOrDefault(e => e.login == _loginUser);
+                if (currentEmployee?.position == "Врач")
+                {
+                    query = query.Where(x => x.employee_id == currentEmployee.employee_id);
+
+                    // Применяем фильтр по дате, если он установлен
+                    if (_datePicker != null && _datePicker.SelectedDate.HasValue)
+                    {
+                        query = query.Where(x => x.appointment_date.Date == _datePicker.SelectedDate.Value.Date);
+                    }
+                }
             }
 
             // Сортируем по дате и времени
@@ -134,11 +152,72 @@ namespace Medicine_DP.Pages
 
             parent.Children.Clear();
 
+            // Добавляем элементы управления фильтром для врача
+            if (_context.employees.Any(e => e.login == _loginUser && e.position == "Врач"))
+            {
+                AddFilterControls();
+            }
+
             foreach (var app in appointmentsList)
             {
                 parent.Children.Add(new Elements.appointments(app, _loginUser));
             }
         }
+        private void AddFilterControls()
+        {
+            var filterPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Margin = new Thickness(0, 0, 0, 10)
+            };
+
+            _datePicker = new DatePicker
+            {
+                SelectedDate = DateTime.Today,
+                Margin = new Thickness(0, 0, 10, 0),
+                Width = 150
+            };
+
+            _applyFilterButton = new Button
+            {
+                Content = "Применить фильтр",
+                Margin = new Thickness(0, 0, 10, 0),
+                Padding = new Thickness(10, 5, 10, 5),
+                Background = Brushes.LightBlue
+            };
+            _applyFilterButton.Click += ApplyFilterButton_Click;
+
+            filterPanel.Children.Add(new TextBlock
+            {
+                Text = "Дата приема:",
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 10, 0)
+            });
+            filterPanel.Children.Add(_datePicker);
+            filterPanel.Children.Add(_applyFilterButton);
+
+            // Кнопка сброса фильтра
+            var resetButton = new Button
+            {
+                Content = "Сбросить",
+                Margin = new Thickness(0, 0, 10, 0),
+                Padding = new Thickness(10, 5, 10, 5),
+                Background = Brushes.LightGray
+            };
+            resetButton.Click += (s, e) =>
+            {
+                _datePicker.SelectedDate = DateTime.Today;
+                CreateUIapps();
+            };
+            filterPanel.Children.Add(resetButton);
+
+            parent.Children.Add(filterPanel);
+        }
+        private void ApplyFilterButton_Click(object sender, RoutedEventArgs e)
+        {
+            CreateUIapps();
+        }
+
 
         public void CreateUIEmp()
         {
@@ -192,6 +271,7 @@ namespace Medicine_DP.Pages
                 }
             }
         }
+
 
         private void appointments_Click(object sender, RoutedEventArgs e)
         {

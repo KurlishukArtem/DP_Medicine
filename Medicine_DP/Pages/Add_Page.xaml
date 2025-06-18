@@ -97,7 +97,7 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20">
             <UniformGrid Columns="2" HorizontalAlignment="Center">
                 <!-- Сотрудники -->
-                <Border x:Name="AddEmloyesContainer" Background="White" CornerRadius="8" Margin="10" 
+                <Border x:Name="AddEmloyesContainer" Background="White" CornerRadius="8" Margin="10" Height="120" 
                         Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Сотрудники" Style="{StaticResource SectionHeaderStyle}"/>
@@ -107,7 +107,7 @@
                 </Border>
 
                 <!-- Результаты посещения -->
-                <Border x:Name="AddRecordContainer" Background="White" CornerRadius="8" Margin="10" 
+                <Border x:Name="AddRecordContainer" Background="White" CornerRadius="8" Margin="10" Height="120" 
                         Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Результаты посещения" Style="{StaticResource SectionHeaderStyle}"/>
@@ -117,7 +117,7 @@
                 </Border>
 
                 <!-- Медикаменты -->
-                <Border x:Name="AddMedicationsContainer" Background="White" CornerRadius="8" Margin="10" 
+                <Border x:Name="AddMedicationsContainer" Background="White" CornerRadius="8" Margin="10" Height="120" 
                         Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Медикаменты" Style="{StaticResource SectionHeaderStyle}"/>
@@ -127,7 +127,7 @@
                 </Border>
 
                 <!-- Мед-тесты -->
-                <Border x:Name="AddTestContainer" Background="White" CornerRadius="8" Margin="10" 
+                <Border x:Name="AddTestContainer" Background="White" CornerRadius="8" Margin="10" Height="120" 
                         Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Мед-тесты" Style="{StaticResource SectionHeaderStyle}"/>
@@ -137,7 +137,7 @@
                 </Border>
 
                 <!-- Пациенты -->
-                <Border x:Name="AddPatientContainer" Background="White" CornerRadius="8" Margin="10" 
+                <Border x:Name="AddPatientContainer" Background="White" CornerRadius="8" Margin="10" Height="120" 
                         Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Пациенты" Style="{StaticResource SectionHeaderStyle}"/>
@@ -147,7 +147,7 @@
                 </Border>
 
                 <!-- Оплата -->
-                <Border x:Name="AddPaymentContainer" Background="White" CornerRadius="8" Margin="10" 
+                <Border x:Name="AddPaymentContainer" Background="White" CornerRadius="8" Margin="10" Height="120" 
                         Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Оплата" Style="{StaticResource SectionHeaderStyle}"/>
@@ -157,7 +157,7 @@
                 </Border>
 
                 <!-- Услуги -->
-                <Border x:Name="AddServiceContainer" Background="White" CornerRadius="8" Margin="10" 
+                <Border x:Name="AddServiceContainer" Background="White" CornerRadius="8" Margin="10" Height="120" 
                         Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Услуги" Style="{StaticResource SectionHeaderStyle}"/>
@@ -167,7 +167,7 @@
                 </Border>
 
                 <!-- Расписание -->
-                <Border x:Name="AddSheduleContainer" Background="White" CornerRadius="8" Margin="10" 
+                <Border x:Name="AddSheduleContainer" Background="White" CornerRadius="8" Margin="10" Height="120" 
                         Padding="15" Effect="{StaticResource ShadowEffect}">
                     <StackPanel>
                         <Label Content="Расписание" Style="{StaticResource SectionHeaderStyle}"/>

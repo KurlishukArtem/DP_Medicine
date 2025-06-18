@@ -174,119 +174,45 @@ namespace Medicine_DP.Windows
 
             // Проверка обязательных полей
             if (string.IsNullOrWhiteSpace(txtLastName.Text))
-                errors.AppendLine("• Фамилия обязательна для заполнения");
-            else if (txtLastName.Text.Length > 50)
-                errors.AppendLine("• Фамилия не должна превышать 50 символов");
+                errors.AppendLine("Фамилия обязательна для заполнения");
 
             if (string.IsNullOrWhiteSpace(txtFirstName.Text))
-                errors.AppendLine("• Имя обязательно для заполнения");
-            else if (txtFirstName.Text.Length > 50)
-                errors.AppendLine("• Имя не должно превышать 50 символов");
+                errors.AppendLine("Имя обязательно для заполнения");
 
-            if (!string.IsNullOrWhiteSpace(txtMiddleName.Text) && txtMiddleName.Text.Length > 50)
-                errors.AppendLine("• Отчество не должно превышать 50 символов");
-
-            if (string.IsNullOrWhiteSpace(txtPosition.Text))
-                errors.AppendLine("• Должность обязательна для заполнения");
-            else if (txtPosition.Text.Length > 100)
-                errors.AppendLine("• Должность не должна превышать 100 символов");
-
-            if (!string.IsNullOrWhiteSpace(txtSpecialization.Text) && txtSpecialization.Text.Length > 100)
-                errors.AppendLine("• Специализация не должна превышать 100 символов");
-
-            // Проверка даты рождения
             if (dpBirthDate.SelectedDate == null)
-                errors.AppendLine("• Дата рождения обязательна для заполнения");
-            else
-            {
-                if (dpBirthDate.SelectedDate > DateTime.Today)
-                    errors.AppendLine("• Дата рождения не может быть в будущем");
-                else if (dpBirthDate.SelectedDate > DateTime.Today.AddYears(-18))
-                    errors.AppendLine("• Сотрудник должен быть старше 18 лет");
-                else if (dpBirthDate.SelectedDate < DateTime.Today.AddYears(-100))
-                    errors.AppendLine("• Проверьте дату рождения (возраст более 100 лет)");
-            }
+                errors.AppendLine("Дата рождения обязательна для заполнения");
+            else if (dpBirthDate.SelectedDate > DateTime.Today.AddYears(-18))
+                errors.AppendLine("Сотрудник должен быть старше 18 лет");
 
-            // Проверка пола
             if (cbGender.SelectedItem == null)
-                errors.AppendLine("• Укажите пол сотрудника");
+                errors.AppendLine("Укажите пол сотрудника");
 
-            // Проверка номера телефона
-            if (!string.IsNullOrWhiteSpace(txtPhoneNumber.Text))
-            {
-                if (!System.Text.RegularExpressions.Regex.IsMatch(txtPhoneNumber.Text, @"^[\d\s\(\)\+-]{10,20}$"))
-                    errors.AppendLine("• Некорректный формат номера телефона");
-            }
-
-            // Проверка email
-            if (string.IsNullOrWhiteSpace(txtEmail.Text))
-                errors.AppendLine("• Email обязателен для заполнения");
-            else if (txtEmail.Text.Length > 100)
-                errors.AppendLine("• Email не должен превышать 100 символов");
-            else if (!IsValidEmail(txtEmail.Text))
-                errors.AppendLine("• Некорректный формат email");
-
-            // Проверка даты приема на работу
             if (dpHireDate.SelectedDate == null)
-                errors.AppendLine("• Дата приема на работу обязательна для заполнения");
-            else
+                errors.AppendLine("Дата приема на работу обязательна для заполнения");
+            else if (dpBirthDate.SelectedDate != null && dpHireDate.SelectedDate < dpBirthDate.SelectedDate.Value.AddYears(18))
+                errors.AppendLine("Дата приема на работу не может быть раньше совершеннолетия сотрудника");
+
+            // Проверка уникальности логина (только для нового сотрудника)
+            if (_isNewEmployee && !string.IsNullOrEmpty(txtLogin.Text))
             {
-                if (dpHireDate.SelectedDate > DateTime.Today)
-                    errors.AppendLine("• Дата приема на работу не может быть в будущем");
-
-                if (dpBirthDate.SelectedDate != null && dpHireDate.SelectedDate < dpBirthDate.SelectedDate.Value.AddYears(14))
-                    errors.AppendLine("• Дата приема на работу не может быть раньше 14-летия сотрудника");
+                bool loginExists = _context.employees.Any(emp => emp.login == txtLogin.Text);
+                if (loginExists)
+                    errors.AppendLine("Этот логин уже занят");
             }
-
-            // Проверка адреса
-            if (!string.IsNullOrWhiteSpace(txtAddress.Text) && txtAddress.Text.Length > 200)
-                errors.AppendLine("• Адрес не должен превышать 200 символов");
-
-            // Проверка логина
-            if (string.IsNullOrWhiteSpace(txtLogin.Text))
-                errors.AppendLine("• Логин обязателен для заполнения");
-            else if (txtLogin.Text.Length > 50)
-                errors.AppendLine("• Логин не должен превышать 50 символов");
-            else if (!System.Text.RegularExpressions.Regex.IsMatch(txtLogin.Text, @"^[a-zA-Z0-9_]+$"))
-                errors.AppendLine("• Логин может содержать только буквы, цифры и подчеркивание");
-
-            // Проверка пароля
-            if (string.IsNullOrWhiteSpace(txtPassword.Text))
-                errors.AppendLine("• Пароль обязателен для заполнения");
-            else if (txtPassword.Text.Length < 6)
-                errors.AppendLine("• Пароль должен содержать минимум 6 символов");
-            else if (txtPassword.Text.Length > 100)
-                errors.AppendLine("• Пароль не должен превышать 100 символов");
 
             if (errors.Length > 0)
             {
-                MessageBox.Show("Обнаружены следующие ошибки:\n\n" + errors.ToString(),
-                               "Ошибки ввода",
-                               MessageBoxButton.OK,
-                               MessageBoxImage.Warning);
+                MessageBox.Show(errors.ToString(), "Ошибки ввода",
+                               MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
             return true;
         }
 
-        // Метод для проверки валидности email
-        private bool IsValidEmail(string email)
-        {
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+
         }
     }
 }

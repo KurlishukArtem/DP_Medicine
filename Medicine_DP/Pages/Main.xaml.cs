@@ -23,6 +23,7 @@ namespace Medicine_DP.Pages
     /// </summary>
     public partial class Main : Page
     {
+        public static patients CurrentPatient { get; set; }
         public static string _loginUser;
         public static Main _main;
         public DataContext _context = new DataContext();

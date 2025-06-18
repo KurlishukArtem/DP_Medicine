@@ -32,26 +32,58 @@ namespace Medicine_DP.Windows
         public Models.appointments _appointment;
 
         private bool _isEditMode = false;
+        private bool _isPatientMode = false;
+        private int _currentPatientId = -1;
 
-        public AddAppointmentWindow(Models.appointments appointment = null)
+        public AddAppointmentWindow(Models.appointments appointment = null, int currentPatientId = -1)
         {
             InitializeComponent();
             _context = new DataContext();
             _appointment = appointment;
             _isEditMode = _appointment != null;
+            _currentPatientId = currentPatientId;
+            _isPatientMode = currentPatientId > 0; // Режим пациента, если передан ID пациента
+
             LoadData();
 
             if (_isEditMode)
             {
                 LoadAppointmentData();
             }
-        }
 
-        private void LoadData()
+            // Настройка ComboBox пациентов в зависимости от режима
+            SetupPatientsComboBox();
+        }
+        private void SetupPatientsComboBox()
         {
-            try
+            if (_isPatientMode)
             {
-                // Загрузка пациентов
+                // В режиме пациента блокируем выбор и показываем только текущего пациента
+                cbPatients.IsEnabled = false;
+                cbPatients.Background = Brushes.LightGray;
+                cbPatients.ToolTip = "Вы записываетесь на прием для себя";
+
+                // Если это новая запись (не редактирование), автоматически выбираем текущего пациента
+                if (!_isEditMode)
+                {
+                    var patient = _context.patients.FirstOrDefault(p => p.patient_id == _currentPatientId);
+                    if (patient != null)
+                    {
+                        cbPatients.ItemsSource = new List<dynamic>
+                    {
+                        new
+                        {
+                            patient_id = patient.patient_id,
+                            FullName = $"{patient.last_name} {patient.first_name} {patient.middle_name}"
+                        }
+                    };
+                        cbPatients.SelectedIndex = 0;
+                    }
+                }
+            }
+            else
+            {
+                // В обычном режиме загружаем всех пациентов
                 cbPatients.ItemsSource = _context.patients
                     .Select(p => new
                     {
@@ -59,7 +91,12 @@ namespace Medicine_DP.Windows
                         FullName = $"{p.last_name} {p.first_name} {p.middle_name}"
                     })
                     .ToList();
-
+            }
+        }
+        private void LoadData()
+        {
+            try
+            {
                 // Загрузка врачей
                 cbDoctors.ItemsSource = _context.employees
                     .Where(e => e.is_active == 1)
@@ -220,7 +257,11 @@ namespace Medicine_DP.Windows
             {
                 if (!ValidateInput()) return;
 
-                int patientId = ((dynamic)cbPatients.SelectedItem).patient_id;
+                // В режиме пациента всегда используем текущего пациента
+                int patientId = _isPatientMode ?
+                    _currentPatientId :
+                    ((dynamic)cbPatients.SelectedItem).patient_id;
+
                 int employeeId = ((dynamic)cbDoctors.SelectedItem).employee_id;
                 int serviceId = ((dynamic)cbServices.SelectedItem).service_id;
                 int? roomId = int.TryParse(tbRoom.Text, out int room) ? room : (int?)null;
@@ -272,7 +313,7 @@ namespace Medicine_DP.Windows
 
         private bool ValidateInput()
         {
-            if (cbPatients.SelectedItem == null)
+            if (!_isPatientMode && cbPatients.SelectedItem == null)
             {
                 MessageBox.Show("Выберите пациента");
                 return false;

@@ -52,6 +52,7 @@ namespace Medicine_DP.Pages
 
                 // Скрываем панель пациента
                 patientPanel.Visibility = Visibility.Collapsed;
+                zapis.Visibility = Visibility.Collapsed;
                 //btnNewAppointment.Visibility = Visibility.Collapsed;
             }
             else
@@ -117,7 +118,7 @@ namespace Medicine_DP.Pages
         private void zapis_Click(object sender, RoutedEventArgs e)
         {
             // Создаем экземпляр окна для добавления новой записи
-            Windows.AddAppointmentWindow addAppointmentWindow = new AddAppointmentWindow();
+            Windows.AddAppointmentWindow addAppointmentWindow = new AddAppointmentWindow(currentPatientId: _patient.patient_id);
 
             // Настраиваем окно
 

@@ -4,28 +4,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Medicine_DP.Elements"
-             mc:Ignorable="d">
+             mc:Ignorable="d"
+             Cursor="Hand">
     <UserControl.Resources>
-    <Style x:Key="DetailLabel" TargetType="TextBlock">
-        <Setter Property="Width" Value="120"/>
-        <Setter Property="Foreground" Value="#FF666666"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-    </Style>
+        <Style x:Key="DetailLabel" TargetType="TextBlock">
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Foreground" Value="#FF666666"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
 
-    <Style x:Key="DetailValue" TargetType="TextBlock">
-        <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-    </Style>
+        <Style x:Key="DetailValue" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
 
-    <Style x:Key="ActionButton" TargetType="Button">
-        <Setter Property="Width" Value="120"/>
-        <Setter Property="Height" Value="32"/>
-        <Setter Property="Margin" Value="5,0"/>
-        <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Cursor" Value="Hand"/>
-    </Style>
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
         <Style x:Key="EditButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#FF4285F4"/>
             <Setter Property="Foreground" Value="White"/>
@@ -38,8 +40,8 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" 
-     CornerRadius="4"
-     Padding="{TemplateBinding Padding}">
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
@@ -51,6 +53,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
         <Style x:Key="DeleteButtonStyle" TargetType="Button" BasedOn="{StaticResource EditButtonStyle}">
             <Setter Property="Background" Value="#FFEA4335"/>
             <Style.Triggers>
@@ -59,11 +62,32 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Style x:Key="VisitCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+
+        <Style x:Key="VisitHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
     </UserControl.Resources>
 
     <Border Background="White" CornerRadius="10" Padding="15"
             BorderBrush="#FFE0E0E0" BorderThickness="1">
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="10"/>
@@ -71,9 +95,9 @@
             </Grid.ColumnDefinitions>
 
             <!-- Personal Info -->
-            <StackPanel Grid.Column="0">
+            <StackPanel Grid.Column="0" Grid.Row="0">
                 <TextBlock Text="Персональные данные" 
-                           FontSize="18" FontWeight="SemiBold" 
+                           FontSize="18" FontWeight="Bold" 
                            Margin="0,0,0,15" Foreground="#FF333333"/>
 
                 <Grid>
@@ -86,38 +110,38 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,5">
-                        <TextBlock Text="ФИО:" Width="120" Foreground="#FF666666"/>
-                        <TextBlock x:Name="lbFullName" FontWeight="SemiBold"/>
+                        <TextBlock Text="ФИО:" Style="{StaticResource DetailLabel}"/>
+                        <TextBlock x:Name="lbFullName" Style="{StaticResource DetailValue}"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5">
-                        <TextBlock Text="Дата рождения:" Width="120" Foreground="#FF666666"/>
-                        <TextBlock x:Name="lbBirthDate" FontWeight="SemiBold"/>
+                        <TextBlock Text="Дата рождения:" Style="{StaticResource DetailLabel}"/>
+                        <TextBlock x:Name="lbBirthDate" Style="{StaticResource DetailValue}"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5">
-                        <TextBlock Text="Пол:" Width="120" Foreground="#FF666666"/>
-                        <TextBlock x:Name="lbGender" FontWeight="SemiBold"/>
+                        <TextBlock Text="Пол:" Style="{StaticResource DetailLabel}"/>
+                        <TextBlock x:Name="lbGender" Style="{StaticResource DetailValue}"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,5">
-                        <TextBlock Text="Телефон:" Width="120" Foreground="#FF666666"/>
-                        <TextBlock x:Name="lbPhone" FontWeight="SemiBold"/>
+                        <TextBlock Text="Телефон:" Style="{StaticResource DetailLabel}"/>
+                        <TextBlock x:Name="lbPhone" Style="{StaticResource DetailValue}"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="4" Margin="0,5">
-                        <TextBlock Text="Email:" Width="120" Foreground="#FF666666"/>
-                        <TextBlock x:Name="lbEmail" FontWeight="SemiBold"/>
+                        <TextBlock Text="Email:" Style="{StaticResource DetailLabel}"/>
+                        <TextBlock x:Name="lbEmail" Style="{StaticResource DetailValue}"/>
                     </StackPanel>
                 </Grid>
             </StackPanel>
 
-            <Rectangle Grid.Column="1" Fill="#FFEEEEEE" Width="1" HorizontalAlignment="Center"/>
+            <Rectangle Grid.Column="1" Grid.Row="0" Fill="#FFEEEEEE" Width="1" HorizontalAlignment="Center"/>
 
             <!-- Documents and Address -->
-            <StackPanel Grid.Column="2">
+            <StackPanel Grid.Column="2" Grid.Row="0">
                 <TextBlock Text="Документы и адрес" 
-                           FontSize="18" FontWeight="SemiBold" 
+                           FontSize="18" FontWeight="Bold" 
                            Margin="0,0,0,15" Foreground="#FF333333"/>
 
                 <Grid>
@@ -130,23 +154,23 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,5">
-                        <TextBlock Text="Паспорт:" Width="120" Foreground="#FF666666"/>
-                        <TextBlock x:Name="lbPassport" FontWeight="SemiBold"/>
+                        <TextBlock Text="Паспорт:" Style="{StaticResource DetailLabel}"/>
+                        <TextBlock x:Name="lbPassport" Style="{StaticResource DetailValue}"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5">
-                        <TextBlock Text="СНИЛС:" Width="120" Foreground="#FF666666"/>
-                        <TextBlock x:Name="lbSnils" FontWeight="SemiBold"/>
+                        <TextBlock Text="СНИЛС:" Style="{StaticResource DetailLabel}"/>
+                        <TextBlock x:Name="lbSnils" Style="{StaticResource DetailValue}"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,5">
-                        <TextBlock Text="Полис:" Width="120" Foreground="#FF666666"/>
-                        <TextBlock x:Name="lbPolicy" FontWeight="SemiBold"/>
+                        <TextBlock Text="Полис:" Style="{StaticResource DetailLabel}"/>
+                        <TextBlock x:Name="lbPolicy" Style="{StaticResource DetailValue}"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,5">
-                        <TextBlock Text="Адрес:" Width="120" Foreground="#FF666666"/>
-                        <TextBlock x:Name="lbAddress" FontWeight="SemiBold"/>
+                        <TextBlock Text="Адрес:" Style="{StaticResource DetailLabel}"/>
+                        <TextBlock x:Name="lbAddress" Style="{StaticResource DetailValue}"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Vertical" Grid.Row="4" Margin="0,5">
@@ -158,12 +182,25 @@
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 15 0 0">
                     <Button x:Name="btnEdit" Content="Изменить" 
-Style="{StaticResource EditButtonStyle}"
-Click="btnEdit_Click"/>
+                            Style="{StaticResource EditButtonStyle}"
+                            Click="btnEdit_Click"/>
                     <Button x:Name="btnDelete" Content="Удалить" 
-Style="{StaticResource DeleteButtonStyle}"
-Click="btnDelete_Click"/>
+                            Style="{StaticResource DeleteButtonStyle}"
+                            Click="btnDelete_Click"/>
                 </StackPanel>
+            </StackPanel>
+
+            <!-- Visits History Panel (will be populated in code) -->
+            <StackPanel x:Name="visitsHistoryPanel" 
+                        Grid.Row="1" 
+                        Grid.ColumnSpan="3"
+                        Visibility="Collapsed"
+                        Margin="0,15,0,0">
+                <TextBlock x:Name="visitsHeader" 
+                           Text="История посещений"
+                           Style="{StaticResource VisitHeaderStyle}"/>
+
+                <!-- Visits will be added here dynamically -->
             </StackPanel>
         </Grid>
     </Border>

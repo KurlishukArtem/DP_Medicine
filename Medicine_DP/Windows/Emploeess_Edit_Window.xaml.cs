@@ -212,7 +212,7 @@ namespace Medicine_DP.Windows
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-
+            this.Close();
         }
     }
 }

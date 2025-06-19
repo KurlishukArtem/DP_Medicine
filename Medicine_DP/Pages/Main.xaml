@@ -189,11 +189,7 @@
                                 Click="medtical_tests_Click"
                                 Margin="10,5"/>
 
-                        <Button x:Name="medications" 
-                                Content="Медикаменты" 
-                                Style="{StaticResource NavButtonStyle}"
-                                Click="medications_Click"
-                                Margin="10,5"/>
+                        
 
                         <Button x:Name="patients" 
                                 Content="Пациенты" 
@@ -228,7 +224,11 @@
                                 Style="{StaticResource NavButtonStyle}"
                                 Click="AddPage_Click"
                                 Margin="10,5"/>
-                        
+                        <Button x:Name="medications" 
+        Content="Медикаменты" 
+        Style="{StaticResource NavButtonStyle}"
+        Click="medications_Click"
+        Margin="10,5" Visibility="Hidden"/>
                     </StackPanel>
                 </ScrollViewer>
             </Border>

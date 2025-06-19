@@ -35,7 +35,7 @@ namespace Medicine_DP.Elements
 
         public static readonly DependencyProperty IsActiveColorProperty =
           DependencyProperty.Register("IsActiveColor", typeof(Brush), typeof(Emploeess_El));
-        public Emploeess_El(employees employee, string loginUser)
+        public Emploeess_El(Models.employees employee, string loginUser)
         {
 
             InitializeComponent();

@@ -73,7 +73,7 @@ namespace Medicine_DP.Pages
                         // Врач видит только связанные с приемами элементы
                         employees.Visibility = Visibility.Collapsed;
                         medical_tests.Visibility = Visibility.Visible;
-                        medications.Visibility = Visibility.Visible;
+                        medications.Visibility = Visibility.Collapsed;
                         payments.Visibility = Visibility.Collapsed;
                         AddPage.Visibility = Visibility.Visible;
                         
@@ -83,7 +83,7 @@ namespace Medicine_DP.Pages
                         // Администратор видит все
                         employees.Visibility = Visibility.Visible;
                         medical_tests.Visibility = Visibility.Visible;
-                        medications.Visibility = Visibility.Visible;
+                        medications.Visibility = Visibility.Collapsed;
                         payments.Visibility = Visibility.Visible;
                         AddPage.Visibility = Visibility.Visible;
                         break;
@@ -153,15 +153,159 @@ namespace Medicine_DP.Pages
 
             parent.Children.Clear();
 
-            // Добавляем элементы управления фильтром для врача
-            if (_context.employees.Any(e => e.login == _loginUser && e.position == "Врач"))
+            // Добавляем элементы управления фильтром для врача/администратора
+            if (_context.employees.Any(e => e.login == _loginUser && (e.position == "Врач" || e.position == "Администратор")))
             {
                 AddFilterControls();
             }
 
+            // Добавляем поле поиска пациентов для администратора
+            if (_context.employees.Any(e => e.login == _loginUser && e.position == "Администратор"))
+            {
+                AddPatientSearchControls();
+            }
+            if (_context.employees.Any(e => e.login == _loginUser && e.position == "Врач"))
+            {
+                AddPatientSearchControls();
+            }
+
+
             foreach (var app in appointmentsList)
             {
                 parent.Children.Add(new Elements.appointments(app, _loginUser));
+            }
+        }
+
+        private void AddPatientSearchControls()
+        {
+            var searchPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Margin = new Thickness(0, 0, 0, 10)
+            };
+
+            var searchTextBox = new TextBox
+            {
+                Width = 250,
+                Margin = new Thickness(0, 0, 10, 0),
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Padding = new Thickness(5),
+                Tag = "Введите ФИО пациента"
+            };
+
+            // Обработчик для подсказки
+            searchTextBox.GotFocus += (s, e) =>
+            {
+                if (searchTextBox.Text == (string)searchTextBox.Tag)
+                    searchTextBox.Text = "";
+            };
+
+            searchTextBox.LostFocus += (s, e) =>
+            {
+                if (string.IsNullOrWhiteSpace(searchTextBox.Text))
+                    searchTextBox.Text = (string)searchTextBox.Tag;
+            };
+
+            var searchButton = new Button
+            {
+                Content = "Поиск пациента",
+                Margin = new Thickness(0, 0, 10, 0),
+                Padding = new Thickness(10, 5, 10, 5),
+                Background = Brushes.LightGreen,
+                Cursor = Cursors.Hand
+            };
+            searchButton.Click += (s, e) => SearchPatientAppointments(searchTextBox.Text);
+
+            var resetButton = new Button
+            {
+                Content = "Сбросить",
+                Margin = new Thickness(0, 0, 10, 0),
+                Padding = new Thickness(10, 5, 10, 5),
+                Background = Brushes.LightGray,
+                Cursor = Cursors.Hand
+            };
+            resetButton.Click += (s, e) =>
+            {
+                searchTextBox.Text = "";
+                CreateUIapps();
+            };
+
+            searchPanel.Children.Add(new TextBlock
+            {
+                Text = "Поиск пациента:",
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 10, 0)
+            });
+            searchPanel.Children.Add(searchTextBox);
+            searchPanel.Children.Add(searchButton);
+            searchPanel.Children.Add(resetButton);
+
+            parent.Children.Add(searchPanel);
+        }
+
+        private void SearchPatientAppointments(string searchText)
+        {
+            if (string.IsNullOrWhiteSpace(searchText) || searchText == "Введите ФИО пациента")
+            {
+                MessageBox.Show("Введите ФИО пациента для поиска", "Поиск",
+                              MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            try
+            {
+                // Разбиваем поисковую строку на части
+                var searchParts = searchText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                // Ищем пациентов, у которых ФИО содержит все части поисковой строки
+                var foundPatients = _context.patients.AsEnumerable()
+     .Where(p => searchParts.All(part =>
+         p.last_name.Contains(part, StringComparison.OrdinalIgnoreCase) ||
+         p.first_name.Contains(part, StringComparison.OrdinalIgnoreCase) ||
+         (p.middle_name != null && p.middle_name.Contains(part, StringComparison.OrdinalIgnoreCase))))
+     .Select(p => p.patient_id)
+     .ToList();
+
+                if (!foundPatients.Any())
+                {
+                    MessageBox.Show("Пациенты не найдены", "Результаты поиска",
+                                  MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+                // Фильтруем записи по найденным пациентам
+                var filteredAppointments = _context.appointments
+                
+                    .Where(a => foundPatients.Contains(a.patient_id))
+                    .OrderBy(a => a.appointment_date)
+                    .ThenBy(a => a.start_time)
+                    .ToList();
+                var filteredPatients = _context.patients
+                    .Where(a => foundPatients.Contains(a.patient_id))
+                    .ToList();
+
+                parent.Children.Clear();
+
+                // Добавляем элементы управления фильтром (если нужно)
+                if (_context.employees.Any(e => e.login == _loginUser && (e.position == "Врач" || e.position == "Администратор")))
+                {
+                    AddFilterControls();
+                    AddPatientSearchControls();
+                }
+
+                foreach (var app in filteredAppointments)
+                {
+                    parent.Children.Add(new Elements.appointments(app, _loginUser));
+                }
+                foreach (var app in filteredPatients)
+                {
+                    parent.Children.Add(new Elements.Patients_El(app));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка поиска: {ex.Message}", "Ошибка",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         private void AddFilterControls()

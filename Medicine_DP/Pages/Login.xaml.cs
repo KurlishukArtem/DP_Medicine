@@ -38,7 +38,7 @@ namespace Medicine_DP.Pages
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             string loginUser = UsernameTextBox.Text;
-            string passwordBox = Password.Password.ToString();
+            string passwordBox = HashPassword.Hash(Password.Password);
 
             try
             {
@@ -113,7 +113,7 @@ namespace Medicine_DP.Pages
 
                         // Генерируем новый случайный пароль
                         string newPassword = GenerateRandomPassword(8);
-                        string hashedPassword = HashPassword(newPassword);
+                        string hashedPassword = HashPassword.Hash(newPassword);
 
                         // Обновляем пароль в базе данных
                         if (patient != null)
@@ -183,14 +183,14 @@ namespace Medicine_DP.Pages
         }
 
         // Метод для хеширования пароля (упрощенная версия)
-        private string HashPassword(string password)
-        {
-            using (var sha256 = System.Security.Cryptography.SHA256.Create())
-            {
-                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
-            }
-        }
+        //private string HashPassword(string password)
+        //{
+        //    using (var sha256 = System.Security.Cryptography.SHA256.Create())
+        //    {
+        //        var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+        //        return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+        //    }
+        //}
 
         // Метод для отправки email
         private async Task<bool> SendPasswordResetEmail(string email, string newPassword)

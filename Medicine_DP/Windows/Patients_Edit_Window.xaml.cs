@@ -229,7 +229,7 @@ namespace Medicine_DP.Windows
                     registration_date = dpRegistrationDate.SelectedDate ?? DateTime.Now,
                     notes = txtNotes.Text,
                     login = txtLogin.Text,
-                    password_hash = txtPassword.Password
+                    password_hash = HashPassword.Hash(txtPassword.Password),
                 };
                 _context.patients.Add(_patient); // Только Add для нового пациента
             }
@@ -250,7 +250,7 @@ namespace Medicine_DP.Windows
                 _patient.policy_number = txtPolicyNumber.Text;
                 _patient.notes = txtNotes.Text;
                 _patient.login = txtLogin.Text;
-                _patient.password_hash = txtPassword.Password;
+                    _patient.password_hash = HashPassword.Hash(txtPassword.Password);
 
                 // Для существующего пациента помечаем как измененный
                 _context.Entry(_patient).State = EntityState.Modified;

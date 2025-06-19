@@ -84,54 +84,80 @@ namespace Medicine_DP.Windows
 
             try
             {
-                // Проверка на уникальность email
-                string email = txtEmail.Text;
-                if (_context.employees.Any(emp => emp.email == email && (_isNewEmployee || emp.employee_id != _employee.employee_id)))
+                string email = txtEmail.Text.Trim();
+                string login = txtLogin.Text.Trim();
+                string password = txtPassword.Text;
+
+                // Проверка уникальности email (исключая текущего сотрудника при редактировании)
+                if (_context.employees.Any(emp =>
+                    emp.email == email &&
+                    (_isNewEmployee || emp.employee_id != _employee.employee_id)))
                 {
                     MessageBox.Show("Сотрудник с таким email уже существует", "Ошибка",
                                   MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
-                // Проверка на уникальность login
-                string login = txtLogin.Text;
-                if (_context.employees.Any(emp => emp.login == login && (_isNewEmployee || emp.employee_id != _employee.employee_id)))
+                // Проверка уникальности login (исключая текущего сотрудника при редактировании)
+                if (_context.employees.Any(emp =>
+                    emp.login == login &&
+                    (_isNewEmployee || emp.employee_id != _employee.employee_id)))
                 {
                     MessageBox.Show("Сотрудник с таким логином уже существует", "Ошибка",
                                   MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
-                // Создаем нового сотрудника или используем существующего
                 if (_isNewEmployee)
                 {
+                    // Создание нового сотрудника
                     _employee = new employees
                     {
-                        password_hash = "temp123", // Временный пароль (рекомендуется хеширование)
+                        last_name = txtLastName.Text.Trim(),
+                        first_name = txtFirstName.Text.Trim(),
+                        middle_name = txtMiddleName.Text.Trim(),
+                        position = txtPosition.Text.Trim(),
+                        specialization = txtSpecialization.Text.Trim(),
+                        birth_date = dpBirthDate.SelectedDate.Value,
+                        gender = ((ComboBoxItem)cbGender.SelectedItem).Tag.ToString()[0],
+                        phone_number = txtPhoneNumber.Text.Trim(),
+                        email = email,
+                        hire_date = dpHireDate.SelectedDate.Value,
+                        address = txtAddress.Text.Trim(),
+                        login = string.IsNullOrEmpty(login) ? GenerateDefaultLogin() : login,
+                        password_hash = HashPassword.Hash(txtPassword.Text),
+                        is_active = chkIsActive.IsChecked == true ? 1 : 0,
+                        rooms = 0 // Или другое значение по умолчанию
                     };
                     _context.employees.Add(_employee);
                 }
-
-                // Обновление данных (общее для нового и существующего сотрудника)
-                _employee.last_name = txtLastName.Text;
-                _employee.first_name = txtFirstName.Text;
-                _employee.middle_name = txtMiddleName.Text;
-                _employee.position = txtPosition.Text;
-                _employee.specialization = txtSpecialization.Text;
-                _employee.birth_date = dpBirthDate.SelectedDate.Value;
-                _employee.gender = ((ComboBoxItem)cbGender.SelectedItem).Tag.ToString()[0];
-                _employee.phone_number = txtPhoneNumber.Text;
-                _employee.email = email;
-                _employee.hire_date = dpHireDate.SelectedDate.Value;
-                _employee.address = txtAddress.Text;
-                _employee.login = login;
-                _employee.password_hash = txtPassword.Text;
-                _employee.is_active = chkIsActive.IsChecked == true ? 1 : 0;
-
-                // Для нового сотрудника генерируем логин, если не заполнен
-                if (_isNewEmployee && string.IsNullOrEmpty(_employee.login))
+                else
                 {
-                    _employee.login = GenerateDefaultLogin();
+                    // Обновление существующего сотрудника
+                    _employee.last_name = txtLastName.Text.Trim();
+                    _employee.first_name = txtFirstName.Text.Trim();
+                    _employee.middle_name = txtMiddleName.Text.Trim();
+                    _employee.position = txtPosition.Text.Trim();
+                    _employee.specialization = txtSpecialization.Text.Trim();
+                    _employee.birth_date = dpBirthDate.SelectedDate.Value;
+                    _employee.gender = ((ComboBoxItem)cbGender.SelectedItem).Tag.ToString()[0];
+                    _employee.phone_number = txtPhoneNumber.Text.Trim();
+                    _employee.email = email;
+                    _employee.hire_date = dpHireDate.SelectedDate.Value;
+                    _employee.address = txtAddress.Text.Trim();
+                    _employee.login = login;
+
+                    // Обновляем пароль только если поле не пустое
+                    if (!string.IsNullOrEmpty(password))
+                    {
+                        _employee.password_hash = HashPassword.Hash(password);
+                    }
+
+                    _employee.is_active = chkIsActive.IsChecked == true ? 1 : 0;
+                    
+
+                    // Явно помечаем сущность как измененную
+                    _context.Entry(_employee).State = EntityState.Modified;
                 }
 
                 _context.SaveChanges();
@@ -139,16 +165,12 @@ namespace Medicine_DP.Windows
                 MessageBox.Show(_isNewEmployee ? "Новый сотрудник успешно добавлен" : "Данные сотрудника успешно обновлены",
                               "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                Close();
-            }
-            catch (DbUpdateException dbEx)
-            {
-                MessageBox.Show($"Ошибка сохранения в базу данных: {dbEx.InnerException?.Message ?? dbEx.Message}",
-                              "Ошибка базы данных", MessageBoxButton.OK, MessageBoxImage.Error);
+                
+                this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка",
+                MessageBox.Show($"Ошибка при сохранении: {ex.Message}", "Ошибка",
                               MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

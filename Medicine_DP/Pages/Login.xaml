@@ -174,7 +174,7 @@
                         <Label x:Name="Forgot_Password" 
                                Content="Забыли пароль?"
                                Style="{StaticResource ForgotPasswordStyle}"
-                               MouseDoubleClick="Forgot_Password_MouseDoubleClick"/>
+                               MouseDown="Forgot_Password_MouseDoubleClick"/>
 
                         <Button Content="Войти" 
                                 Style="{StaticResource LoginButtonStyle}"

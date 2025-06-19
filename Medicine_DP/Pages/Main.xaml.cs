@@ -34,6 +34,7 @@ namespace Medicine_DP.Pages
             _main = this;
             _loginUser = loginUser;
             ConfigureUIForUserRole();
+
         }
 
         private void ConfigureUIForUserRole()
@@ -176,6 +177,7 @@ namespace Medicine_DP.Pages
             }
         }
 
+
         private void AddPatientSearchControls()
         {
             var searchPanel = new StackPanel
@@ -242,6 +244,7 @@ namespace Medicine_DP.Pages
 
             parent.Children.Add(searchPanel);
         }
+
 
         private void SearchPatientAppointments(string searchText)
         {

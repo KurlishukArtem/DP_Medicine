@@ -45,6 +45,7 @@ namespace Medicine_DP.Windows
                 txtPolicyNumber.Text = patient.policy_number;
                 dpRegistrationDate.SelectedDate = patient.registration_date;
                 txtNotes.Text = patient.notes;
+                txtLogin.Text = patient.login;
             }
             else
             {

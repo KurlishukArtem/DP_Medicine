@@ -23,6 +23,7 @@ namespace Medicine_DP.Windows
     {
         public schedules _schedule;
         private readonly DataContext _context = Main._main._context;
+        private const int TimeSlotIntervalMinutes = 30;
 
         public Shedules_Edit_Window(schedules schedule = null)
         {
@@ -43,7 +44,10 @@ namespace Medicine_DP.Windows
             }
             else
             {
-                cbIsWorkingDay.IsChecked = true; // По умолчанию — рабочий день
+                // Устанавливаем значения по умолчанию
+                txtStartTime.Text = "08:30";
+                txtEndTime.Text = "18:00";
+                cbIsWorkingDay.IsChecked = true;
             }
         }
 
@@ -73,23 +77,25 @@ namespace Medicine_DP.Windows
         {
             try
             {
-                if (cbDoctor.SelectedItem == null)
-                {
-                    MessageBox.Show("Выберите врача", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
+                if (!ValidateInput()) return;
 
                 int employeeId = (int)cbDoctor.SelectedValue;
                 int dayOfWeek = int.Parse(txtDayOfWeek.Text);
                 TimeSpan startTime = TimeSpan.Parse(txtStartTime.Text);
                 TimeSpan endTime = TimeSpan.Parse(txtEndTime.Text);
-                int? roomId = string.IsNullOrWhiteSpace(txtRoom.Text) ? (int?)null : int.Parse(txtRoom.Text);
+
+                // Явное преобразование для nullable int
+                int? roomId = null;
+                if (!string.IsNullOrWhiteSpace(txtRoom.Text))
+                {
+                    roomId = int.Parse(txtRoom.Text);
+                }
+
                 bool isWorkingDay = cbIsWorkingDay.IsChecked == true;
 
                 if (_schedule == null)
                 {
-                    // Создание новой записи
-                    var newSchedule = new schedules
+                    _context.schedules.Add(new schedules
                     {
                         employee_id = employeeId,
                         day_of_week = dayOfWeek,
@@ -97,78 +103,72 @@ namespace Medicine_DP.Windows
                         end_time = endTime,
                         room_id = roomId,
                         is_working_day = isWorkingDay
-                    };
-
-                    _context.schedules.Add(newSchedule);
-                    _context.SaveChanges();
-                    MessageBox.Show("Расписание успешно добавлено", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    });
                 }
                 else
                 {
-                    // Обновление существующей записи
                     _schedule.employee_id = employeeId;
                     _schedule.day_of_week = dayOfWeek;
                     _schedule.start_time = startTime;
                     _schedule.end_time = endTime;
                     _schedule.room_id = roomId;
                     _schedule.is_working_day = isWorkingDay;
-
                     _context.schedules.Update(_schedule);
-                    _context.SaveChanges();
-                    MessageBox.Show("Расписание успешно изменено", "Изменение", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
 
-                
+                _context.SaveChanges();
+                MessageBox.Show("Расписание сохранено", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка сохранения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         private void Shablon_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (cbDoctor.SelectedItem == null)
-                {
-                    MessageBox.Show("Выберите врача", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
+                if (!ValidateInput()) return;
 
                 int employeeId = (int)cbDoctor.SelectedValue;
+                int dayOfWeek = int.Parse(txtDayOfWeek.Text);
+                TimeSpan startTime = TimeSpan.Parse(txtStartTime.Text);
+                TimeSpan endTime = TimeSpan.Parse(txtEndTime.Text);
 
-                // Проверяем, выбран ли день недели
-                if (!int.TryParse(txtDayOfWeek.Text, out int dayOfWeek) || dayOfWeek < 1 || dayOfWeek > 7)
+                // Исправление для C# 8.0 - замена тернарного оператора на явную проверку
+                int? roomId = null;
+                if (!string.IsNullOrWhiteSpace(txtRoom.Text))
                 {
-                    MessageBox.Show("Введите корректный день недели (от 1 до 7)", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
+                    roomId = int.Parse(txtRoom.Text);
                 }
-
-                TimeSpan start = new TimeSpan(8, 30, 0); // 08:30
-                TimeSpan end = new TimeSpan(18, 0, 0);  // 18:00
-                TimeSpan interval = TimeSpan.FromMinutes(30);
-
-                // Получаем номер кабинета
-                int? roomId = string.IsNullOrWhiteSpace(txtRoom.Text) ? (int?)null : int.Parse(txtRoom.Text);
 
                 bool isWorkingDay = cbIsWorkingDay.IsChecked == true;
 
-                // Очищаем предыдущие записи (если это редактирование существующего расписания одного дня)
+                // Проверка на корректность временного интервала
+                if (startTime >= endTime)
+                {
+                    MessageBox.Show("Время окончания должно быть позже времени начала", "Ошибка",
+                                   MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Подтверждение удаления старых записей
                 var existingSchedules = _context.schedules
                     .Where(s => s.employee_id == employeeId && s.day_of_week == dayOfWeek)
                     .ToList();
 
-                if (existingSchedules.Count > 0)
+                if (existingSchedules.Any())
                 {
-                    var confirm = MessageBox.Show(
-                        $"Врач уже имеет расписание на этот день. Удалить старые записи и применить шаблон?",
+                    var result = MessageBox.Show(
+                        "У врача уже есть расписание на этот день. Удалить существующие записи?",
                         "Подтверждение",
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question);
 
-                    if (confirm == MessageBoxResult.Yes)
+                    if (result == MessageBoxResult.Yes)
                     {
                         _context.schedules.RemoveRange(existingSchedules);
                         _context.SaveChanges();
@@ -179,31 +179,75 @@ namespace Medicine_DP.Windows
                     }
                 }
 
-                // Генерируем слоты с 8:30 до 18:00 каждые 30 мин
-                for (TimeSpan time = start; time < end; time = time.Add(interval))
+                // Создание временных слотов с интервалом 30 минут
+                List<schedules> timeSlots = new List<schedules>();
+                TimeSpan currentTime = startTime;
+
+                while (currentTime < endTime)
                 {
-                    var scheduleSlot = new schedules
+                    TimeSpan slotEndTime = currentTime.Add(TimeSpan.FromMinutes(TimeSlotIntervalMinutes));
+                    if (slotEndTime > endTime) slotEndTime = endTime;
+
+                    timeSlots.Add(new schedules
                     {
                         employee_id = employeeId,
                         day_of_week = dayOfWeek,
-                        start_time = time,
-                        end_time = time.Add(interval),
+                        start_time = currentTime,
+                        end_time = slotEndTime,
                         room_id = roomId,
                         is_working_day = isWorkingDay
-                    };
+                    });
 
-                    _context.schedules.Add(scheduleSlot);
+                    currentTime = slotEndTime;
                 }
 
+                _context.schedules.AddRange(timeSlots);
                 _context.SaveChanges();
-                MessageBox.Show("Шаблон расписания успешно применён", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                
+
+                MessageBox.Show($"Создано {timeSlots.Count} временных слотов", "Успех",
+                               MessageBoxButton.OK, MessageBoxImage.Information);
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при создании шаблона: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка",
+                               MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private bool ValidateInput()
+        {
+            if (cbDoctor.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите врача", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            if (!int.TryParse(txtDayOfWeek.Text, out int day) || day < 1 || day > 7)
+            {
+                MessageBox.Show("Введите день недели от 1 до 7", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            if (!TimeSpan.TryParse(txtStartTime.Text, out _))
+            {
+                MessageBox.Show("Введите корректное время начала (формат HH:mm)", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            if (!TimeSpan.TryParse(txtEndTime.Text, out _))
+            {
+                MessageBox.Show("Введите корректное время окончания (формат HH:mm)", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtRoom.Text) && !int.TryParse(txtRoom.Text, out _))
+            {
+                MessageBox.Show("Номер кабинета должен быть числом", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            return true;
         }
     }
 }
